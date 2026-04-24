@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STEP UP | Premium Shoe Boutique</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+:root[data-theme="dark"] {
+  --bg:#0d0d0d; --bg2:#111111; --bg3:#171717; --surface:#1c1c1c;
+  --text:#f0f0f0; --muted:#777; --border:rgba(255,255,255,0.07);
+  --accent:#ff4500; --accent2:#ff7b00; --card:#161616;
+  --tag-bg:rgba(255,69,0,0.12); --tag-bd:rgba(255,69,0,0.3);
+}
+:root[data-theme="light"] {
+  --bg:#f4f2ed; --bg2:#e9e7e1; --bg3:#dedad3; --surface:#ffffff;
+  --text:#111; --muted:#666; --border:rgba(0,0,0,0.09);
+  --accent:#d93c00; --accent2:#ff5c00; --card:#ffffff;
+  --tag-bg:rgba(217,60,0,0.08); --tag-bd:rgba(217,60,0,0.25);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+/* CRITICAL locomotive rules */
+html.has-scroll-smooth{overflow:hidden;}
+html.has-scroll-dragging{user-select:none;}
+.has-scroll-smooth body{overflow:hidden;}
+[data-scroll-container]{will-change:transform;}
+
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);transition:background .4s,color .3s;}
+
+/* TYPOGRAPHY */
+.font-oswald{font-family:'Oswald',sans-serif;}
+.section-label{display:block;font-size:.62rem;letter-spacing:.45em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:1.2rem;}
+.section-title{font-family:'Oswald',sans-serif;font-size:clamp(2.4rem,4.5vw,4.2rem);font-weight:700;text-transform:uppercase;line-height:.95;color:var(--text);}
+
+/* NAV */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:9999;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.4rem 3rem;
+  backdrop-filter:blur(18px) saturate(1.2);
+  -webkit-backdrop-filter:blur(18px);
+  background:rgba(13,13,13,.55);
+  border-bottom:1px solid var(--border);
+  transition:background .4s,border-color .4s;
+}
+[data-theme="light"] #nav{background:rgba(244,242,237,.65);}
+
+.nav-logo{font-family:'Oswald',sans-serif;font-size:1.5rem;font-weight:700;color:var(--text);text-decoration:none;}
+.nav-logo span{color:var(--accent);}
+
+.nav-links{display:flex;gap:2.5rem;align-items:center;}
+.nav-link{font-size:.68rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--text);text-decoration:none;position:relative;opacity:.7;transition:opacity .25s,color .25s;cursor:pointer;}
+.nav-link:hover,.nav-link.active{opacity:1;color:var(--accent);}
+.nav-link::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1.5px;background:var(--accent);transition:width .3s ease;}
+.nav-link:hover::after,.nav-link.active::after{width:100%;}
+
+.nav-right{display:flex;align-items:center;gap:1.5rem;}
+.cart-btn{font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:1px solid var(--muted);padding-bottom:1px;transition:color .25s,border-color .25s;}
+.cart-btn:hover{color:var(--accent);border-color:var(--accent);}
+
+.theme-toggle{width:46px;height:24px;background:var(--surface);border:1.5px solid var(--border);border-radius:999px;cursor:pointer;position:relative;flex-shrink:0;transition:background .3s,border-color .3s;}
+.theme-toggle::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--accent);transition:transform .35s cubic-bezier(.4,0,.2,1);}
+[data-theme="light"] .theme-toggle::after{transform:translateX(22px);}
+
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;}
+.hamburger span{width:24px;height:2px;background:var(--text);border-radius:2px;display:block;transition:all .3s;}
+
+/* BUTTONS */
+.btn-primary{display:inline-flex;align-items:center;gap:.6rem;background:var(--accent);color:#fff;padding:.95rem 2.4rem;font-size:.72rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;border:none;cursor:pointer;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));transition:background .3s,transform .3s,box-shadow .3s;}
+.btn-primary:hover{background:var(--accent2);transform:translateY(-2px);box-shadow:0 12px 40px rgba(255,69,0,.3);}
+
+.btn-ghost{display:inline-flex;align-items:center;gap:.6rem;background:transparent;color:var(--text);padding:.95rem 2.4rem;font-size:.72rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;border:1.5px solid var(--border);cursor:pointer;transition:border-color .25s,color .25s;}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+
+/* ─── HERO ─── */
+.hero-section{
+  position:relative;min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg);
+  /* NO overflow:hidden — critical for parallax */
+}
+
+.hero-bg-word{
+  position:absolute;font-family:'Oswald',sans-serif;
+  font-size:clamp(100px,20vw,260px);font-weight:700;
+  color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.04);
+  white-space:nowrap;pointer-events:none;user-select:none;
+  top:50%;left:-5%;transform:translateY(-50%);
+  will-change:transform;
+}
+[data-theme="light"] .hero-bg-word{-webkit-text-stroke:1.5px rgba(0,0,0,.05);}
+
+.hero-glow{
+  position:absolute;width:480px;height:480px;
+  background:radial-gradient(circle,rgba(255,69,0,.1) 0%,transparent 70%);
+  border-radius:50%;right:10%;top:50%;transform:translateY(-50%);
+  pointer-events:none;will-change:transform;
+}
+
+.hero-content{
+  position:relative;z-index:5;
+  width:100%;max-width:1200px;padding:0 3rem;
+  display:flex;align-items:center;justify-content:space-between;gap:3rem;
+}
+
+.hero-text{flex:1;}
+.hero-pill{display:inline-flex;align-items:center;gap:.5rem;background:var(--tag-bg);border:1px solid var(--tag-bd);color:var(--accent);font-size:.6rem;font-weight:700;letter-spacing:.35em;text-transform:uppercase;padding:.35rem 1rem;border-radius:999px;margin-bottom:1.75rem;}
+.hero-pill::before{content:'';width:6px;height:6px;background:var(--accent);border-radius:50%;}
+
+.hero-title{font-family:'Oswald',sans-serif;font-size:clamp(4rem,10vw,9rem);font-weight:700;line-height:.9;text-transform:uppercase;color:var(--text);margin-bottom:1.75rem;}
+.hero-desc{color:var(--muted);font-size:.9rem;line-height:1.85;max-width:360px;margin-bottom:2.5rem;}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;}
+
+.hero-shoe-wrap{flex:1;display:flex;justify-content:center;align-items:center;position:relative;will-change:transform;}
+.hero-shoe-wrap img{width:min(500px,100%);filter:drop-shadow(0 50px 80px rgba(255,69,0,.2));transform:rotate(-9deg);transition:transform .8s cubic-bezier(.23,1,.32,1);}
+.hero-shoe-wrap:hover img{transform:rotate(-3deg) scale(1.04) translateY(-8px);}
+
+.hero-scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;z-index:5;}
+.hero-scroll-hint span{font-size:.58rem;letter-spacing:.4em;text-transform:uppercase;color:var(--muted);}
+.scroll-bar{width:1px;height:55px;background:linear-gradient(to bottom,var(--accent),transparent);animation:pulse-bar 1.6s ease-in-out infinite;}
+@keyframes pulse-bar{0%,100%{opacity:.3;transform:scaleY(.6);}50%{opacity:1;transform:scaleY(1);}}
+
+/* MARQUEE */
+.marquee-section{background:var(--bg3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.2rem 0;overflow:hidden;}
+.marquee-track{display:flex;gap:2.5rem;white-space:nowrap;animation:marquee-run 22s linear infinite;}
+@keyframes marquee-run{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.marquee-item{display:flex;align-items:center;gap:1rem;font-size:.68rem;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);}
+.m-dot{width:4px;height:4px;background:var(--accent);border-radius:50%;flex-shrink:0;}
+
+/* ABOUT */
+.about-section{background:var(--bg2);padding:10rem 3rem;position:relative;overflow:visible;}
+.about-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;}
+
+.about-img-box{position:relative;will-change:transform;}
+.about-img-box::after{content:'';position:absolute;top:2rem;right:-2rem;width:100%;height:100%;border:2px solid var(--accent);z-index:0;opacity:.55;transition:transform .6s ease;}
+.about-img-box:hover::after{transform:translate(5px,5px);}
+.about-img-box img{position:relative;z-index:1;width:100%;height:560px;object-fit:cover;display:block;filter:contrast(1.05) saturate(.95);}
+
+.about-float-label{position:absolute;bottom:-1.5rem;left:-1.5rem;background:var(--accent);color:#fff;font-family:'Oswald',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;padding:.7rem 1.4rem;z-index:5;will-change:transform;}
+
+.about-text{will-change:transform;}
+.about-text p{color:var(--muted);font-size:.9rem;line-height:1.85;margin-bottom:1.2rem;}
+
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:3rem;}
+.stat-item{padding:1.75rem;background:var(--surface);border:1px solid var(--border);}
+.stat-num{font-family:'Oswald',sans-serif;font-size:2.8rem;font-weight:700;color:var(--accent);line-height:1;margin-bottom:.3rem;}
+.stat-lbl{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:600;}
+
+.about-bg-num{position:absolute;font-family:'Oswald',sans-serif;font-size:28vw;font-weight:700;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.025);right:-5%;bottom:-5%;pointer-events:none;user-select:none;will-change:transform;}
+[data-theme="light"] .about-bg-num{-webkit-text-stroke:1px rgba(0,0,0,.03);}
+
+/* PRODUCTS */
+.products-section{background:var(--bg);padding:10rem 3rem;}
+.products-inner{max-width:1200px;margin:0 auto;}
+.products-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3.5rem;gap:2rem;flex-wrap:wrap;}
+.filter-tabs{display:flex;gap:.5rem;flex-wrap:wrap;}
+.f-tab{font-size:.65rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;padding:.5rem 1.2rem;border:1.5px solid var(--border);color:var(--muted);background:transparent;cursor:pointer;transition:all .25s;}
+.f-tab:hover,.f-tab.active{border-color:var(--accent);color:var(--accent);background:var(--tag-bg);}
+
+.products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+
+.p-card{background:var(--card);border:1px solid var(--border);position:relative;overflow:hidden;cursor:pointer;transition:box-shadow .4s ease;will-change:transform;}
+.p-card:hover{box-shadow:0 24px 70px rgba(0,0,0,.35);}
+.p-card.featured{grid-column:span 2;}
+
+.p-img{overflow:hidden;aspect-ratio:16/10;background:var(--bg3);}
+.p-card.featured .p-img{aspect-ratio:21/9;}
+.p-img img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.23,1,.32,1);display:block;}
+.p-card:hover .p-img img{transform:scale(1.08);}
+
+.p-badge{position:absolute;top:1rem;left:1rem;background:var(--accent);color:#fff;font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;padding:.3rem .7rem;}
+.p-body{padding:1.4rem 1.5rem;display:flex;justify-content:space-between;align-items:flex-end;}
+.p-name{font-family:'Oswald',sans-serif;font-size:1.15rem;font-weight:700;text-transform:uppercase;color:var(--text);line-height:1.1;}
+.p-sub{font-size:.65rem;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-top:.25rem;}
+.p-price{font-family:'Oswald',sans-serif;font-size:1.25rem;font-weight:700;color:var(--accent);margin-bottom:.5rem;text-align:right;}
+.p-add{width:36px;height:36px;background:var(--accent);color:#fff;border:none;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:.4rem;transition:background .25s,transform .2s;}
+.p-add:hover{background:var(--accent2);transform:scale(1.1);}
+
+/* REVIEWS */
+.reviews-section{background:var(--bg2);padding:10rem 3rem;position:relative;overflow:visible;}
+.reviews-inner{max-width:1200px;margin:0 auto;}
+.reviews-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:4rem;flex-wrap:wrap;gap:2rem;}
+.rating-big{font-family:'Oswald',sans-serif;font-size:4rem;font-weight:700;color:var(--accent);line-height:1;}
+.rating-stars{font-size:1.1rem;color:var(--accent);letter-spacing:2px;}
+.rating-lbl{font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-top:.25rem;}
+
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+.r-card{background:var(--card);border:1px solid var(--border);padding:2.5rem;position:relative;transition:transform .35s ease,box-shadow .35s ease;will-change:transform;}
+.r-card:hover{transform:translateY(-5px);box-shadow:0 20px 55px rgba(0,0,0,.25);}
+.r-card::before{content:'"';position:absolute;top:1.5rem;right:2rem;font-family:'Oswald',sans-serif;font-size:5rem;line-height:1;color:var(--accent);opacity:.1;}
+.r-card.r-feat{grid-column:span 2;background:var(--accent);border-color:transparent;}
+.r-card.r-feat::before{color:#fff;opacity:.15;}
+
+.r-stars{display:flex;gap:2px;margin-bottom:1.2rem;}
+.r-star{color:var(--accent);font-size:.9rem;}
+.r-card.r-feat .r-star{color:#fff;}
+.r-text{font-size:.875rem;line-height:1.8;color:var(--muted);font-style:italic;margin-bottom:1.5rem;}
+.r-card.r-feat .r-text{color:rgba(255,255,255,.82);}
+.r-author{display:flex;align-items:center;gap:.75rem;}
+.r-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--border);}
+.r-card.r-feat .r-avatar{border-color:rgba(255,255,255,.3);}
+.r-name{font-size:.85rem;font-weight:600;color:var(--text);}
+.r-card.r-feat .r-name{color:#fff;}
+.r-loc{font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.r-card.r-feat .r-loc{color:rgba(255,255,255,.6);}
+
+.reviews-bg-text{position:absolute;font-family:'Oswald',sans-serif;font-size:20vw;font-weight:700;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.025);bottom:-5%;left:-3%;pointer-events:none;user-select:none;will-change:transform;}
+[data-theme="light"] .reviews-bg-text{-webkit-text-stroke:1px rgba(0,0,0,.03);}
+
+/* CONTACT */
+.contact-section{background:var(--bg);padding:10rem 3rem;}
+.contact-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:start;}
+.c-info-item{padding:1.5rem 0;border-bottom:1px solid var(--border);}
+.c-info-lbl{font-size:.6rem;letter-spacing:.35em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:.4rem;}
+.c-info-val{font-size:.95rem;color:var(--text);font-weight:300;}
+
+.contact-form-box{background:var(--surface);border:1px solid var(--border);padding:3rem;will-change:transform;}
+.contact-form-box h3{font-family:'Oswald',sans-serif;font-size:1.5rem;font-weight:700;text-transform:uppercase;color:var(--text);margin-bottom:2rem;}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.f-group{display:flex;flex-direction:column;gap:.45rem;margin-bottom:1.4rem;}
+.f-label{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);font-weight:600;}
+.f-input,.f-textarea{background:var(--bg);border:1.5px solid var(--border);color:var(--text);padding:.85rem 1.1rem;font-family:'DM Sans',sans-serif;font-size:.9rem;outline:none;width:100%;transition:border-color .25s;}
+.f-input:focus,.f-textarea:focus{border-color:var(--accent);}
+.f-textarea{resize:none;height:110px;}
+
+/* FOOTER */
+.footer-section{background:var(--bg3);border-top:1px solid var(--border);padding:5rem 3rem 2rem;}
+.footer-inner{max-width:1200px;margin:0 auto;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:4rem;}
+.f-logo{font-family:'Oswald',sans-serif;font-size:2rem;font-weight:700;color:var(--text);margin-bottom:1rem;}
+.f-logo span{color:var(--accent);}
+.f-desc{font-size:.82rem;color:var(--muted);line-height:1.75;max-width:250px;}
+.f-col-title{font-size:.6rem;letter-spacing:.4em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:1.4rem;}
+.f-col-link{display:block;font-size:.83rem;color:var(--muted);margin-bottom:.7rem;text-decoration:none;cursor:pointer;transition:color .22s;}
+.f-col-link:hover{color:var(--text);}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:2rem;border-top:1px solid var(--border);font-size:.72rem;color:var(--muted);flex-wrap:wrap;gap:.75rem;}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .hero-content{flex-direction:column;text-align:center;padding:8rem 2rem 4rem;}
+  .hero-shoe-wrap{width:100%;max-width:420px;}
+  .hero-desc{max-width:100%;}
+  .hero-actions{justify-content:center;}
+  .about-inner{grid-template-columns:1fr;gap:3rem;}
+  .about-img-box::after{display:none;}
+  .about-img-box img{height:360px;}
+  .contact-inner{grid-template-columns:1fr;gap:3rem;}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:2rem;}
+}
+@media(max-width:768px){
+  #nav{padding:1.2rem 1.5rem;}
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .nav-links.open{display:flex;flex-direction:column;gap:1.5rem;position:fixed;top:0;right:0;width:75vw;height:100vh;background:var(--bg3);border-left:1px solid var(--border);padding:5rem 2rem 2rem;z-index:9998;}
+  .nav-link{font-size:1rem;letter-spacing:.1em;}
+  .about-section,.products-section,.reviews-section,.contact-section,.footer-section{padding-left:1.5rem;padding-right:1.5rem;}
+  .about-section,.products-section,.reviews-section,.contact-section{padding-top:6rem;padding-bottom:6rem;}
+  .products-grid{grid-template-columns:1fr;}
+  .p-card.featured{grid-column:span 1;}
+  .p-card.featured .p-img{aspect-ratio:16/9;}
+  .reviews-grid{grid-template-columns:1fr;}
+  .r-card.r-feat{grid-column:span 1;}
+  .filter-tabs{display:none;}
+  .footer-grid{grid-template-columns:1fr;}
+  .footer-bottom{text-align:center;justify-content:center;}
+}
+@media(max-width:480px){
+  .hero-title{font-size:clamp(3rem,14vw,4.5rem);}
+  .contact-form-box{padding:2rem 1.5rem;}
+  .f-row{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#home" class="nav-logo">STEP <span>UP.</span></a>
+  <div class="nav-links" id="navLinks">
+    <span class="nav-link" data-target="home">Home</span>
+    <span class="nav-link" data-target="about">About</span>
+    <span class="nav-link" data-target="products">Products</span>
+    <span class="nav-link" data-target="reviews">Reviews</span>
+    <span class="nav-link" data-target="contact">Contact</span>
+  </div>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"></button>
+    <div class="cart-btn" id="cartBtn">Cart (0)</div>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- SCROLL CONTAINER -->
+<div data-scroll-container id="scrollContainer">
+
+  <!-- ══ HERO ══ -->
+  <section class="hero-section" id="home" data-scroll-section>
+
+    <!-- parallax: bg word slides horizontally at high speed -->
+    <div class="hero-bg-word"
+         data-scroll
+         data-scroll-speed="-8"
+         data-scroll-direction="horizontal">
+      STEP UP &nbsp;·&nbsp; AIR MAX 2026 &nbsp;·&nbsp; STEP UP &nbsp;·&nbsp; AIR MAX 2026 &nbsp;·&nbsp; STEP UP
+    </div>
+
+    <!-- parallax: glow orb floats up slowly -->
+    <div class="hero-glow" data-scroll data-scroll-speed="2"></div>
+
+    <div class="hero-content">
+
+      <!-- parallax: text block moves up at medium speed -->
+      <div class="hero-text" data-scroll data-scroll-speed="1">
+<br><br>        
+<br><br>        
+        <div class="hero-pill">New Collection · 2026</div>
+        <h1 class="hero-title">
+          Walk<br>The<br><span style="color:var(--accent)">Future.</span>
+        </h1>
+        <p class="hero-desc">
+          Performance technology meets street-style audacity. Every step, a statement. Engineered for those who refuse to blend in.
+        </p>
+        <div class="hero-actions">
+          <button class="btn-primary" id="shopNow">Shop Now →</button>
+          <button class="btn-ghost" id="learnMore">Learn More</button>
+        </div>
+      </div>
+
+      <!-- parallax: shoe image floats up faster than text -->
+      <div class="hero-shoe-wrap" data-scroll data-scroll-speed="5">
+        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=2070&auto=format&fit=crop"
+             alt="Nike Air Max 2026">
+      </div>
+
+    </div>
+
+    <div class="hero-scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-bar"></div>
+    </div>
+  </section>
+
+  <!-- ══ MARQUEE ══ -->
+  <div class="marquee-section" data-scroll-section>
+    <div class="marquee-track">
+      <span class="marquee-item"><span class="m-dot"></span>Air Max 2026</span>
+      <span class="marquee-item"><span class="m-dot"></span>Ultra Boost Pro</span>
+      <span class="marquee-item"><span class="m-dot"></span>Premium Leather</span>
+      <span class="marquee-item"><span class="m-dot"></span>Free Shipping</span>
+      <span class="marquee-item"><span class="m-dot"></span>Limited Edition</span>
+      <span class="marquee-item"><span class="m-dot"></span>Step Up Boutique</span>
+      <span class="marquee-item"><span class="m-dot"></span>Erode · Chennai · Coimbatore</span>
+      <span class="marquee-item"><span class="m-dot"></span>Air Max 2026</span>
+      <span class="marquee-item"><span class="m-dot"></span>Ultra Boost Pro</span>
+      <span class="marquee-item"><span class="m-dot"></span>Premium Leather</span>
+      <span class="marquee-item"><span class="m-dot"></span>Free Shipping</span>
+      <span class="marquee-item"><span class="m-dot"></span>Limited Edition</span>
+      <span class="marquee-item"><span class="m-dot"></span>Step Up Boutique</span>
+      <span class="marquee-item"><span class="m-dot"></span>Erode · Chennai · Coimbatore</span>
+    </div>
+  </div>
+
+  <!-- ══ ABOUT ══ -->
+  <section class="about-section" id="about" data-scroll-section>
+
+    <!-- parallax: huge decorative "20" behind everything -->
+    <div class="about-bg-num" data-scroll data-scroll-speed="6">20</div>
+
+    <div class="about-inner">
+
+      <!-- parallax: image rises slower than viewport scroll -->
+      <div class="about-img-box" data-scroll data-scroll-speed="3">
+        <img src="https://images.unsplash.com/photo-1460353581641-37baddab0fa2?q=80&w=1400&auto=format&fit=crop"
+             alt="About Step Up">
+        <!-- parallax: label floats opposite direction -->
+        <div class="about-float-label" data-scroll data-scroll-speed="-2">
+          Est. 2020 · Erode, TN
+        </div>
+      </div>
+
+      <!-- parallax: text moves a bit faster -->
+      <div class="about-text" data-scroll data-scroll-speed="1.5">
+        <span class="section-label">Who We Are</span>
+        <h2 class="section-title" style="margin-bottom:1.75rem;">
+          Born on<br>the <span style="color:var(--accent)">Streets.</span><br>Built for<br>the Bold.
+        </h2>
+        <p>Step Up is a Chennai-born premium shoe boutique obsessed with finding the perfect intersection of comfort, culture, and craftsmanship. We handpick every model — no filler, only fire.</p>
+        <p>From the concrete jungles of Chennai to the global runways, our curation philosophy is simple: wear what makes you feel unstoppable.</p>
+        <div class="stats-row">
+          <div class="stat-item"><div class="stat-num">12K+</div><div class="stat-lbl">Happy Customers</div></div>
+          <div class="stat-item"><div class="stat-num">200+</div><div class="stat-lbl">Curated Models</div></div>
+          <div class="stat-item"><div class="stat-num">98%</div><div class="stat-lbl">Satisfaction Rate</div></div>
+          <div class="stat-item"><div class="stat-num">5 ★</div><div class="stat-lbl">Average Rating</div></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ PRODUCTS ══ -->
+  <section class="products-section" id="products" data-scroll-section>
+    <div class="products-inner">
+
+      <div class="products-top">
+        <div data-scroll data-scroll-speed="1">
+          <span class="section-label">Our Collection</span>
+          <h2 class="section-title">Featured<br><span style="color:var(--accent)">Drops.</span></h2>
+        </div>
+        <div class="filter-tabs" data-scroll data-scroll-speed="1.5">
+          <button class="f-tab active">All</button>
+          <button class="f-tab">Nike</button>
+          <button class="f-tab">Adidas</button>
+          <button class="f-tab">New Balance</button>
+          <button class="f-tab">Limited</button>
+        </div>
+      </div>
+
+      <div class="products-grid">
+
+        <div class="p-card featured" data-scroll data-scroll-speed="1">
+          <div class="p-badge">🔥 Best Seller</div>
+          <div class="p-img">
+            <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1400&auto=format&fit=crop" alt="Nike Air Max 2026">
+          </div>
+          <div class="p-body">
+            <div><div class="p-name">Nike Air Max 2026</div><div class="p-sub">Unisex · Sizes 6–13</div></div>
+            <div style="text-align:right"><div class="p-price">₹12,999</div><button class="p-add">+</button></div>
+          </div>
+        </div>
+
+        <div class="p-card" data-scroll data-scroll-speed="3">
+          <div class="p-badge">New</div>
+          <div class="p-img"><img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?q=80&w=800&auto=format&fit=crop" alt="Cloud Foam Elite"></div>
+          <div class="p-body">
+            <div><div class="p-name">Cloud Foam Elite</div><div class="p-sub">Men · Sizes 7–12</div></div>
+            <div style="text-align:right"><div class="p-price">₹8,499</div><button class="p-add">+</button></div>
+          </div>
+        </div>
+
+        <div class="p-card" data-scroll data-scroll-speed="1.5">
+          <div class="p-img"><img src="https://images.unsplash.com/photo-1608231387042-66d1773070a5?q=80&w=800&auto=format&fit=crop" alt="Adidas Ultra Run"></div>
+          <div class="p-body">
+            <div><div class="p-name">Adidas Ultra Run</div><div class="p-sub">Unisex · Sizes 5–13</div></div>
+            <div style="text-align:right"><div class="p-price">₹9,999</div><button class="p-add">+</button></div>
+          </div>
+        </div>
+
+        <div class="p-card" data-scroll data-scroll-speed="3.5">
+          <div class="p-badge">Limited</div>
+          <div class="p-img"><img src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?q=80&w=800&auto=format&fit=crop" alt="NB 990v6"></div>
+          <div class="p-body">
+            <div><div class="p-name">NB 990v6</div><div class="p-sub">Men · Sizes 7–11</div></div>
+            <div style="text-align:right"><div class="p-price">₹15,500</div><button class="p-add">+</button></div>
+          </div>
+        </div>
+
+        <div class="p-card" data-scroll data-scroll-speed="2">
+          <div class="p-img"><img src="https://images.unsplash.com/photo-1584735175315-9d5df23be3be?q=80&w=800&auto=format&fit=crop" alt="Street Classic Pro"></div>
+          <div class="p-body">
+            <div><div class="p-name">Street Classic Pro</div><div class="p-sub">Women · Sizes 4–10</div></div>
+            <div style="text-align:right"><div class="p-price">₹7,299</div><button class="p-add">+</button></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="text-align:center;margin-top:4rem;" data-scroll data-scroll-speed="1">
+        <button class="btn-ghost">View All Products →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ REVIEWS ══ -->
+  <section class="reviews-section" id="reviews" data-scroll-section>
+
+    <!-- parallax: large LOVE text drifts on scroll -->
+    <div class="reviews-bg-text" data-scroll data-scroll-speed="5">LOVE</div>
+
+    <div class="reviews-inner">
+      <div class="reviews-top">
+        <div data-scroll data-scroll-speed="1">
+          <span class="section-label">Customer Reviews</span>
+          <h2 class="section-title">What They<br><span style="color:var(--accent)">Say.</span></h2>
+        </div>
+        <div data-scroll data-scroll-speed="1.5" style="text-align:right">
+          <div class="rating-big">4.9</div>
+          <div class="rating-stars">★★★★★</div>
+          <div class="rating-lbl">Average Rating</div>
+        </div>
+      </div>
+
+      <div class="reviews-grid">
+
+        <div class="r-card r-feat" data-scroll data-scroll-speed="1">
+          <div class="r-stars"><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span></div>
+          <p class="r-text" style="font-size:1rem;">"Step Up literally changed how I look at sneaker shopping. The curation is insane — every pair feels handpicked with genuine love and expertise. Got the Air Max 2026 and it's hands down the most comfortable shoe I've ever worn. Perfect packaging too!"</p>
+          <div class="r-author">
+            <img src="https://i.pravatar.cc/100?img=1" class="r-avatar" alt="">
+            <div><div class="r-name" style="color:#fff">Aravind S.</div><div class="r-loc">Verified Buyer · Chennai</div></div>
+          </div>
+        </div>
+
+        <div class="r-card" data-scroll data-scroll-speed="2.5">
+          <div class="r-stars"><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span></div>
+          <p class="r-text">"Ordered the NB 990v6 on a whim — genuinely shocked at how perfect the fit is. Delivery was lightning fast and support was super responsive. Will 100% shop again!"</p>
+          <div class="r-author">
+            <img src="https://i.pravatar.cc/100?img=5" class="r-avatar" alt="">
+            <div><div class="r-name">Priya M.</div><div class="r-loc">Verified Buyer · Coimbatore</div></div>
+          </div>
+        </div>
+
+        <div class="r-card" data-scroll data-scroll-speed="1.5">
+          <div class="r-stars"><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span></div>
+          <p class="r-text">"Skeptical about buying shoes online but Step Up made it seamless. Accurate sizing guide, great photos. The Adidas Ultra Run is an absolute beast on the road!"</p>
+          <div class="r-author">
+            <img src="https://i.pravatar.cc/100?img=3" class="r-avatar" alt="">
+            <div><div class="r-name">Karthik R.</div><div class="r-loc">Verified Buyer · Erode</div></div>
+          </div>
+        </div>
+
+        <div class="r-card" data-scroll data-scroll-speed="2">
+          <div class="r-stars"><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star" style="opacity:.35">★</span></div>
+          <p class="r-text">"Excellent selection and fast delivery. Would love more women's styles but what's available is top tier. The Street Classic Pro is my daily go-to now."</p>
+          <div class="r-author">
+            <img src="https://i.pravatar.cc/100?img=9" class="r-avatar" alt="">
+            <div><div class="r-name">Divya K.</div><div class="r-loc">Verified Buyer · Bangalore</div></div>
+          </div>
+        </div>
+
+        <div class="r-card" data-scroll data-scroll-speed="3">
+          <div class="r-stars"><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span></div>
+          <p class="r-text">"Got the Cloud Foam Elite for my morning runs. Absolute game changer. The cushioning is unreal. Zero compromise on quality whatsoever."</p>
+          <div class="r-author">
+            <img src="https://i.pravatar.cc/100?img=12" class="r-avatar" alt="">
+            <div><div class="r-name">Mohammed A.</div><div class="r-loc">Verified Buyer · Salem</div></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CONTACT ══ -->
+  <section class="contact-section" id="contact" data-scroll-section>
+    <div class="contact-inner">
+
+      <div data-scroll data-scroll-speed="1.5">
+        <span class="section-label">Get In Touch</span>
+        <h2 class="section-title" style="margin-bottom:2rem;">Let's<br><span style="color:var(--accent)">Talk.</span></h2>
+        <p style="color:var(--muted);font-size:.9rem;line-height:1.85;max-width:360px;margin-bottom:3rem;">Questions about sizing, availability, or custom orders? We're here. Drop us a message or visit our store in Erode.</p>
+        <div class="c-info-item"><div class="c-info-lbl">Location</div><div class="c-info-val">45, Brough Road, Erode – 638001, Tamil Nadu</div></div>
+        <div class="c-info-item"><div class="c-info-lbl">Email</div><div class="c-info-val">hello@stepup.store</div></div>
+        <div class="c-info-item"><div class="c-info-lbl">Phone</div><div class="c-info-val">+91 98765 43210</div></div>
+        <div class="c-info-item"><div class="c-info-lbl">Store Hours</div><div class="c-info-val">Mon – Sat &nbsp;·&nbsp; 10:00 AM – 8:30 PM</div></div>
+      </div>
+
+      <!-- parallax: form box comes in faster from below -->
+      <div class="contact-form-box" data-scroll data-scroll-speed="3">
+        <h3>Send a Message</h3>
+        <div class="f-row">
+          <div class="f-group"><label class="f-label">First Name</label><input type="text" class="f-input" placeholder="Aravind"></div>
+          <div class="f-group"><label class="f-label">Last Name</label><input type="text" class="f-input" placeholder="S."></div>
+        </div>
+        <div class="f-group"><label class="f-label">Email</label><input type="email" class="f-input" placeholder="you@example.com"></div>
+        <div class="f-group"><label class="f-label">Subject</label><input type="text" class="f-input" placeholder="Sizing query / Custom order..."></div>
+        <div class="f-group"><label class="f-label">Message</label><textarea class="f-textarea" placeholder="Tell us what you're looking for..."></textarea></div>
+        <button class="btn-primary" style="width:100%;justify-content:center;margin-top:.25rem;">Send Message →</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ FOOTER ══ -->
+  <footer class="footer-section" data-scroll-section>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div>
+          <div class="f-logo">STEP <span>UP.</span></div>
+          <div class="f-desc">Chennai-born. Street-tested. Premium curated footwear for those who refuse to settle for ordinary.</div>
+        </div>
+        <div>
+          <div class="f-col-title">Shop</div>
+          <span class="f-col-link">New Arrivals</span>
+          <span class="f-col-link">Men's</span>
+          <span class="f-col-link">Women's</span>
+          <span class="f-col-link">Unisex</span>
+          <span class="f-col-link">Limited Edition</span>
+        </div>
+        <div>
+          <div class="f-col-title">Help</div>
+          <span class="f-col-link">Size Guide</span>
+          <span class="f-col-link">Shipping Info</span>
+          <span class="f-col-link">Returns</span>
+          <span class="f-col-link">FAQ</span>
+          <span class="f-col-link">Track Order</span>
+        </div>
+        <div>
+          <div class="f-col-title">Follow</div>
+          <span class="f-col-link">Instagram</span>
+          <span class="f-col-link">Twitter / X</span>
+          <span class="f-col-link">YouTube</span>
+          <span class="f-col-link">WhatsApp</span>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>© 2026 Step Up Boutique. All rights reserved.</div>
+        <div>Made with ❤️ in Erode, TN</div>
+        <div style="display:flex;gap:1.5rem;">
+          <span class="f-col-link" style="margin:0">Privacy Policy</span>
+          <span class="f-col-link" style="margin:0">Terms</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</div><!-- /scroll-container -->
+
+<script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.js"></script>
+<script>
+/* ── Init Locomotive Scroll ── */
+const lscroll = new LocomotiveScroll({
+  el: document.getElementById('scrollContainer'),
+  smooth: true,
+  multiplier: 1.0,
+  lerp: 0.07,
+  getDirection: true,
+  smartphone: { smooth: true, multiplier: 0.85 },
+  tablet:      { smooth: true, multiplier: 0.9  }
+});
+
+/* Must update after images/fonts load for correct heights */
+window.addEventListener('load', () => {
+  lscroll.update();
+});
+
+/* ── Theme Toggle ── */
+const html    = document.documentElement;
+const tBtn    = document.getElementById('themeToggle');
+const stored  = localStorage.getItem('su-theme') || 'dark';
+html.setAttribute('data-theme', stored);
+
+tBtn.addEventListener('click', () => {
+  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('su-theme', next);
+  /* Give CSS transition time before recalculating heights */
+  setTimeout(() => lscroll.update(), 500);
+});
+
+/* ── Hamburger ── */
+const hamburger = document.getElementById('hamburger');
+const navLinks  = document.getElementById('navLinks');
+hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
+
+/* ── Nav smooth scrollTo ── */
+document.querySelectorAll('.nav-link[data-target]').forEach(link => {
+  link.addEventListener('click', () => {
+    const target = document.getElementById(link.dataset.target);
+    if (target) {
+      lscroll.scrollTo(target, { offset: -80, duration: 1400 });
+      navLinks.classList.remove('open');
+    }
+  });
+});
+
+document.getElementById('shopNow').addEventListener('click', () => {
+  lscroll.scrollTo(document.getElementById('products'), { offset: -80, duration: 1200 });
+});
+document.getElementById('learnMore').addEventListener('click', () => {
+  lscroll.scrollTo(document.getElementById('about'), { offset: -80, duration: 1200 });
+});
+
+/* ── Active nav on scroll ── */
+lscroll.on('scroll', ({ currentElements }) => {
+  ['home','about','products','reviews','contact'].forEach(id => {
+    const link = document.querySelector(`.nav-link[data-target="${id}"]`);
+    if (!link) return;
+    currentElements[id] ? link.classList.add('active') : link.classList.remove('active');
+  });
+});
+
+/* ── Filter tabs ── */
+document.querySelectorAll('.f-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.f-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+  });
+});
+
+/* ── Cart counter ── */
+let count = 0;
+const cartEl = document.getElementById('cartBtn');
+document.querySelectorAll('.p-add').forEach(btn => {
+  btn.addEventListener('click', () => {
+    count++;
+    cartEl.textContent = `Cart (${count})`;
+    btn.textContent = '✓';
+    btn.style.background = '#22c55e';
+    setTimeout(() => { btn.textContent = '+'; btn.style.background = ''; }, 1200);
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpiceCraft - Authentic Indian Flavours</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none; }
+        html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+        body { font-family: 'Georgia', serif; background: #fffdf5; color: #1a0a00; overflow-x: hidden; }
+
+        .font-display { font-family: 'Playfair Display', serif; }
+        .font-body { font-family: 'Lato', sans-serif; }
+
+        /* Navigation */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 0 5%; display: flex; align-items: center;
+            justify-content: space-between; height: 72px;
+            transition: all 0.4s;
+        }
+        nav.scrolled {
+            background: rgba(26,10,0,0.97);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(245,166,35,0.2);
+        }
+
+        .nav-links { display: flex; gap: 36px; align-items: center; }
+        .nav-link {
+            color: #fff; text-decoration: none; font-family: 'Lato', sans-serif;
+            font-size: 0.9rem; letter-spacing: 0.12em; text-transform: uppercase;
+            padding: 6px 0; position: relative; transition: color 0.3s;
+        }
+        .nav-link::after {
+            content: ''; position: absolute; bottom: 0; left: 0;
+            width: 0; height: 2px; background: #f5a623; transition: width 0.3s;
+        }
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+        .nav-link:hover { color: #f5a623; }
+
+        /* Buttons */
+        .hero-btn {
+            display: inline-block; background: linear-gradient(135deg, #f5a623, #e8831a);
+            color: #fff; font-family: 'Lato', sans-serif; font-weight: 700;
+            letter-spacing: 0.15em; text-transform: uppercase; font-size: 0.85rem;
+            padding: 16px 36px; border: none; cursor: pointer;
+            clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+            transition: transform 0.2s, box-shadow 0.2s; text-decoration: none;
+        }
+        .hero-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(245,166,35,0.5); }
+
+        .hero-btn-outline {
+            display: inline-block; background: transparent; color: #fff;
+            font-family: 'Lato', sans-serif; font-weight: 700; letter-spacing: 0.15em;
+            text-transform: uppercase; font-size: 0.85rem; padding: 14px 34px;
+            border: 2px solid rgba(255,255,255,0.6); cursor: pointer;
+            clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+            transition: all 0.2s; text-decoration: none;
+        }
+        .hero-btn-outline:hover { background: rgba(255,255,255,0.15); border-color: #f5a623; color: #f5a623; }
+
+        /* Tags & Cards */
+        .section-tag {
+            display: inline-block; font-family: 'Lato', sans-serif; font-size: 0.75rem;
+            letter-spacing: 0.25em; text-transform: uppercase; color: #e8831a;
+            background: rgba(245,166,35,0.12); padding: 6px 16px; border-left: 3px solid #f5a623; margin-bottom: 18px;
+        }
+
+        .food-card {
+            background: #fff; border-radius: 16px; padding: 28px 22px;
+            box-shadow: 0 4px 24px rgba(232,131,26,0.08); transition: all 0.3s;
+            position: relative; overflow: hidden; cursor: pointer;
+        }
+        .food-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0;
+            height: 4px; background: linear-gradient(90deg, #f5a623, #e8831a);
+            transform: scaleX(0); transform-origin: left; transition: transform 0.3s;
+        }
+        .food-card:hover { transform: translateY(-8px); box-shadow: 0 16px 48px rgba(232,131,26,0.18); }
+        .food-card:hover::before { transform: scaleX(1); }
+
+        /* Forms */
+        .contact-input {
+            width: 100%; padding: 14px 18px; border: 1.5px solid #e5d5b0;
+            background: #fffdf5; font-family: 'Lato', sans-serif; font-size: 0.95rem;
+            color: #1a0a00; border-radius: 8px; outline: none; transition: all 0.2s;
+        }
+        .contact-input:focus { border-color: #f5a623; box-shadow: 0 0 0 3px rgba(245,166,35,0.15); }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #f5a623, #e8831a); color: white;
+            font-family: 'Lato', sans-serif; font-weight: 700; letter-spacing: 0.12em;
+            text-transform: uppercase; font-size: 0.9rem; padding: 16px 40px;
+            border: none; border-radius: 8px; cursor: pointer; transition: all 0.2s; width: 100%;
+        }
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(245,166,35,0.4); }
+
+        /* Animations */
+        .pulse-ring { animation: pulseRing 2s ease-out infinite; }
+        @keyframes pulseRing { 0% { transform: scale(1); opacity: 0.6; } 100% { transform: scale(1.4); opacity: 0; } }
+        
+        .fade-in-up { animation: fadeInUp 0.8s ease forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        @keyframes floatBadge { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        /* Orbit */
+        .orbit-container { position: relative; width: 420px; height: 420px; }
+        .orbit-food { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: transform 0.2s; }
+        .orbit-food:hover { transform: scale(1.3) !important; z-index: 10; }
+        .orbit-food-icon {
+            width: 52px; height: 52px; border-radius: 50%;
+            background: rgba(255,255,255,0.12); backdrop-filter: blur(8px);
+            border: 1.5px solid rgba(245,166,35,0.35); display: flex;
+            align-items: center; justify-content: center; fontSize: 22px; transition: all 0.3s;
+        }
+        .orbit-food:hover .orbit-food-icon { background: linear-gradient(135deg, #f5a623, #e8831a); box-shadow: 0 4px 20px rgba(245,166,35,0.5); }
+
+        @media (max-width: 768px) {
+            .hero-grid, .about-grid, .contact-grid { grid-template-columns: 1fr !important; }
+            .foods-grid { grid-template-columns: 1fr 1fr !important; }
+            .orbit-container, .orbit-container-about { display: none !important; }
+            .hero-title { font-size: 2.8rem !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav id="navbar">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="font-size: 28px;">🍽️</div>
+            <span class="font-display" style="font-size: 1.5rem; font-weight: 900; color: #fff; letter-spacing: -0.01em;">
+                Spice<span style="color: #f5a623;">Craft</span>
+            </span>
+        </div>
+        <div class="nav-links">
+            <a href="#home" class="nav-link active">Home</a>
+            <a href="#about" class="nav-link">About</a>
+            <a href="#menu" class="nav-link">Menu</a>
+            <a href="#contact" class="nav-link">Contact</a>
+            <a href="#contact" class="hero-btn" style="padding: 10px 22px; font-size: 0.8rem;">Order Now</a>
+        </div>
+    </nav>
+
+    <section id="home" style="min-height: 100vh; position: relative; display: flex; align-items: center; overflow: hidden;">
+        <div id="hero-parallax" style="position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1600&q=80') center/cover no-repeat; will-change: transform;"></div>
+        <div style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(20,6,0,0.82) 0%, rgba(40,15,0,0.65) 50%, rgba(20,6,0,0.78) 100%);"></div>
+        
+        <div style="position: relative; z-index: 2; padding: 0 8%; maxWidth: 1300px; margin: 0 auto; width: 100%;">
+            <div class="hero-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;">
+                <div class="fade-in-up">
+                    <div class="section-tag">✦ Authentic Indian Flavours</div>
+                    <h1 class="font-display hero-title" style="font-size: 4.2rem; font-weight: 900; line-height: 1.05; color: #fff; margin-bottom: 24px;">
+                        Every Bite Tells a <span style="color: #f5a623; font-style: italic;">Story</span>
+                    </h1>
+                    <p class="font-body" style="color: rgba(255,255,255,0.75); fontSize: 1.1rem; line-height: 1.75; max-width: 480px; margin-bottom: 40px;">
+                        From the heart of tradition to your table — bold spices, fresh ingredients, and recipes passed down through generations.
+                    </p>
+                    <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                        <a href="#menu" class="hero-btn">Explore Menu</a>
+                        <a href="#about" class="hero-btn-outline">Our Story</a>
+                    </div>
+                </div>
+
+                <div class="orbit-container" id="hero-orbit">
+                    <div class="pulse-ring" style="position: absolute; inset: 10%; border-radius: 50%; border: 1px solid rgba(245,166,35,0.25);"></div>
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 110px; height: 110px; border-radius: 50%; background: linear-gradient(135deg, #f5a623, #e8831a); display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 40px rgba(245,166,35,0.5); z-index: 5;">
+                        <div style="font-size: 36px;">🍽️</div>
+                        <div class="font-display" style="color: #fff; font-size: 0.65rem; font-weight: 700;">SPICECRAFT</div>
+                    </div>
+                    <div id="orbit-items-wrap"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" style="padding: 100px 8%; background: #fff; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: 0; right: 0; width: 35%; height: 100%; background: rgba(245,166,35,0.05); clip-path: polygon(20% 0%, 100% 0%, 100% 100%, 0% 100%);"></div>
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <div class="about-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;">
+                <div>
+                    <div class="section-tag">✦ Who We Are</div>
+                    <h2 class="font-display" style="font-size: 3rem; font-weight: 900; line-height: 1.1; margin-bottom: 24px;">
+                        Crafting Flavours <br><span style="color: #e8831a; font-style: italic;">Since 2010</span>
+                    </h2>
+                    <p class="font-body" style="color: #6b4a20; line-height: 1.85; font-size: 1.05rem; margin-bottom: 36px;">
+                        SpiceCraft kitchen blends age-old spice traditions with modern culinary craft to create meals that feel like home. Every ingredient is sourced fresh.
+                    </p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;" id="about-features"></div>
+                </div>
+                <div class="orbit-container" id="about-orbit" style="display: flex; justify-content: center;">
+                    <div style="position: relative; width: 420px; height: 420px;">
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 130px; height: 130px; border-radius: 50%; background: #fff9ee; border: 3px solid rgba(245,166,35,0.35); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 5;">
+                            <div style="font-size: 42px;">🍽️</div>
+                            <div class="font-display" style="font-size: 0.65rem; color: #e8831a;">FRESH TODAY</div>
+                        </div>
+                        <div id="about-orbit-items"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="menu" style="padding: 100px 8%; background: linear-gradient(180deg, #fffdf5 0%, #fff9ec 100%); position: relative;">
+        <div style="text-align: center; margin-bottom: 60px;">
+            <div class="section-tag">✦ Handpicked for You</div>
+            <h2 class="font-display" style="font-size: 3rem; font-weight: 900; margin-bottom: 14px;">Trending <span style="color: #e8831a; font-style: italic;">Favourites</span></h2>
+        </div>
+        <div class="foods-grid" id="menu-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1200px; margin: 0 auto;"></div>
+    </section>
+
+    <section id="contact" style="padding: 100px 8%; background: #1a0a00; color: #fff; position: relative; overflow: hidden;">
+        <div style="text-align: center; margin-bottom: 60px;">
+            <div class="section-tag" style="background: rgba(245,166,35,0.15);">✦ Get In Touch</div>
+            <h2 class="font-display" style="font-size: 3rem; font-weight: 900;">Reserve a <span style="color: #f5a623; font-style: italic;">Table</span></h2>
+        </div>
+        <div class="contact-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; max-width: 900px; margin: 0 auto; position: relative; z-index: 1;">
+            <div id="contact-info"></div>
+            <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(245,166,35,0.15); border-radius: 20px; padding: 36px;">
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <input class="contact-input" placeholder="Your Name">
+                        <input class="contact-input" placeholder="Phone">
+                    </div>
+                    <input class="contact-input" placeholder="Email Address">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <input class="contact-input" type="date">
+                        <input class="contact-input" type="number" placeholder="Guests">
+                    </div>
+                    <textarea class="contact-input" placeholder="Special requests..." rows="3"></textarea>
+                    <button class="submit-btn">Book My Table 🍽️</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer style="background: #0e0500; padding: 32px 8%; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(245,166,35,0.12); color: rgba(255,255,255,0.3); font-size: 0.82rem;">
+        <div>🍽️ Spice<span style="color: #f5a623;">Craft</span></div>
+        <div>© 2026 Made with sundarDev.</div>
+    </footer>
+
+    <script>
+        // Data from JSX
+        const foods = [
+            { name: "Biryani", emoji: "🍛" }, { name: "Dosa", emoji: "🥞" },
+            { name: "Burger", emoji: "🍔" }, { name: "Pizza", emoji: "🍕" },
+            { name: "Noodles", emoji: "🍜" }, { name: "Ice Cream", emoji: "🍦" },
+            { name: "Tacos", emoji: "🌮" }, { name: "Curry", emoji: "🍲" }
+        ];
+
+        const trendingFoods = [
+            { name: "Butter Chicken", tag: "🔥 Bestseller", emoji: "🍗", price: "₹280", cal: "420 kcal" },
+            { name: "Paneer Tikka", tag: "⭐ Fan Fav", emoji: "🧀", price: "₹220", cal: "310 kcal" },
+            { name: "Masala Dosa", tag: "🌿 Classic", emoji: "🥞", price: "₹120", cal: "250 kcal" },
+            { name: "Veg Biryani", tag: "💛 Must Try", emoji: "🍛", price: "₹180", cal: "380 kcal" },
+            { name: "Mango Lassi", tag: "🥤 Refreshing", emoji: "🥭", price: "₹80", cal: "190 kcal" },
+            { name: "Gulab Jamun", tag: "🍯 Sweet End", emoji: "🍮", price: "₹60", cal: "210 kcal" }
+        ];
+
+        // Navbar Scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            const parallax = document.getElementById('hero-parallax');
+            if (window.scrollY > 60) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+            
+            // Parallax Effect
+            parallax.style.transform = `translateY(${window.scrollY * 0.4}px)`;
+        });
+
+        // Hero Orbit Animation
+        let rotation = 0;
+        function animate() {
+            rotation += 0.3;
+            
+            // Hero Orbit
+            const heroWrap = document.getElementById('orbit-items-wrap');
+            heroWrap.innerHTML = '';
+            foods.forEach((food, i) => {
+                const angle = (rotation + (i * 360) / foods.length) * (Math.PI / 180);
+                const x = 210 + 180 * Math.cos(angle) - 30;
+                const y = 210 + 180 * Math.sin(angle) - 30;
+                heroWrap.innerHTML += `
+                    <div class="orbit-food" style="left:${x}px; top:${y}px; width:60px;">
+                        <div class="orbit-food-icon">${food.emoji}</div>
+                    </div>`;
+            });
+
+            // About Orbit
+            const aboutWrap = document.getElementById('about-orbit-items');
+            aboutWrap.innerHTML = '';
+            foods.forEach((food, i) => {
+                const angle = (rotation * 0.7 + (i * 360) / foods.length) * (Math.PI / 180);
+                const x = 210 + 155 * Math.cos(angle) - 35;
+                const y = 210 + 155 * Math.sin(angle) - 35;
+                aboutWrap.innerHTML += `
+                    <div style="position:absolute; left:${x}px; top:${y}px; width:70px; display:flex; flex-direction:column; align-items:center;">
+                        <div style="width:56px; height:56px; border-radius:50%; background:#fff9ee; border:2px solid rgba(245,166,35,0.35); display:flex; align-items:center; justify-content:center; font-size:24px;">${food.emoji}</div>
+                        <span class="font-body" style="font-size:0.6rem; font-weight:700; color:#9a6b35; background:#fff; padding:2px 6px; border-radius:4px; margin-top:4px;">${food.name}</span>
+                    </div>`;
+            });
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // Render Menu
+        const menuGrid = document.getElementById('menu-grid');
+        trendingFoods.forEach(food => {
+            menuGrid.innerHTML += `
+                <div class="food-card">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:16px;">
+                        <div style="width:72px; height:72px; border-radius:16px; background:#fff9ee; display:flex; align-items:center; justify-content:center; font-size:36px;">${food.emoji}</div>
+                        <span class="font-body" style="font-size:0.72rem; color:#e8831a; background:rgba(245,166,35,0.12); padding:5px 10px; border-radius:20px;">${food.tag}</span>
+                    </div>
+                    <h3 class="font-display" style="font-size:1.2rem;">${food.name}</h3>
+                    <p class="font-body" style="font-size:0.82rem; color:#9a6b35; margin-bottom:18px;">${food.cal}</p>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span class="font-display" style="font-size:1.4rem; font-weight:900; color:#e8831a;">${food.price}</span>
+                        <button class="hero-btn" style="padding:8px 18px; font-size:0.8rem;">Add +</button>
+                    </div>
+                </div>`;
+        });
+
+        // About Features
+        const features = [["🌶️", "Authentic Spices"], ["👨‍🍳", "Expert Chefs"], ["🌿", "Fresh Daily"], ["🏆", "Award Winning"]];
+        const featGrid = document.getElementById('about-features');
+        features.forEach(f => {
+            featGrid.innerHTML += `
+                <div style="padding:18px 16px; border-radius:12px; background:rgba(245,166,35,0.06); border:1px solid rgba(245,166,35,0.15);">
+                    <div style="font-size:24px;">${f[0]}</div>
+                    <div class="font-display" style="font-weight:700; font-size:0.95rem;">${f[1]}</div>
+                </div>`;
+        });
+
+        // Contact Info
+        const contacts = [["📍", "Find Us", "123 Spice Lane, Chennai"], ["📞", "Call Us", "+91 98765 43210"], ["🕐", "Hours", "11am – 10pm"]];
+        const contactWrap = document.getElementById('contact-info');
+        contacts.forEach(c => {
+            contactWrap.innerHTML += `
+                <div style="display:flex; gap:18px; margin-bottom:28px;">
+                    <div style="width:46px; height:46px; background:rgba(245,166,35,0.12); display:flex; align-items:center; justify-content:center; border-radius:12px;">${c[0]}</div>
+                    <div>
+                        <div style="color:#f5a623; font-size:0.75rem; text-transform:uppercase;">${c[1]}</div>
+                        <div style="color:rgba(255,255,255,0.7); font-size:0.9rem;">${c[2]}</div>
+                    </div>
+                </div>`;
+        });
+    </script>
+</body>
+</html>

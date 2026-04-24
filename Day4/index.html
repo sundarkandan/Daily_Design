@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOIR | The Rare Earth Collection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;1,6..96,400&family=Inter:wght@100;300;400;600&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Bodoni Moda', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        noir: '#050505',
+                        gold: '#9B804E',
+                        'gold-light': '#C4A96D',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root { --gold: #9B804E; --gold-light: #C4A96D; }
+
+        * { box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body { overflow-x: hidden; }
+
+        /* Custom cursor */
+        #cursor {
+            width: 18px; height: 18px;
+            border: 1px solid var(--gold);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            transition: transform 0.15s ease, opacity 0.3s;
+            z-index: 9999;
+            display: none;
+            mix-blend-mode: difference;
+        }
+        @media (min-width: 1024px) { #cursor { display: block; } }
+
+        /* Kerning */
+        .kerning-extreme { letter-spacing: 0.5em; }
+        .kerning-wide { letter-spacing: 0.3em; }
+
+        /* Nav */
+        nav {
+            background: rgba(5, 5, 5, 0.96);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Arch frame */
+        .arch-frame { border-radius: 500px 500px 0 0; }
+
+        /* Luxury pulse */
+        @keyframes luxuryPulse {
+            0%, 100% { filter: grayscale(100%); transform: scale(1); }
+            50% { filter: grayscale(0%); transform: scale(1.06); }
+        }
+        .animate-luxury { animation: luxuryPulse 9s ease-in-out infinite; }
+
+        /* Reveal animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1s cubic-bezier(0.2,1,0.3,1), transform 1s cubic-bezier(0.2,1,0.3,1);
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: opacity 1s cubic-bezier(0.2,1,0.3,1), transform 1s cubic-bezier(0.2,1,0.3,1);
+        }
+        .reveal-left.active { opacity: 1; transform: translateX(0); }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: opacity 1s cubic-bezier(0.2,1,0.3,1), transform 1s cubic-bezier(0.2,1,0.3,1);
+        }
+        .reveal-right.active { opacity: 1; transform: translateX(0); }
+
+        @keyframes revealUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Mobile menu */
+        #mobile-menu {
+            transform: translateY(-100%);
+            transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        #mobile-menu.active { transform: translateY(0); }
+
+        /* Gold line divider */
+        .gold-line {
+            display: block;
+            width: 40px;
+            height: 1px;
+            background: var(--gold);
+            margin: 1rem 0;
+        }
+
+        /* Recipe card hover */
+        .recipe-card {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.5s ease;
+        }
+        .recipe-card:hover { transform: translateY(-6px); }
+        .recipe-card .overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(5,5,5,0.95) 40%, transparent 100%);
+            transition: opacity 0.4s ease;
+        }
+        .recipe-card:hover .overlay { opacity: 0.8; }
+        .recipe-card img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.7s ease, filter 0.7s ease;
+            filter: grayscale(60%);
+        }
+        .recipe-card:hover img { transform: scale(1.08); filter: grayscale(0%); }
+
+        /* Section bg text */
+        .section-bg-text {
+            position: absolute;
+            font-size: clamp(80px, 20vw, 260px);
+            font-family: 'Bodoni Moda', serif;
+            font-weight: 700;
+            font-style: italic;
+            color: white;
+            opacity: 0.025;
+            white-space: nowrap;
+            pointer-events: none;
+            user-select: none;
+            will-change: transform;
+        }
+
+        /* Input styles */
+        .noir-input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            padding: 12px 0;
+            color: white;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+            width: 100%;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .noir-input::placeholder { color: rgba(255,255,255,0.3); }
+        .noir-input:focus { border-bottom-color: var(--gold); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+        /* Pointer none utility */
+        .pointer-none { pointer-events: none; }
+
+        /* Steps connector */
+        .step-connector {
+            position: absolute;
+            top: 24px;
+            left: calc(50% + 28px);
+            width: calc(100% - 56px);
+            height: 1px;
+            background: linear-gradient(to right, rgba(155,128,78,0.5), rgba(155,128,78,0.1));
+        }
+
+        /* Tag pill */
+        .tag-pill {
+            display: inline-block;
+            padding: 3px 10px;
+            border: 1px solid rgba(155,128,78,0.4);
+            font-size: 9px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gold);
+        }
+
+        /* Responsive text */
+        @media (max-width: 640px) {
+            .hero-title { font-size: 3.5rem; }
+        }
+
+        /* Contact form button */
+        .btn-noir {
+            display: inline-block;
+            padding: 14px 40px;
+            border: 1px solid rgba(255,255,255,0.15);
+            font-size: 10px;
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            color: white;
+            cursor: pointer;
+            transition: background 0.5s, color 0.5s, border-color 0.5s;
+            background: transparent;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-noir:hover { background: white; color: #050505; border-color: white; }
+        .btn-noir-gold {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+        .btn-noir-gold:hover { background: var(--gold); color: #050505; border-color: var(--gold); }
+    </style>
+</head>
+<body class="bg-noir text-white antialiased font-sans lg:cursor-none overflow-x-hidden">
+
+    <!-- Custom Cursor -->
+    <div id="cursor"></div>
+
+    <!-- Frame Borders -->
+    <div class="fixed inset-0 border-[8px] md:border-[14px] border-noir z-[90] pointer-none"></div>
+    <div class="fixed inset-0 border-[1px] border-white/[0.06] z-[89] pointer-none m-2 md:m-[14px]"></div>
+
+    <!-- ═══════════════════════════════════════════ NAVIGATION -->
+    <nav class="fixed top-0 left-0 right-0 z-[100] px-6 md:px-12 py-3 md:py-4">
+        <div class="max-w-[1400px] mx-auto flex justify-between items-center">
+            <a href="#home" class="cursor-pointer">
+                <h1 class="font-serif text-xl md:text-2xl tracking-tighter text-white">NOIR</h1>
+                <p class="text-[6px] md:text-[7px] kerning-extreme opacity-40 uppercase">Atelier de Café</p>
+            </a>
+
+            <div class="hidden lg:flex gap-10 text-[10px] kerning-extreme uppercase font-light items-center">
+                <a href="#home" class="hover:text-gold transition-colors">Home</a>
+                <a href="#about" class="hover:text-gold transition-colors">About</a>
+                <a href="#recipes" class="hover:text-gold transition-colors">Recipes</a>
+                <a href="#contact" class="hover:text-gold transition-colors">Contact</a>
+                <a href="#contact" class="btn-noir-gold btn-noir text-[9px] py-2 px-6">Order Now</a>
+            </div>
+
+            <button onclick="toggleMenu()" class="lg:hidden text-[10px] kerning-extreme uppercase font-semibold text-gold">
+                Menu
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="fixed inset-0 bg-noir z-[110] flex flex-col items-center justify-center gap-8 lg:hidden">
+        <button onclick="toggleMenu()" class="absolute top-8 right-8 text-white/40 uppercase text-[9px] tracking-widest">Close</button>
+        <a href="#home" onclick="toggleMenu()" class="font-serif text-4xl italic hover:text-gold transition-colors">Home</a>
+        <a href="#about" onclick="toggleMenu()" class="font-serif text-4xl italic hover:text-gold transition-colors">About</a>
+        <a href="#recipes" onclick="toggleMenu()" class="font-serif text-4xl italic hover:text-gold transition-colors">Recipes</a>
+        <a href="#contact" onclick="toggleMenu()" class="font-serif text-4xl italic hover:text-gold transition-colors">Contact</a>
+        <span class="gold-line" style="margin: 0 auto;"></span>
+        <p class="text-[9px] kerning-wide opacity-30 uppercase">Since 2019</p>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ HERO SECTION -->
+    <main id="home" class="relative min-h-screen w-full flex items-center justify-center pt-20 pb-10 lg:py-0 overflow-hidden">
+
+        <!-- Floating grain overlay -->
+        <div class="absolute inset-0 opacity-[0.04] pointer-none" style="background-image: url('https://www.transparenttextures.com/patterns/asfalt-dark.png');"></div>
+
+        <div class="container mx-auto px-6 md:px-12 grid grid-cols-12 items-center gap-6 lg:gap-12 relative z-10">
+
+            <!-- Left Text -->
+            <div class="col-span-12 lg:col-span-5 z-10 order-2 lg:order-1 mt-8 lg:mt-0">
+                <div class="overflow-hidden mb-6">
+                    <span class="inline-block text-gold text-[9px] md:text-[10px] kerning-extreme uppercase animate-[revealUp_1s_ease_forwards]">
+                        Private Reserve / 2026
+                    </span>
+                </div>
+
+                <h2 class="hero-title font-serif text-6xl md:text-7xl lg:text-8xl leading-none mb-6 text-white">
+                    Soul of the <br>
+                    <span class="italic font-light">Grind.</span>
+                </h2>
+
+                <span class="gold-line"></span>
+
+                <p class="text-sm font-light leading-relaxed text-white/45 max-w-sm mb-10">
+                    Moving beyond the ordinary. We present a curated collection of rare single-origin beans, roasted with surgical precision for those who demand perfection in every cup.
+                </p>
+
+                <div class="flex flex-wrap items-center gap-6">
+                    <a href="#recipes" class="group flex items-center gap-4 text-[10px] kerning-extreme uppercase border-b border-gold pb-2 transition-all duration-300 hover:gap-6 text-white">
+                        The Collection <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
+                    </a>
+                    <a href="#about" class="text-[10px] kerning-extreme uppercase text-white/30 hover:text-white/60 transition-colors pb-2">
+                        Our Story
+                    </a>
+                </div>
+
+                <!-- Stats row -->
+                <div class="flex gap-10 mt-14 pt-10 border-t border-white/[0.07]">
+                    <div>
+                        <p class="font-serif text-2xl text-gold">72h</p>
+                        <p class="text-[8px] kerning-wide opacity-30 uppercase mt-1">Precision Roast</p>
+                    </div>
+                    <div>
+                        <p class="font-serif text-2xl text-gold">12+</p>
+                        <p class="text-[8px] kerning-wide opacity-30 uppercase mt-1">Origins</p>
+                    </div>
+                    <div>
+                        <p class="font-serif text-2xl text-gold">100%</p>
+                        <p class="text-[8px] kerning-wide opacity-30 uppercase mt-1">Ethical</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Image -->
+            <div class="col-span-12 lg:col-span-7 relative flex justify-center lg:justify-end order-1 lg:order-2">
+                <!-- Decorative ring -->
+                <div class="absolute -right-8 -top-8 w-64 h-64 rounded-full border border-white/[0.04] pointer-none hidden lg:block"></div>
+                <div class="absolute -right-16 -top-16 w-96 h-96 rounded-full border border-white/[0.03] pointer-none hidden lg:block"></div>
+
+                <div class="arch-frame w-full max-w-[440px] h-[52vh] md:h-[62vh] relative overflow-hidden bg-zinc-900 shadow-[0_0_80px_rgba(0,0,0,0.6)]">
+                    <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=2070"
+                        class="w-full h-full object-cover animate-luxury"
+                        alt="Premium Coffee">
+
+                    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 bg-noir/90 backdrop-blur-xl px-8 py-5 border border-white/10 text-center whitespace-nowrap">
+                        <p class="text-[8px] kerning-extreme uppercase opacity-50 mb-1">Certified Grade</p>
+                        <p class="font-serif text-xl italic text-gold">A+ Reserve</p>
+                    </div>
+                </div>
+
+                <!-- Floating badge -->
+                <div class="absolute bottom-16 -left-4 lg:left-4 bg-zinc-900/90 border border-white/10 px-6 py-4 backdrop-blur-xl hidden md:block">
+                    <p class="text-[8px] kerning-wide opacity-40 uppercase mb-1">Origin</p>
+                    <p class="font-serif text-sm italic">Ethiopia &bull; Yirgacheffe</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll cue -->
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-30 animate-bounce">
+            <div class="w-[1px] h-10 bg-white/40"></div>
+            <p class="text-[8px] kerning-wide uppercase">Scroll</p>
+        </div>
+    </main>
+
+    <!-- ═══════════════════════════════════════════ ABOUT SECTION -->
+    <section id="about" class="relative min-h-screen w-full flex items-center justify-center py-24 border-t border-white/[0.05] overflow-hidden">
+
+        <!-- Parallax BG text -->
+        <div class="absolute inset-0 flex items-center pointer-none select-none overflow-hidden">
+            <h2 id="heritage-text" class="section-bg-text" style="left: 10%;">Heritage</h2>
+        </div>
+
+        <div class="container mx-auto px-6 md:px-12 grid grid-cols-12 gap-8 lg:gap-20 items-center relative z-10">
+
+            <!-- Image Grid -->
+            <div class="col-span-12 lg:col-span-6 grid grid-cols-2 gap-3 relative reveal-left">
+                <!-- Gold line accent -->
+                <div class="absolute -left-6 top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-gold/40 to-transparent hidden xl:block"></div>
+
+                <div class="space-y-3">
+                    <div class="h-56 md:h-72 overflow-hidden rounded-sm group">
+                        <img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=1961"
+                             class="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110"
+                             alt="Roasting Process">
+                    </div>
+                    <div class="h-44 md:h-52 overflow-hidden rounded-sm group">
+                        <img src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?q=80&w=2070"
+                             class="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110"
+                             alt="Coffee Beans">
+                    </div>
+                </div>
+
+                <div class="pt-10">
+                    <div class="h-[360px] md:h-[460px] overflow-hidden arch-frame group relative">
+                        <img src="https://images.unsplash.com/photo-1610632380989-680fe40816c6?q=80&w=387&auto=format&fit=crop"
+                             class="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110"
+                             alt="Pouring Coffee">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Text Content -->
+            <div class="col-span-12 lg:col-span-6 space-y-8 reveal-right" style="transition-delay: 0.15s;">
+                <div>
+                    <p class="text-gold text-[9px] kerning-extreme uppercase mb-3">Our Philosophy</p>
+                    <h3 class="font-serif text-4xl md:text-5xl leading-tight">
+                        Beyond the <br>
+                        <span class="italic font-light">Daily Ritual.</span>
+                    </h3>
+                    <span class="gold-line"></span>
+                </div>
+
+                <div class="space-y-5 text-white/50 font-light leading-relaxed max-w-md text-sm">
+                    <p>Started in a small atelier, NOIR was born from a singular obsession: to find the perfect balance between the bitterness of the roast and the soul of the bean.</p>
+                    <p>Every batch we produce is a result of 72 hours of precision monitoring. We orchestrate a symphony of flavors that linger long after the last sip.</p>
+                </div>
+
+                <!-- Process Steps -->
+                <div class="grid grid-cols-3 gap-4 pt-6">
+                    <div class="text-center relative group">
+                        <div class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center mx-auto mb-3 group-hover:border-gold transition-colors">
+                            <span class="font-serif text-gold text-lg">01</span>
+                        </div>
+                        <p class="text-[9px] kerning-wide uppercase opacity-40">Source</p>
+                    </div>
+                    <div class="text-center group">
+                        <div class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center mx-auto mb-3 group-hover:border-gold transition-colors">
+                            <span class="font-serif text-gold text-lg">02</span>
+                        </div>
+                        <p class="text-[9px] kerning-wide uppercase opacity-40">Roast</p>
+                    </div>
+                    <div class="text-center group">
+                        <div class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center mx-auto mb-3 group-hover:border-gold transition-colors">
+                            <span class="font-serif text-gold text-lg">03</span>
+                        </div>
+                        <p class="text-[9px] kerning-wide uppercase opacity-40">Curate</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-10 pt-6 border-t border-white/[0.07]">
+                    <div>
+                        <h4 class="font-serif text-3xl text-gold">12+</h4>
+                        <p class="text-[8px] kerning-wide uppercase opacity-30 mt-2">Single Origins</p>
+                    </div>
+                    <div>
+                        <h4 class="font-serif text-3xl text-gold">100%</h4>
+                        <p class="text-[8px] kerning-wide uppercase opacity-30 mt-2">Ethically Sourced</p>
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <a href="#contact" class="btn-noir">Learn Our Craft</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ MARQUEE STRIP -->
+    <div class="border-t border-b border-white/[0.05] py-4 overflow-hidden bg-white/[0.01]">
+        <div class="flex gap-16 whitespace-nowrap animate-[marquee_20s_linear_infinite]" style="animation: marqueeScroll 20s linear infinite; display: flex; gap: 60px;">
+            <span id="marquee-inner" class="flex gap-16 shrink-0">
+                <span class="text-[9px] kerning-extreme uppercase opacity-30">Single Origin Beans</span>
+                <span class="text-gold opacity-60">&#10022;</span>
+                <span class="text-[9px] kerning-extreme uppercase opacity-30">Precision Roasted</span>
+                <span class="text-gold opacity-60">&#10022;</span>
+                <span class="text-[9px] kerning-extreme uppercase opacity-30">Ethically Sourced</span>
+                <span class="text-gold opacity-60">&#10022;</span>
+                <span class="text-[9px] kerning-extreme uppercase opacity-30">Private Reserve 2026</span>
+                <span class="text-gold opacity-60">&#10022;</span>
+                <span class="text-[9px] kerning-extreme uppercase opacity-30">Rare Earth Collection</span>
+                <span class="text-gold opacity-60">&#10022;</span>
+                <span class="text-[9px] kerning-extreme uppercase opacity-30">Grade A+ Certified</span>
+                <span class="text-gold opacity-60">&#10022;</span>
+            </span>
+            <span class="flex gap-16 shrink-0" aria-hidden="true">
+                <span class="text-[9px] kerning-extreme uppercase opacity-30">Single Origin Beans</span>
+                <span class="text-gold opacity-60">&#10022;</span>
+                <span class="text-[9px] kerning-extreme uppercase opacity-30">Precision Roasted</span>
+                <span class="text-gold opacity-60">&#10022;</span>
+                <span class="text-[9px] kerning-extreme uppercase opacity-30">Ethically Sourced</span>
+                <span class="text-gold opacity-60">&#10022;</span>
+                <span class="text-[9px] kerning-extreme uppercase opacity-30">Private Reserve 2026</span>
+                <span class="text-gold opacity-60">&#10022;</span>
+                <span class="text-[9px] kerning-extreme uppercase opacity-30">Rare Earth Collection</span>
+                <span class="text-gold opacity-60">&#10022;</span>
+                <span class="text-[9px] kerning-extreme uppercase opacity-30">Grade A+ Certified</span>
+                <span class="text-gold opacity-60">&#10022;</span>
+            </span>
+        </div>
+    </div>
+    <style>
+        @keyframes marqueeScroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+        #marquee-inner { animation: marqueeScroll 20s linear infinite; }
+        .flex[style*="marqueeScroll"] { display: flex !important; }
+        /* Fix the marquee container */
+        .marquee-wrap { display: flex; gap: 60px; animation: marqueeScroll 20s linear infinite; }
+    </style>
+
+    <!-- ═══════════════════════════════════════════ RECIPES SECTION -->
+    <section id="recipes" class="relative py-24 border-t border-white/[0.05] overflow-hidden">
+
+        <div class="absolute top-0 right-0 pointer-none select-none overflow-hidden opacity-[0.025]">
+            <h2 id="recipes-bg-text" class="section-bg-text" style="right: 0; top: 20px;">Brews</h2>
+        </div>
+
+        <div class="container mx-auto px-6 md:px-12 relative z-10">
+
+            <!-- Section Header -->
+            <div class="grid grid-cols-12 gap-6 mb-16 reveal">
+                <div class="col-span-12 lg:col-span-7">
+                    <p class="text-gold text-[9px] kerning-extreme uppercase mb-3">The Collection</p>
+                    <h3 class="font-serif text-4xl md:text-6xl leading-tight">
+                        Curated <br>
+                        <span class="italic font-light">Recipes.</span>
+                    </h3>
+                    <span class="gold-line"></span>
+                    <p class="text-white/45 text-sm font-light leading-relaxed max-w-md mt-4">
+                        Each recipe is engineered from a specific bean origin — crafted to amplify its native character, terroir, and soul.
+                    </p>
+                </div>
+                <div class="col-span-12 lg:col-span-5 flex lg:justify-end lg:items-end">
+                    <a href="#contact" class="btn-noir-gold btn-noir self-end">View Full Menu &rarr;</a>
+                </div>
+            </div>
+
+            <!-- Recipe Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+
+                <!-- Card 1 — Featured large -->
+                <div class="recipe-card h-[420px] md:h-[500px] lg:col-span-2 reveal" style="transition-delay:0.05s;">
+                    <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=1974" alt="Noir Espresso">
+                    <div class="overlay"></div>
+                    <div class="absolute inset-x-0 bottom-0 p-8 z-10">
+                        <span class="tag-pill">Signature</span>
+                        <h4 class="font-serif text-3xl md:text-4xl italic mt-3 mb-2">Noir Espresso</h4>
+                        <p class="text-white/50 text-xs font-light leading-relaxed max-w-sm">Ethiopia Yirgacheffe · Double shot · Black &amp; uncut. The foundation of everything we do.</p>
+                        <div class="flex items-center gap-6 mt-5 pt-5 border-t border-white/10">
+                            <span class="text-[9px] kerning-wide uppercase opacity-40">Intensity: <span class="text-gold">9/10</span></span>
+                            <span class="text-[9px] kerning-wide uppercase opacity-40">Notes: <span class="text-white/70">Dark Chocolate · Smoke</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="recipe-card h-[420px] md:h-[500px] reveal" style="transition-delay:0.1s;">
+                    <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?q=80&w=2069" alt="Gold Cortado">
+                    <div class="overlay"></div>
+                    <div class="absolute inset-x-0 bottom-0 p-6 z-10">
+                        <span class="tag-pill">Premium</span>
+                        <h4 class="font-serif text-2xl italic mt-3 mb-2">Gold Cortado</h4>
+                        <p class="text-white/50 text-xs font-light">Colombia Huila · Equal parts espresso &amp; steamed milk. Silky and complex.</p>
+                        <div class="flex items-center gap-4 mt-4 pt-4 border-t border-white/10">
+                            <span class="text-[9px] kerning-wide opacity-40">Intensity: <span class="text-gold">6/10</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="recipe-card h-[360px] reveal" style="transition-delay:0.15s;">
+                    <img src="https://images.unsplash.com/photo-1498804103079-a6351b050096?q=80&w=1974" alt="Cold Noir">
+                    <div class="overlay"></div>
+                    <div class="absolute inset-x-0 bottom-0 p-6 z-10">
+                        <span class="tag-pill">Cold Brew</span>
+                        <h4 class="font-serif text-2xl italic mt-3 mb-2">Cold Noir</h4>
+                        <p class="text-white/50 text-xs font-light">Kenya AA · 18-hour cold extraction. Smooth, bold &amp; unsettling.</p>
+                        <div class="flex items-center gap-4 mt-4 pt-4 border-t border-white/10">
+                            <span class="text-[9px] kerning-wide opacity-40">Intensity: <span class="text-gold">8/10</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="recipe-card h-[360px] reveal" style="transition-delay:0.2s;">
+                    <img src="https://images.unsplash.com/photo-1534040385115-33dcb3acba5b?q=80&w=1974" alt="Ritual Latte">
+                    <div class="overlay"></div>
+                    <div class="absolute inset-x-0 bottom-0 p-6 z-10">
+                        <span class="tag-pill">Seasonal</span>
+                        <h4 class="font-serif text-2xl italic mt-3 mb-2">Ritual Latte</h4>
+                        <p class="text-white/50 text-xs font-light">Guatemala Antigua · Ceremonial oat milk. Earthy, warm &amp; grounding.</p>
+                        <div class="flex items-center gap-4 mt-4 pt-4 border-t border-white/10">
+                            <span class="text-[9px] kerning-wide opacity-40">Intensity: <span class="text-gold">5/10</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 5 — wide -->
+                <div class="recipe-card h-[360px] lg:col-span-2 reveal" style="transition-delay:0.25s;">
+                    <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?q=80&w=2070" alt="The Ceremony">
+                    <div class="overlay"></div>
+                    <div class="absolute inset-x-0 bottom-0 p-8 z-10">
+                        <span class="tag-pill">Reserve</span>
+                        <h4 class="font-serif text-3xl italic mt-3 mb-2">The Ceremony</h4>
+                        <p class="text-white/50 text-sm font-light max-w-md">Panama Geisha · Pour-over with Japanese precision. A meditation on clarity. Only 20 cups daily.</p>
+                        <div class="flex items-center gap-8 mt-5 pt-5 border-t border-white/10">
+                            <span class="text-[9px] kerning-wide opacity-40">Intensity: <span class="text-gold">7/10</span></span>
+                            <span class="text-[9px] kerning-wide opacity-40">Notes: <span class="text-white/70">Jasmine · Bergamot · Honey</span></span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ ORIGINS STRIP -->
+    <section class="py-20 border-t border-white/[0.05] bg-white/[0.01]">
+        <div class="container mx-auto px-6 md:px-12">
+            <div class="text-center mb-14 reveal">
+                <p class="text-[9px] kerning-extreme uppercase text-gold mb-3">Where We Source</p>
+                <h3 class="font-serif text-3xl md:text-4xl italic">Origins of Excellence</h3>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+                <div class="text-center reveal" style="transition-delay:0.05s;">
+                    <div class="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center mx-auto mb-4 hover:border-gold transition-colors">
+                        <span class="font-serif text-gold text-xl">Et</span>
+                    </div>
+                    <p class="font-serif italic text-lg mb-1">Ethiopia</p>
+                    <p class="text-[9px] kerning-wide opacity-30 uppercase">Yirgacheffe</p>
+                    <span class="gold-line" style="width: 20px; margin: 8px auto;"></span>
+                    <p class="text-xs opacity-30 font-light">Berry · Floral</p>
+                </div>
+                <div class="text-center reveal" style="transition-delay:0.1s;">
+                    <div class="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center mx-auto mb-4 hover:border-gold transition-colors">
+                        <span class="font-serif text-gold text-xl">Co</span>
+                    </div>
+                    <p class="font-serif italic text-lg mb-1">Colombia</p>
+                    <p class="text-[9px] kerning-wide opacity-30 uppercase">Huila Region</p>
+                    <span class="gold-line" style="width: 20px; margin: 8px auto;"></span>
+                    <p class="text-xs opacity-30 font-light">Caramel · Citrus</p>
+                </div>
+                <div class="text-center reveal" style="transition-delay:0.15s;">
+                    <div class="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center mx-auto mb-4 hover:border-gold transition-colors">
+                        <span class="font-serif text-gold text-xl">Ke</span>
+                    </div>
+                    <p class="font-serif italic text-lg mb-1">Kenya</p>
+                    <p class="text-[9px] kerning-wide opacity-30 uppercase">AA Grade</p>
+                    <span class="gold-line" style="width: 20px; margin: 8px auto;"></span>
+                    <p class="text-xs opacity-30 font-light">Black currant · Bold</p>
+                </div>
+                <div class="text-center reveal" style="transition-delay:0.2s;">
+                    <div class="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center mx-auto mb-4 hover:border-gold transition-colors">
+                        <span class="font-serif text-gold text-xl">Pa</span>
+                    </div>
+                    <p class="font-serif italic text-lg mb-1">Panama</p>
+                    <p class="text-[9px] kerning-wide opacity-30 uppercase">Geisha Varietal</p>
+                    <span class="gold-line" style="width: 20px; margin: 8px auto;"></span>
+                    <p class="text-xs opacity-30 font-light">Jasmine · Honey</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ CONTACT SECTION -->
+    <section id="contact" class="relative py-24 border-t border-white/[0.05] overflow-hidden">
+
+        <div class="absolute bottom-0 left-0 pointer-none select-none overflow-hidden opacity-[0.025]">
+            <h2 class="section-bg-text" style="bottom: 0; left: -2%;">Contact</h2>
+        </div>
+
+        <div class="container mx-auto px-6 md:px-12 relative z-10">
+
+            <div class="grid grid-cols-12 gap-8 lg:gap-16">
+
+                <!-- Left info -->
+                <div class="col-span-12 lg:col-span-5 reveal-left">
+                    <p class="text-gold text-[9px] kerning-extreme uppercase mb-3">Get in Touch</p>
+                    <h3 class="font-serif text-4xl md:text-5xl leading-tight mb-6">
+                        Start Your <br>
+                        <span class="italic font-light">Journey.</span>
+                    </h3>
+                    <span class="gold-line"></span>
+
+                    <p class="text-white/45 text-sm font-light leading-relaxed max-w-sm mb-12">
+                        Whether you wish to order a private reserve, inquire about wholesale, or simply talk about coffee — we're here for it.
+                    </p>
+
+                    <!-- Contact info blocks -->
+                    <div class="space-y-8">
+                        <div class="flex items-start gap-5">
+                            <div class="w-10 h-10 border border-white/10 flex items-center justify-center shrink-0 mt-0.5">
+                                <span class="text-gold text-sm">@</span>
+                            </div>
+                            <div>
+                                <p class="text-[8px] kerning-wide uppercase opacity-30 mb-1">Email</p>
+                                <p class="text-sm font-light text-white/70">hello@noiratelier.com</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-5">
+                            <div class="w-10 h-10 border border-white/10 flex items-center justify-center shrink-0 mt-0.5">
+                                <span class="text-gold text-sm">&#9679;</span>
+                            </div>
+                            <div>
+                                <p class="text-[8px] kerning-wide uppercase opacity-30 mb-1">Location</p>
+                                <p class="text-sm font-light text-white/70">Atelier No. 3 · Rue du Moulin<br>Paris, France 75006</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-5">
+                            <div class="w-10 h-10 border border-white/10 flex items-center justify-center shrink-0 mt-0.5">
+                                <span class="text-gold text-sm">&#9654;</span>
+                            </div>
+                            <div>
+                                <p class="text-[8px] kerning-wide uppercase opacity-30 mb-1">Hours</p>
+                                <p class="text-sm font-light text-white/70">Mon – Sat · 8am – 8pm<br>Sunday by appointment</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social links -->
+                    <div class="flex gap-6 mt-12 pt-8 border-t border-white/[0.07]">
+                        <a href="#" class="text-[9px] kerning-wide uppercase opacity-30 hover:opacity-70 hover:text-gold transition-all">Instagram</a>
+                        <a href="#" class="text-[9px] kerning-wide uppercase opacity-30 hover:opacity-70 hover:text-gold transition-all">Pinterest</a>
+                        <a href="#" class="text-[9px] kerning-wide uppercase opacity-30 hover:opacity-70 hover:text-gold transition-all">Substack</a>
+                    </div>
+                </div>
+
+                <!-- Right form -->
+                <div class="col-span-12 lg:col-span-7 reveal-right" style="transition-delay: 0.15s;">
+                    <div class="border border-white/[0.06] p-8 md:p-12 relative">
+                        <!-- Corner accents -->
+                        <div class="absolute top-0 left-0 w-6 h-6 border-t border-l border-gold/30"></div>
+                        <div class="absolute top-0 right-0 w-6 h-6 border-t border-r border-gold/30"></div>
+                        <div class="absolute bottom-0 left-0 w-6 h-6 border-b border-l border-gold/30"></div>
+                        <div class="absolute bottom-0 right-0 w-6 h-6 border-b border-r border-gold/30"></div>
+
+                        <p class="text-[9px] kerning-extreme uppercase opacity-30 mb-8">Send a message</p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                            <div>
+                                <label class="text-[8px] kerning-wide uppercase opacity-30 block mb-2">First Name</label>
+                                <input type="text" placeholder="Jean" class="noir-input">
+                            </div>
+                            <div>
+                                <label class="text-[8px] kerning-wide uppercase opacity-30 block mb-2">Last Name</label>
+                                <input type="text" placeholder="Dupont" class="noir-input">
+                            </div>
+                        </div>
+
+                        <div class="mb-8">
+                            <label class="text-[8px] kerning-wide uppercase opacity-30 block mb-2">Email Address</label>
+                            <input type="email" placeholder="jean@example.com" class="noir-input">
+                        </div>
+
+                        <div class="mb-8">
+                            <label class="text-[8px] kerning-wide uppercase opacity-30 block mb-2">Inquiry Type</label>
+                            <div class="flex flex-wrap gap-3 mt-3">
+                                <button onclick="selectInquiry(this)" class="inquiry-btn tag-pill cursor-pointer transition-all hover:bg-gold/10">Order Reserve</button>
+                                <button onclick="selectInquiry(this)" class="inquiry-btn tag-pill cursor-pointer transition-all hover:bg-gold/10">Wholesale</button>
+                                <button onclick="selectInquiry(this)" class="inquiry-btn tag-pill cursor-pointer transition-all hover:bg-gold/10">Events</button>
+                                <button onclick="selectInquiry(this)" class="inquiry-btn tag-pill cursor-pointer transition-all hover:bg-gold/10">Just Coffee</button>
+                            </div>
+                        </div>
+
+                        <div class="mb-10">
+                            <label class="text-[8px] kerning-wide uppercase opacity-30 block mb-2">Message</label>
+                            <textarea placeholder="Tell us about your needs..." rows="4" class="noir-input resize-none"></textarea>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+                            <button class="btn-noir-gold btn-noir">Send Message</button>
+                            <p class="text-[9px] opacity-20 font-light">We reply within 24 hours.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ FOOTER -->
+    <footer class="border-t border-white/[0.05] py-12">
+        <div class="container mx-auto px-6 md:px-12">
+            <div class="grid grid-cols-12 gap-8 items-center">
+                <div class="col-span-12 lg:col-span-4">
+                    <h1 class="font-serif text-2xl tracking-tighter mb-1">NOIR</h1>
+                    <p class="text-[7px] kerning-extreme opacity-30 uppercase">Atelier de Café</p>
+                </div>
+                <div class="col-span-12 lg:col-span-4 flex justify-start lg:justify-center gap-8">
+                    <a href="#home" class="text-[9px] kerning-wide uppercase opacity-30 hover:opacity-60 hover:text-gold transition-all">Home</a>
+                    <a href="#about" class="text-[9px] kerning-wide uppercase opacity-30 hover:opacity-60 hover:text-gold transition-all">About</a>
+                    <a href="#recipes" class="text-[9px] kerning-wide uppercase opacity-30 hover:opacity-60 hover:text-gold transition-all">Recipes</a>
+                    <a href="#contact" class="text-[9px] kerning-wide uppercase opacity-30 hover:opacity-60 hover:text-gold transition-all">Contact</a>
+                </div>
+                <div class="col-span-12 lg:col-span-4 lg:text-right">
+                    <p class="text-[9px] opacity-20 font-light">© 2026 NOIR Atelier de Café. All rights reserved.</p>
+                    <p class="text-[8px] kerning-wide opacity-20 uppercase mt-1">Paris, France</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════════ SCRIPTS -->
+    <script>
+        // Cursor
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', e => {
+            cursor.style.left = e.clientX - 9 + 'px';
+            cursor.style.top = e.clientY - 9 + 'px';
+        });
+        document.querySelectorAll('a, button, .recipe-card').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.style.transform = 'scale(2.2)');
+            el.addEventListener('mouseleave', () => cursor.style.transform = 'scale(1)');
+        });
+
+        // Mobile menu
+        function toggleMenu() {
+            document.getElementById('mobile-menu').classList.toggle('active');
+        }
+
+        // Scroll animations
+        function handleScroll() {
+            const scrollY = window.scrollY;
+
+            // Parallax heritage text
+            const ht = document.getElementById('heritage-text');
+            if (ht) ht.style.transform = `translateX(${scrollY * 0.15 - 60}px)`;
+
+            // Reveal elements
+            document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 80) el.classList.add('active');
+            });
+        }
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        window.addEventListener('load', handleScroll);
+
+        // Inquiry button selection
+        function selectInquiry(btn) {
+            document.querySelectorAll('.inquiry-btn').forEach(b => {
+                b.style.background = 'transparent';
+                b.style.color = 'var(--gold)';
+            });
+            btn.style.background = 'rgba(155, 128, 78, 0.15)';
+            btn.style.color = '#C4A96D';
+        }
+
+        // Marquee duplication handled via CSS animation
+    </script>
+</body>
+</html>

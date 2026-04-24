@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ryuu Kage | Video Editor Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Orbitron', 'sans-serif'],
+            heading: ['Bebas Neue', 'cursive'],
+            body: ['Rajdhani', 'sans-serif'],
+          },
+          colors: {
+            red: {
+              primary: '#e63946',
+              dark: '#c1121f',
+              glow: '#ff0a2c',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { scroll-behavior: smooth; }
+    body { font-family: 'Rajdhani', sans-serif; transition: background 0.4s, color 0.4s; }
+
+    /* DARK THEME */
+    .dark body { background: #0a0a0a; color: #f0f0f0; }
+    .dark .bg-theme { background: #0a0a0a; }
+    .dark .bg-theme-alt { background: #111111; }
+    .dark .bg-card { background: #1a1a1a; border: 1px solid #2a2a2a; }
+    .dark .text-theme { color: #f0f0f0; }
+    .dark .text-muted { color: #888; }
+    .dark .nav-bg { background: rgba(10,10,10,0.95); border-bottom: 1px solid #1f1f1f; }
+
+    /* LIGHT THEME */
+    html:not(.dark) body { background: #ffffff; color: #111; }
+    html:not(.dark) .bg-theme { background: #ffffff; }
+    html:not(.dark) .bg-theme-alt { background: #f5f5f5; }
+    html:not(.dark) .bg-card { background: #fff; border: 1px solid #e5e5e5; box-shadow: 0 2px 20px rgba(0,0,0,0.08); }
+    html:not(.dark) .text-theme { color: #111; }
+    html:not(.dark) .text-muted { color: #666; }
+    html:not(.dark) .nav-bg { background: rgba(255,255,255,0.97); border-bottom: 1px solid #eee; }
+
+    /* RED ACCENTS */
+    .text-red { color: #e63946; }
+    .bg-red { background: #e63946; }
+    .border-red { border-color: #e63946; }
+
+    /* GLOW EFFECTS */
+    .red-glow { box-shadow: 0 0 20px rgba(230,57,70,0.5), 0 0 40px rgba(230,57,70,0.2); }
+    .red-glow-text { text-shadow: 0 0 20px rgba(230,57,70,0.8); }
+    .dark .red-glow-text { text-shadow: 0 0 30px rgba(255,10,44,0.9), 0 0 60px rgba(255,10,44,0.4); }
+
+    /* ANIME PROFILE IMAGE */
+    .anime-ring { 
+      border: 3px solid #e63946;
+      box-shadow: 0 0 0 4px rgba(230,57,70,0.2), 0 0 30px rgba(230,57,70,0.4);
+      animation: ringPulse 3s infinite;
+    }
+    @keyframes ringPulse {
+      0%, 100% { box-shadow: 0 0 0 4px rgba(230,57,70,0.2), 0 0 30px rgba(230,57,70,0.4); }
+      50% { box-shadow: 0 0 0 8px rgba(230,57,70,0.1), 0 0 50px rgba(230,57,70,0.6); }
+    }
+
+    /* NAVBAR */
+    nav { backdrop-filter: blur(10px); position: fixed; top: 0; width: 100%; z-index: 1000; transition: all 0.3s; }
+
+    /* HERO SECTION */
+    .hero-bg-dark {
+      background: radial-gradient(ellipse at 70% 50%, rgba(230,57,70,0.12) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(230,57,70,0.06) 0%, transparent 50%),
+                  #0a0a0a;
+    }
+    .hero-bg-light {
+      background: radial-gradient(ellipse at 70% 50%, rgba(230,57,70,0.08) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(230,57,70,0.04) 0%, transparent 50%),
+                  #ffffff;
+    }
+    .dark .hero-section { background: radial-gradient(ellipse at 70% 50%, rgba(230,57,70,0.12) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, rgba(230,57,70,0.06) 0%, transparent 50%), #0a0a0a; }
+    html:not(.dark) .hero-section { background: radial-gradient(ellipse at 70% 50%, rgba(230,57,70,0.06) 0%, transparent 60%), #ffffff; }
+
+    /* GLITCH EFFECT */
+    .glitch { position: relative; }
+    .glitch::before, .glitch::after {
+      content: attr(data-text);
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    }
+    .glitch::before { color: #e63946; animation: glitch1 4s infinite; clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%); transform: translate(-3px, 0); opacity: 0.7; }
+    .glitch::after { color: #00d4ff; animation: glitch2 4s infinite; clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%); transform: translate(3px, 0); opacity: 0.7; }
+    @keyframes glitch1 {
+      0%, 90%, 100% { transform: translate(-3px,0); opacity:0; }
+      92% { transform: translate(-3px, -2px); opacity:0.7; }
+      94% { transform: translate(3px, 2px); opacity:0.7; }
+      96% { transform: translate(-3px, 0); opacity:0.7; }
+    }
+    @keyframes glitch2 {
+      0%, 90%, 100% { transform: translate(3px,0); opacity:0; }
+      92% { transform: translate(3px, 2px); opacity:0.7; }
+      94% { transform: translate(-3px, -2px); opacity:0.7; }
+      96% { transform: translate(3px, 0); opacity:0.7; }
+    }
+
+    /* SCROLL ANIMATIONS */
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s, transform 0.7s; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* PRICING CARD HOVER */
+    .price-card { transition: all 0.3s; }
+    .price-card:hover { transform: translateY(-8px); }
+    .dark .price-card:hover { box-shadow: 0 20px 60px rgba(230,57,70,0.2); }
+    html:not(.dark) .price-card:hover { box-shadow: 0 20px 60px rgba(230,57,70,0.15); }
+
+    /* FEATURED PRICING */
+    .featured-card { border: 2px solid #e63946 !important; }
+    .dark .featured-card { box-shadow: 0 0 40px rgba(230,57,70,0.2); }
+
+    /* MOBILE MENU */
+    .mobile-menu { display: none; }
+    .mobile-menu.open { display: block; }
+
+    /* CUSTOM SCROLLBAR */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #111; }
+    ::-webkit-scrollbar-thumb { background: #e63946; border-radius: 3px; }
+    html:not(.dark) ::-webkit-scrollbar-track { background: #f0f0f0; }
+
+    /* STAT COUNTER */
+    .stat-item { position: relative; }
+    .stat-item::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 40px; height: 2px; background: #e63946; }
+
+    /* VIDEO REEL MOCKUP */
+    .reel-card { position: relative; overflow: hidden; border-radius: 8px; }
+    .reel-card::after { content: '▶'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: white; background: rgba(230,57,70,0.0); transition: all 0.3s; }
+    .reel-card:hover::after { background: rgba(230,57,70,0.6); }
+
+    /* TESTIMONIAL STARS */
+    .star { color: #e63946; }
+
+    /* CONTACT INPUT */
+    .contact-input { transition: border-color 0.3s, box-shadow 0.3s; outline: none; }
+    .dark .contact-input { background: #1a1a1a; border: 1px solid #333; color: #f0f0f0; }
+    .dark .contact-input:focus { border-color: #e63946; box-shadow: 0 0 0 3px rgba(230,57,70,0.15); }
+    html:not(.dark) .contact-input { background: #f9f9f9; border: 1px solid #ddd; color: #111; }
+    html:not(.dark) .contact-input:focus { border-color: #e63946; box-shadow: 0 0 0 3px rgba(230,57,70,0.1); }
+
+    /* LINE DECORATION */
+    .red-line { height: 3px; background: linear-gradient(90deg, #e63946, transparent); border-radius: 2px; }
+
+    /* DIAGONAL DIVIDER */
+    .clip-diagonal { clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%); }
+
+    /* TOGGLE SWITCH */
+    .toggle-track { width: 52px; height: 28px; background: #333; border-radius: 14px; position: relative; cursor: pointer; transition: background 0.3s; }
+    html:not(.dark) .toggle-track { background: #e2e2e2; }
+    .toggle-thumb { width: 22px; height: 22px; background: #e63946; border-radius: 50%; position: absolute; top: 3px; left: 3px; transition: transform 0.3s; }
+    html:not(.dark) .toggle-thumb { transform: translateX(24px); }
+
+    /* SECTION LABEL */
+    .section-label { letter-spacing: 0.3em; font-size: 0.75rem; text-transform: uppercase; }
+
+    /* BTN */
+    .btn-red { background: #e63946; color: white; transition: all 0.3s; position: relative; overflow: hidden; }
+    .btn-red::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent); }
+    .btn-red:hover { background: #c1121f; transform: translateY(-1px); box-shadow: 0 8px 25px rgba(230,57,70,0.4); }
+    .btn-outline { border: 2px solid #e63946; color: #e63946; transition: all 0.3s; }
+    .btn-outline:hover { background: #e63946; color: white; }
+
+    /* ANIME SVG STYLES */
+    .anime-svg { filter: drop-shadow(0 0 20px rgba(230,57,70,0.3)); }
+  </style>
+</head>
+<body class="bg-theme text-theme">
+
+  <!-- NAV -->
+  <nav class="nav-bg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo -->
+        <div class="flex items-center gap-2">
+          <span class="font-display text-xl font-bold text-red">RYUU</span>
+          <span class="font-display text-xl font-bold text-theme">KAGE</span>
+        </div>
+
+        <!-- Desktop Nav -->
+        <div class="hidden md:flex items-center gap-8">
+          <a href="#home" class="font-body font-semibold text-sm tracking-widest uppercase text-muted hover:text-red transition-colors">Home</a>
+          <a href="#about" class="font-body font-semibold text-sm tracking-widest uppercase text-muted hover:text-red transition-colors">About</a>
+          <a href="#pricing" class="font-body font-semibold text-sm tracking-widest uppercase text-muted hover:text-red transition-colors">Pricing</a>
+          <a href="#customers" class="font-body font-semibold text-sm tracking-widest uppercase text-muted hover:text-red transition-colors">Reviews</a>
+          <a href="#contact" class="font-body font-semibold text-sm tracking-widest uppercase text-muted hover:text-red transition-colors">Contact</a>
+        </div>
+
+        <!-- Theme Toggle + Mobile -->
+        <div class="flex items-center gap-4">
+          <!-- Theme toggle -->
+          <button onclick="toggleTheme()" class="flex items-center gap-2" title="Toggle theme">
+            <span class="text-lg">🌙</span>
+            <div class="toggle-track">
+              <div class="toggle-thumb"></div>
+            </div>
+            <span class="text-lg">☀️</span>
+          </button>
+
+          <!-- Mobile menu button -->
+          <button onclick="toggleMenu()" class="md:hidden text-theme focus:outline-none">
+            <svg id="menu-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu bg-theme nav-bg md:hidden px-4 pb-4">
+      <div class="flex flex-col gap-4 pt-2">
+        <a href="#home" onclick="toggleMenu()" class="font-semibold text-sm tracking-widest uppercase text-muted hover:text-red transition-colors">Home</a>
+        <a href="#about" onclick="toggleMenu()" class="font-semibold text-sm tracking-widest uppercase text-muted hover:text-red transition-colors">About</a>
+        <a href="#pricing" onclick="toggleMenu()" class="font-semibold text-sm tracking-widest uppercase text-muted hover:text-red transition-colors">Pricing</a>
+        <a href="#customers" onclick="toggleMenu()" class="font-semibold text-sm tracking-widest uppercase text-muted hover:text-red transition-colors">Reviews</a>
+        <a href="#contact" onclick="toggleMenu()" class="font-semibold text-sm tracking-widest uppercase text-muted hover:text-red transition-colors">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== HOME / HERO ===== -->
+  <section id="home" class="hero-section min-h-screen flex items-center pt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <!-- Text -->
+        <div>
+          <p class="section-label text-red mb-4 reveal">✦ Video Editor & Motion Artist</p>
+          <h1 class="font-heading text-7xl sm:text-8xl lg:text-9xl leading-none mb-4 reveal text-theme">
+            <span class="glitch red-glow-text" data-text="RYUU">RYUU</span><br/>
+            <span class="glitch" data-text="KAGE" style="color: #e63946;" >KAGE</span>
+          </h1>
+          <div class="red-line w-32 mb-6 reveal"></div>
+          <p class="text-muted font-body text-lg leading-relaxed mb-8 max-w-lg reveal">
+            Crafting cinematic experiences through the art of editing. From raw footage to breathtaking stories — I transform your vision into visual masterpieces.
+          </p>
+          <div class="flex flex-wrap gap-4 reveal">
+            <a href="#pricing" class="btn-red px-8 py-3 rounded font-semibold tracking-widest text-sm uppercase">Hire Me</a>
+            <a href="#about" class="btn-outline px-8 py-3 rounded font-semibold tracking-widest text-sm uppercase">My Work</a>
+          </div>
+
+          <!-- Stats -->
+          <div class="grid grid-cols-3 gap-6 mt-14 reveal">
+            <div class="stat-item text-center pb-4">
+              <p class="font-display text-3xl font-black text-red">200+</p>
+              <p class="text-muted text-sm font-semibold tracking-wider mt-1">Projects</p>
+            </div>
+            <div class="stat-item text-center pb-4">
+              <p class="font-display text-3xl font-black text-red">5yr</p>
+              <p class="text-muted text-sm font-semibold tracking-wider mt-1">Experience</p>
+            </div>
+            <div class="stat-item text-center pb-4">
+              <p class="font-display text-3xl font-black text-red">98%</p>
+              <p class="text-muted text-sm font-semibold tracking-wider mt-1">Satisfaction</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-center lg:justify-end reveal">
+  <div class="relative">
+    <div class="absolute inset-0 bg-red-500 opacity-20 rounded-full blur-3xl scale-110"></div>
+    
+    <div class="relative z-10 w-72 h-72 sm:w-96 sm:h-96">
+        <img 
+            src="https://images.unsplash.com/photo-1627244714766-94dab62ed964?q=80&w=465&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+            alt="Profile Image" 
+            class="w-full h-full object-cover rounded-full border-4 border-red-500 shadow-2xl"
+        />
+    </div>
+
+    <div class="absolute top-4 right-0 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full font-display tracking-wider z-20">
+      PRO EDITOR
+    </div>
+    <div class="absolute bottom-12 left-0 bg-black/80 text-white text-xs font-bold px-3 py-2 rounded-lg border-red-500 border z-20">
+      <span class="text-red-500">●</span> Available for hire
+    </div>
+  </div>
+</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section id="about" class="py-24 bg-theme-alt">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <!-- Anime character for about -->
+        <div class="relative z-10 w-72 h-72 sm:w-96 sm:h-96">
+        <img 
+            src="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+            alt="Profile Image" 
+            class="w-full h-full object-cover rounded-full border-4 border-red-500 shadow-2xl"
+        />
+    </div>
+
+
+        <!-- About Text -->
+        <div>
+          <p class="section-label text-red mb-3 reveal">✦ About Me</p>
+          <h2 class="font-heading text-6xl sm:text-7xl text-theme mb-4 reveal">THE EDITOR<br/><span class="text-red">BEHIND THE</span><br/>FRAME</h2>
+          <div class="red-line w-24 mb-6 reveal"></div>
+          <p class="text-muted font-body text-lg leading-relaxed mb-6 reveal">
+            I'm Ryuu Kage, a cinematic video editor with 5 years of experience in post-production. I specialize in creating compelling narratives through masterful cuts, color grading, and motion design that keeps audiences captivated from the first frame to the last.
+          </p>
+          <p class="text-muted font-body text-lg leading-relaxed mb-8 reveal">
+            From YouTube content to commercial ads, music videos to brand films — I bring your story to life with precision, rhythm, and a keen eye for visual storytelling.
+          </p>
+
+          <!-- Skills -->
+          <div class="grid grid-cols-2 gap-4 reveal">
+            <div class="bg-card rounded-lg p-4">
+              <div class="flex justify-between mb-2">
+                <span class="font-semibold text-sm tracking-wider">Premiere Pro</span>
+                <span class="text-red text-sm font-bold">95%</span>
+              </div>
+              <div class="h-1.5 bg-gray-700 rounded-full">
+                <div class="h-1.5 bg-red rounded-full" style="width:95%"></div>
+              </div>
+            </div>
+            <div class="bg-card rounded-lg p-4">
+              <div class="flex justify-between mb-2">
+                <span class="font-semibold text-sm tracking-wider">After Effects</span>
+                <span class="text-red text-sm font-bold">88%</span>
+              </div>
+              <div class="h-1.5 bg-gray-700 rounded-full">
+                <div class="h-1.5 bg-red rounded-full" style="width:88%"></div>
+              </div>
+            </div>
+            <div class="bg-card rounded-lg p-4">
+              <div class="flex justify-between mb-2">
+                <span class="font-semibold text-sm tracking-wider">DaVinci Resolve</span>
+                <span class="text-red text-sm font-bold">90%</span>
+              </div>
+              <div class="h-1.5 bg-gray-700 rounded-full">
+                <div class="h-1.5 bg-red rounded-full" style="width:90%"></div>
+              </div>
+            </div>
+            <div class="bg-card rounded-lg p-4">
+              <div class="flex justify-between mb-2">
+                <span class="font-semibold text-sm tracking-wider">Motion Design</span>
+                <span class="text-red text-sm font-bold">82%</span>
+              </div>
+              <div class="h-1.5 bg-gray-700 rounded-full">
+                <div class="h-1.5 bg-red rounded-full" style="width:82%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Work Samples Grid -->
+      <div class="mt-20">
+        <p class="section-label text-red mb-2 text-center reveal">✦ Selected Works</p>
+        <h3 class="font-heading text-5xl text-center text-theme mb-12 reveal">MY REEL</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Reel cards -->
+          <div class="reel-card bg-card reveal cursor-pointer" style="height:200px; background: linear-gradient(135deg, #1a0808 0%, #0f0f1a 100%);">
+            <div class="w-full h-full flex flex-col items-center justify-center gap-3">
+              <div class="w-14 h-14 bg-red rounded-full flex items-center justify-center text-white text-xl">▶</div>
+              <p class="font-semibold text-sm tracking-widest text-muted">MUSIC VIDEO</p>
+              <p class="font-heading text-2xl text-theme">NIGHT FREQUENCY</p>
+            </div>
+          </div>
+          <div class="reel-card bg-card reveal cursor-pointer" style="height:200px; background: linear-gradient(135deg, #0a1020 0%, #150810 100%);">
+            <div class="w-full h-full flex flex-col items-center justify-center gap-3">
+              <div class="w-14 h-14 bg-red rounded-full flex items-center justify-center text-white text-xl">▶</div>
+              <p class="font-semibold text-sm tracking-widest text-muted">BRAND FILM</p>
+              <p class="font-heading text-2xl text-theme">APEX LAUNCH</p>
+            </div>
+          </div>
+          <div class="reel-card bg-card reveal cursor-pointer" style="height:200px; background: linear-gradient(135deg, #0f1a0a 0%, #1a0a10 100%);">
+            <div class="w-full h-full flex flex-col items-center justify-center gap-3">
+              <div class="w-14 h-14 bg-red rounded-full flex items-center justify-center text-white text-xl">▶</div>
+              <p class="font-semibold text-sm tracking-widest text-muted">DOCUMENTARY</p>
+              <p class="font-heading text-2xl text-theme">URBAN PULSE</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PRICING ===== -->
+  <section id="pricing" class="py-24 bg-theme">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <p class="section-label text-red mb-3 text-center reveal">✦ Packages</p>
+      <h2 class="font-heading text-6xl sm:text-7xl text-center text-theme mb-4 reveal">PRICING <span class="text-red">PLANS</span></h2>
+      <p class="text-muted text-center font-body text-lg max-w-xl mx-auto mb-16 reveal">Transparent pricing with no hidden fees. Choose the plan that fits your project.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Basic -->
+        <div class="price-card bg-card rounded-2xl p-8 reveal">
+          <div class="mb-6">
+            <p class="section-label text-muted mb-2">STARTER</p>
+            <h3 class="font-heading text-4xl text-theme mb-1">BASIC</h3>
+            <div class="red-line w-12 mb-4"></div>
+            <div class="flex items-end gap-1">
+              <span class="font-display text-5xl font-black text-theme">$199</span>
+              <span class="text-muted mb-2">/project</span>
+            </div>
+          </div>
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-center gap-3 font-body">
+              <span class="text-red">✓</span>
+              <span class="text-muted">Up to 3-min video</span>
+            </li>
+            <li class="flex items-center gap-3 font-body">
+              <span class="text-red">✓</span>
+              <span class="text-muted">Basic color grading</span>
+            </li>
+            <li class="flex items-center gap-3 font-body">
+              <span class="text-red">✓</span>
+              <span class="text-muted">2 revision rounds</span>
+            </li>
+            <li class="flex items-center gap-3 font-body">
+              <span class="text-red">✓</span>
+              <span class="text-muted">Background music</span>
+            </li>
+            <li class="flex items-center gap-3 font-body">
+              <span class="text-muted opacity-40">✗</span>
+              <span class="text-muted opacity-40">Motion graphics</span>
+            </li>
+            <li class="flex items-center gap-3 font-body">
+              <span class="text-muted opacity-40">✗</span>
+              <span class="text-muted opacity-40">VFX / compositing</span>
+            </li>
+          </ul>
+          <a href="#contact" class="btn-outline w-full py-3 rounded-lg font-semibold tracking-widest text-sm uppercase text-center block">Get Started</a>
+        </div>
+
+        <!-- Pro (Featured) -->
+        <div class="price-card featured-card bg-card rounded-2xl p-8 reveal relative overflow-hidden">
+          <div class="absolute top-0 right-0 bg-red text-white text-xs font-bold px-4 py-2 rounded-bl-xl tracking-widest">POPULAR</div>
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-red-800"></div>
+          <div class="mb-6">
+            <p class="section-label text-red mb-2">PROFESSIONAL</p>
+            <h3 class="font-heading text-4xl text-theme mb-1">PRO</h3>
+            <div class="red-line w-12 mb-4"></div>
+            <div class="flex items-end gap-1">
+              <span class="font-display text-5xl font-black text-red">$499</span>
+              <span class="text-muted mb-2">/project</span>
+            </div>
+          </div>
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-center gap-3 font-body">
+              <span class="text-red">✓</span>
+              <span class="text-muted">Up to 10-min video</span>
+            </li>
+            <li class="flex items-center gap-3 font-body">
+              <span class="text-red">✓</span>
+              <span class="text-muted">Advanced color grading</span>
+            </li>
+            <li class="flex items-center gap-3 font-body">
+              <span class="text-red">✓</span>
+              <span class="text-muted">5 revision rounds</span>
+            </li>
+            <li class="flex items-center gap-3 font-body">
+              <span class="text-red">✓</span>
+              <span class="text-muted">Custom soundtrack</span>
+            </li>
+            <li class="flex items-center gap-3 font-body">
+              <span class="text-red">✓</span>
+              <span class="text-muted">Motion graphics</span>
+            </li>
+            <li class="flex items-center gap-3 font-body">
+              <span class="text-muted opacity-40">✗</span>
+              <span class="text-muted opacity-40">VFX / compositing</span>
+            </li>
+          </ul>
+          <a href="#contact" class="btn-red w-full py-3 rounded-lg font-semibold tracking-widest text-sm uppercase text-center block">Get Started</a>
+        </div>
+
+        <!-- Elite -->
+        <div class="price-card bg-card rounded-2xl p-8 reveal">
+          <div class="mb-6">
+            <p class="section-label text-muted mb-2">PREMIUM</p>
+            <h3 class="font-heading text-4xl text-theme mb-1">ELITE</h3>
+            <div class="red-line w-12 mb-4"></div>
+            <div class="flex items-end gap-1">
+              <span class="font-display text-5xl font-black text-theme">$999</span>
+              <span class="text-muted mb-2">/project</span>
+            </div>
+          </div>
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-center gap-3 font-body">
+              <span class="text-red">✓</span>
+              <span class="text-muted">Unlimited length</span>
+            </li>
+            <li class="flex items-center gap-3 font-body">
+              <span class="text-red">✓</span>
+              <span class="text-muted">Cinematic color grade</span>
+            </li>
+            <li class="flex items-center gap-3 font-body">
+              <span class="text-red">✓</span>
+              <span class="text-muted">Unlimited revisions</span>
+            </li>
+            <li class="flex items-center gap-3 font-body">
+              <span class="text-red">✓</span>
+              <span class="text-muted">Original score</span>
+            </li>
+            <li class="flex items-center gap-3 font-body">
+              <span class="text-red">✓</span>
+              <span class="text-muted">Full motion graphics</span>
+            </li>
+            <li class="flex items-center gap-3 font-body">
+              <span class="text-red">✓</span>
+              <span class="text-muted">VFX & compositing</span>
+            </li>
+          </ul>
+          <a href="#contact" class="btn-outline w-full py-3 rounded-lg font-semibold tracking-widest text-sm uppercase text-center block">Get Started</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CUSTOMERS / TESTIMONIALS ===== -->
+  <section id="customers" class="py-24 bg-theme-alt">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <p class="section-label text-red mb-3 text-center reveal">✦ Testimonials</p>
+      <h2 class="font-heading text-6xl sm:text-7xl text-center text-theme mb-4 reveal">CLIENT <span class="text-red">REVIEWS</span></h2>
+      <p class="text-muted text-center font-body text-lg max-w-xl mx-auto mb-16 reveal">Real words from real clients who trusted me with their vision.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Review 1 -->
+        <div class="bg-card rounded-2xl p-8 reveal relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-1 h-full bg-red"></div>
+          <div class="flex gap-1 mb-4">
+            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+          </div>
+          <p class="text-muted font-body text-base leading-relaxed mb-6 italic">
+            "Ryuu absolutely transformed my music video. The cuts were perfectly synced to the beat and the color grading gave it that cinematic look I'd always dreamed of. Incredible work!"
+          </p>
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-red flex items-center justify-center font-display font-black text-white text-lg">AK</div>
+            <div>
+              <p class="font-bold text-theme">Akira Nakamura</p>
+              <p class="text-red text-sm font-semibold">Music Artist</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 2 -->
+        <div class="bg-card rounded-2xl p-8 reveal relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-1 h-full bg-red"></div>
+          <div class="flex gap-1 mb-4">
+            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+          </div>
+          <p class="text-muted font-body text-base leading-relaxed mb-6 italic">
+            "We hired Ryuu for our brand launch video and the result was beyond our expectations. Professional, creative, and delivered on time. Will definitely work together again!"
+          </p>
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-red flex items-center justify-center font-display font-black text-white text-lg">SM</div>
+            <div>
+              <p class="font-bold text-theme">Sofia Martinez</p>
+              <p class="text-red text-sm font-semibold">Brand Director, NexGen</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 3 -->
+        <div class="bg-card rounded-2xl p-8 reveal relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-1 h-full bg-red"></div>
+          <div class="flex gap-1 mb-4">
+            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+          </div>
+          <p class="text-muted font-body text-base leading-relaxed mb-6 italic">
+            "My YouTube channel grew by 40% after revamping my editing style with Ryuu's help. The motion graphics and transitions are simply next level. Highly recommended!"
+          </p>
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-red flex items-center justify-center font-display font-black text-white text-lg">KL</div>
+            <div>
+              <p class="font-bold text-theme">Kyle Lee</p>
+              <p class="text-red text-sm font-semibold">YouTuber — 500K subs</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 4 -->
+        <div class="bg-card rounded-2xl p-8 reveal relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-1 h-full bg-red"></div>
+          <div class="flex gap-1 mb-4">
+            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+          </div>
+          <p class="text-muted font-body text-base leading-relaxed mb-6 italic">
+            "The documentary edit Ryuu produced for us won a regional award. The narrative flow and emotional pacing were masterfully handled. A true storyteller."
+          </p>
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-red flex items-center justify-center font-display font-black text-white text-lg">RP</div>
+            <div>
+              <p class="font-bold text-theme">Riya Patel</p>
+              <p class="text-red text-sm font-semibold">Documentary Filmmaker</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 5 -->
+        <div class="bg-card rounded-2xl p-8 reveal relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-1 h-full bg-red"></div>
+          <div class="flex gap-1 mb-4">
+            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+          </div>
+          <p class="text-muted font-body text-base leading-relaxed mb-6 italic">
+            "Fast turnaround, responsive communication, and stunning results. Ryuu handled our corporate event recap video like a pro. Our CEO was absolutely impressed!"
+          </p>
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-red flex items-center justify-center font-display font-black text-white text-lg">JW</div>
+            <div>
+              <p class="font-bold text-theme">James Whitfield</p>
+              <p class="text-red text-sm font-semibold">Events Manager, CoreVision</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 6 -->
+        <div class="bg-card rounded-2xl p-8 reveal relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-1 h-full bg-red"></div>
+          <div class="flex gap-1 mb-4">
+            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+          </div>
+          <p class="text-muted font-body text-base leading-relaxed mb-6 italic">
+            "Working with Ryuu was effortless. He understood my vision immediately and delivered a product that I couldn't have imagined on my own. Will be my go-to editor forever."
+          </p>
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-red flex items-center justify-center font-display font-black text-white text-lg">NF</div>
+            <div>
+              <p class="font-bold text-theme">Nadia Fontaine</p>
+              <p class="text-red text-sm font-semibold">Fashion Content Creator</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trust badges -->
+      <div class="mt-16 flex flex-wrap justify-center gap-8 items-center reveal">
+        <div class="text-center">
+          <p class="font-display text-4xl font-black text-red">200+</p>
+          <p class="text-muted text-sm tracking-wider">PROJECTS</p>
+        </div>
+        <div class="w-px h-12 bg-red opacity-30"></div>
+        <div class="text-center">
+          <p class="font-display text-4xl font-black text-red">50+</p>
+          <p class="text-muted text-sm tracking-wider">HAPPY CLIENTS</p>
+        </div>
+        <div class="w-px h-12 bg-red opacity-30"></div>
+        <div class="text-center">
+          <p class="font-display text-4xl font-black text-red">5.0</p>
+          <p class="text-muted text-sm tracking-wider">AVERAGE RATING</p>
+        </div>
+        <div class="w-px h-12 bg-red opacity-30"></div>
+        <div class="text-center">
+          <p class="font-display text-4xl font-black text-red">3</p>
+          <p class="text-muted text-sm tracking-wider">AWARDS WON</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section id="contact" class="py-24 bg-theme">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+        <!-- Left Info -->
+        <div>
+          <p class="section-label text-red mb-3 reveal">✦ Let's Work</p>
+          <h2 class="font-heading text-6xl sm:text-7xl text-theme mb-4 reveal">GET IN <span class="text-red">TOUCH</span></h2>
+          <div class="red-line w-24 mb-6 reveal"></div>
+          <p class="text-muted font-body text-lg leading-relaxed mb-10 reveal">
+            Ready to bring your vision to life? Tell me about your project and let's create something extraordinary together.
+          </p>
+
+          <!-- Contact Info -->
+          <div class="space-y-6 reveal">
+            <div class="flex items-center gap-5">
+              <div class="w-12 h-12 rounded-lg bg-red flex items-center justify-center text-white text-xl flex-shrink-0">📧</div>
+              <div>
+                <p class="text-muted text-xs tracking-widest uppercase mb-1">Email</p>
+                <p class="font-semibold text-theme">ryuu.kage.edits@gmail.com</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-5">
+              <div class="w-12 h-12 rounded-lg bg-red flex items-center justify-center text-white text-xl flex-shrink-0">📱</div>
+              <div>
+                <p class="text-muted text-xs tracking-widest uppercase mb-1">Phone / WhatsApp</p>
+                <p class="font-semibold text-theme">+1 (555) 123-4567</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-5">
+              <div class="w-12 h-12 rounded-lg bg-red flex items-center justify-center text-white text-xl flex-shrink-0">🌐</div>
+              <div>
+                <p class="text-muted text-xs tracking-widest uppercase mb-1">Social</p>
+                <div class="flex gap-3 mt-1">
+                  <a href="#" class="text-muted hover:text-red transition-colors font-semibold text-sm">YouTube</a>
+                  <span class="text-muted">·</span>
+                  <a href="#" class="text-muted hover:text-red transition-colors font-semibold text-sm">Instagram</a>
+                  <span class="text-muted">·</span>
+                  <a href="#" class="text-muted hover:text-red transition-colors font-semibold text-sm">Twitter</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Response time -->
+          <div class="mt-10 bg-card rounded-xl p-5 inline-flex items-center gap-4 reveal">
+            <div class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
+            <div>
+              <p class="font-bold text-sm text-theme">Currently Available</p>
+              <p class="text-muted text-xs">Typical response within 24 hours</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="bg-card rounded-2xl p-8 reveal">
+          <h3 class="font-heading text-3xl text-theme mb-6">SEND A MESSAGE</h3>
+          <div class="space-y-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label class="text-xs tracking-widest uppercase text-muted mb-2 block">First Name</label>
+                <input type="text" placeholder="Akira" class="contact-input w-full px-4 py-3 rounded-lg text-sm font-semibold"/>
+              </div>
+              <div>
+                <label class="text-xs tracking-widest uppercase text-muted mb-2 block">Last Name</label>
+                <input type="text" placeholder="Nakamura" class="contact-input w-full px-4 py-3 rounded-lg text-sm font-semibold"/>
+              </div>
+            </div>
+            <div>
+              <label class="text-xs tracking-widest uppercase text-muted mb-2 block">Email</label>
+              <input type="email" placeholder="your@email.com" class="contact-input w-full px-4 py-3 rounded-lg text-sm font-semibold"/>
+            </div>
+            <div>
+              <label class="text-xs tracking-widest uppercase text-muted mb-2 block">Project Type</label>
+              <select class="contact-input w-full px-4 py-3 rounded-lg text-sm font-semibold cursor-pointer">
+                <option value="">Select a package...</option>
+                <option>Basic — $199</option>
+                <option>Pro — $499</option>
+                <option>Elite — $999</option>
+                <option>Custom Project</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-xs tracking-widest uppercase text-muted mb-2 block">Message</label>
+              <textarea rows="5" placeholder="Tell me about your project, timeline, and vision..." class="contact-input w-full px-4 py-3 rounded-lg text-sm font-semibold resize-none"></textarea>
+            </div>
+            <button onclick="handleSubmit()" class="btn-red w-full py-4 rounded-lg font-semibold tracking-widest text-sm uppercase">
+              Send Message ✦
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="bg-theme-alt py-10 border-t border-opacity-20" style="border-color: #e63946; border-top-width: 1px; border-top-style: solid; border-top-opacity: 0.2;">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col sm:flex-row justify-between items-center gap-6">
+        <div class="flex items-center gap-2">
+          <span class="font-display text-2xl font-bold text-red">RYUU</span>
+          <span class="font-display text-2xl font-bold text-theme">KAGE</span>
+        </div>
+        <p class="text-muted text-sm font-semibold tracking-wider text-center">
+          © 2025 Ryuu Kage · Crafted with ❤️ and <span class="text-red">precision</span>
+        </p>
+        <div class="flex gap-6">
+          <a href="#home" class="text-muted hover:text-red text-sm font-semibold transition-colors tracking-wider">HOME</a>
+          <a href="#about" class="text-muted hover:text-red text-sm font-semibold transition-colors tracking-wider">ABOUT</a>
+          <a href="#contact" class="text-muted hover:text-red text-sm font-semibold transition-colors tracking-wider">CONTACT</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Theme toggle
+    function toggleTheme() {
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+    }
+
+    // Load saved theme
+    (function() {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'light') document.documentElement.classList.remove('dark');
+      else document.documentElement.classList.add('dark');
+    })();
+
+    // Mobile menu
+    function toggleMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('open');
+    }
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, 80 * (Array.from(entry.target.parentElement?.children || []).indexOf(entry.target)));
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+
+    // Contact form
+    function handleSubmit() {
+      const btn = event.currentTarget;
+      btn.textContent = '✓ Message Sent!';
+      btn.style.background = '#16a34a';
+      setTimeout(() => {
+        btn.textContent = 'Send Message ✦';
+        btn.style.background = '';
+      }, 3000);
+    }
+
+    // Active nav link highlight
+    window.addEventListener('scroll', () => {
+      const sections = ['home','about','pricing','customers','contact'];
+      const links = document.querySelectorAll('nav a');
+      let current = '';
+      sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && window.scrollY >= el.offsetTop - 100) current = id;
+      });
+      links.forEach(link => {
+        link.classList.remove('text-red');
+        if (link.getAttribute('href') === '#' + current) link.classList.add('text-red');
+      });
+    });
+  </script>
+</body>
+</html>

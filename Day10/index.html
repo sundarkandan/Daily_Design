@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mechanical Engineering Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script>tailwind.config = { darkMode: 'class' }</script>
+
+    <style>
+        :root {
+            --brand-red: #dc2626;
+            --brand-dark: #0f172a;
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        html, body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            cursor: none;
+        }
+/* --- Custom Scrollbar for Chrome, Safari, and Edge --- */
+::-webkit-scrollbar {
+    width: 8px; /* Scrollbar width konjam sleek-ah irukkum */
+}
+
+/* Track (Scrollbar background) */
+::-webkit-scrollbar-track {
+    background: #ffffff; 
+}
+
+/* Handle (The moving part) */
+::-webkit-scrollbar-thumb {
+    background: #e2e8f0; /* Subtle grey default */
+    border-radius: 100px;
+    border: 2px solid #ffffff; /* Margin effect tharum */
+}
+
+/* Handle on hover (Red accent trigger aagum) */
+::-webkit-scrollbar-thumb:hover {
+    background: #dc2626; /* Namma Red theme mela hover pannum pothu reveal aagum */
+}
+
+/* --- For Firefox --- */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #e2e8f0 #ffffff;
+}
+        /* ===================== CUSTOM CURSOR ===================== */
+        .cursor-dot {
+            width: 8px; height: 8px;
+            background: #dc2626;
+            border-radius: 50%;
+          
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.05s, width 0.2s, height 0.2s, background 0.2s;
+        }
+        .cursor-ring {
+            width: 36px; height: 36px;
+            border: 2px solid rgba(220,38,38,0.5);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s var(--ease-out-expo), height 0.3s var(--ease-out-expo), border-color 0.3s, background 0.3s;
+        }
+        body:hover .cursor-dot { opacity: 1; }
+        .cursor-ring.hovered { width: 60px; height: 60px; background: rgba(220,38,38,0.08); border-color: #dc2626; }
+        .cursor-dot.hovered { width: 4px; height: 4px; }
+
+        /* ===================== PARTICLES ===================== */
+        #particle-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        /* ===================== SECTIONS ===================== */
+        section, main {
+            width: 100%;
+            min-height: 100vh;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ===================== NAV ===================== */
+        nav {
+            position: fixed;
+            width: 100%;
+            z-index: 50;
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.4s, border-color 0.4s, transform 0.4s;
+        }
+        nav.hidden-nav { transform: translateY(-100%); }
+        .dark nav { background: rgba(15,23,42,0.9); border-color: #1e293b; }
+
+        /* ===================== KEYFRAMES ===================== */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-40px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeLeft {
+            from { opacity: 0; transform: translateX(60px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeRight {
+            from { opacity: 0; transform: translateX(-60px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.75); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+        @keyframes clipReveal {
+            from { clip-path: inset(0 100% 0 0); opacity: 0; }
+            to   { clip-path: inset(0 0% 0 0);   opacity: 1; }
+        }
+        @keyframes floatY {
+            0%,100% { transform: translateY(0px); }
+            50%      { transform: translateY(-14px); }
+        }
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+        @keyframes spin-reverse {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(-360deg); }
+        }
+        @keyframes pulse-glow {
+            0%,100% { box-shadow: 0 0 0 0 rgba(220,38,38,0.4); }
+            50%      { box-shadow: 0 0 0 20px rgba(220,38,38,0); }
+        }
+        @keyframes typing {
+            from { width: 0; }
+            to   { width: 100%; }
+        }
+        @keyframes blink {
+            0%,100% { border-color: transparent; }
+            50%      { border-color: #dc2626; }
+        }
+        @keyframes slideInBar {
+            from { transform: scaleX(0); }
+            to   { transform: scaleX(1); }
+        }
+        @keyframes countUp { /* handled by JS */ }
+        @keyframes gradientShift {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes borderDraw {
+            from { stroke-dashoffset: 600; }
+            to   { stroke-dashoffset: 0; }
+        }
+        @keyframes shimmer {
+            0%   { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        @keyframes morphBg {
+            0%,100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+            50%      { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+        }
+        @keyframes navSlideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes waveIn {
+            0%   { clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%); opacity: 0; }
+            100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); opacity: 1; }
+        }
+        @keyframes magneticPop {
+            0%   { transform: scale(1); }
+            50%  { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+
+        /* ===================== REVEAL BASE ===================== */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+        }
+        .animate-on-scroll.from-left  { transform: translateX(-60px); }
+        .animate-on-scroll.from-right { transform: translateX(60px); }
+        .animate-on-scroll.from-scale { transform: scale(0.8); opacity: 0; }
+        .animate-on-scroll.visible {
+            opacity: 1 !important;
+            transform: none !important;
+        }
+        .animate-on-scroll.delay-1 { transition-delay: 0.1s; }
+        .animate-on-scroll.delay-2 { transition-delay: 0.2s; }
+        .animate-on-scroll.delay-3 { transition-delay: 0.3s; }
+        .animate-on-scroll.delay-4 { transition-delay: 0.45s; }
+        .animate-on-scroll.delay-5 { transition-delay: 0.6s; }
+        .animate-on-scroll.delay-6 { transition-delay: 0.75s; }
+        .animate-on-scroll.delay-7 { transition-delay: 0.9s; }
+
+        /* HOME - plays immediately */
+        .home-anim { opacity: 0; animation-fill-mode: forwards; }
+        .home-fade-up    { animation: fadeUp 0.9s var(--ease-out-expo) forwards; }
+        .home-fade-right { animation: fadeRight 0.9s var(--ease-out-expo) forwards; }
+        .home-fade-left  { animation: fadeLeft 0.9s var(--ease-out-expo) forwards; }
+        .home-scale      { animation: scaleIn 0.9s var(--ease-out-expo) forwards; }
+        .home-clip       { animation: clipReveal 1.2s var(--ease-out-expo) forwards; }
+
+        .d1 { animation-delay: 0.1s; }
+        .d2 { animation-delay: 0.3s; }
+        .d3 { animation-delay: 0.5s; }
+        .d4 { animation-delay: 0.7s; }
+        .d5 { animation-delay: 0.9s; }
+        .d6 { animation-delay: 1.1s; }
+        .d7 { animation-delay: 1.3s; }
+        .d8 { animation-delay: 1.5s; }
+
+        /* ===================== FLOAT & SPIN ===================== */
+        .float-anim { animation: floatY 4s ease-in-out infinite; }
+        .spin-slow   { animation: spin-slow 20s linear infinite; }
+        .spin-rev    { animation: spin-reverse 15s linear infinite; }
+        .pulse-glow  { animation: pulse-glow 2.5s ease-in-out infinite; }
+
+        /* ===================== PATTERNS ===================== */
+        .red-dot-pattern {
+            background-image: radial-gradient(#dc2626 1.5px, transparent 1.5px);
+            background-size: 22px 22px;
+        }
+        .grid-pattern {
+            background-image: linear-gradient(rgba(220,38,38,0.07) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(220,38,38,0.07) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* ===================== TYPING TEXT ===================== */
+        .typing-text {
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 3px solid #dc2626;
+            animation: typing 2s steps(30) 0.5s forwards, blink 0.8s step-end infinite;
+            width: 0;
+        }
+
+        /* ===================== SHIMMER ===================== */
+        .shimmer-text {
+            background: linear-gradient(90deg, #dc2626, #ff6b6b, #dc2626, #991b1b);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 3s linear infinite;
+        }
+
+        /* ===================== MORPHING BG ===================== */
+        .morph-blob {
+            animation: morphBg 8s ease-in-out infinite;
+        }
+
+        /* ===================== SECTION INNER ===================== */
+        .section-inner {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 5rem 1.5rem 2rem;
+        }
+
+        /* ===================== THEME TOGGLE ===================== */
+        #theme-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            width: 52px; height: 52px;
+            border-radius: 50%;
+            background: #dc2626;
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 20px rgba(220,38,38,0.4);
+            transition: all 0.3s ease;
+            animation: pulse-glow 2.5s ease-in-out infinite;
+        }
+        #theme-toggle:hover { transform: scale(1.15) rotate(20deg); background: #b91c1c; }
+
+        /* ===================== SKILL BARS ===================== */
+        .skill-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #dc2626, #ff6b6b);
+            border-radius: 999px;
+            transform-origin: left;
+            transform: scaleX(0);
+            transition: transform 1.6s var(--ease-out-expo);
+        }
+        .skill-bar-fill.animated { transform: scaleX(1); }
+
+        /* ===================== CARDS ===================== */
+        .ach-card {
+            transition: transform 0.35s var(--ease-out-expo),
+                        box-shadow 0.35s ease,
+                        border-color 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .ach-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(220,38,38,0.04) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .ach-card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 30px 60px rgba(220,38,38,0.15); }
+        .ach-card:hover::before { opacity: 1; }
+
+        /* ===================== ABOUT IMAGE ===================== */
+        .about-img-wrap { position: relative; }
+        .about-img-wrap::before {
+            content: '';
+            position: absolute;
+            top: 20px; left: 20px; right: -20px; bottom: -20px;
+            border: 3px solid #dc2626;
+            z-index: 0;
+            transition: all 0.5s var(--ease-out-expo);
+        }
+        .about-img-wrap:hover::before { top: 10px; left: 10px; right: -10px; bottom: -10px; }
+        .about-img-wrap img { position: relative; z-index: 1; }
+
+        /* ===================== NAV ===================== */
+        .nav-link {
+            position: relative;
+            padding-bottom: 2px;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 0; height: 2px;
+            background: #dc2626;
+            transition: width 0.3s var(--ease-out-expo);
+        }
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+        .nav-link.active { color: #dc2626; }
+
+        /* ===================== BUTTONS ===================== */
+        .btn-primary {
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0.1);
+            transform: translateX(-100%);
+            transition: transform 0.4s var(--ease-out-expo);
+        }
+        .btn-primary:hover::after { transform: translateX(0); }
+
+        /* ===================== CONTACT INPUT ===================== */
+        .contact-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid #e5e7eb;
+            background: white;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.875rem;
+            outline: none;
+            transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+        }
+        .contact-input:focus {
+            border-color: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(220,38,38,0.08);
+        }
+        .dark .contact-input { background: #1e293b; border-color: #334155; color: #f1f5f9; }
+        .dark .contact-input:focus { border-color: #dc2626; }
+
+        /* ===================== STATS COUNTER ===================== */
+        .stat-num { font-variant-numeric: tabular-nums; }
+
+        /* ===================== NOISE OVERLAY ===================== */
+        .noise {
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            opacity: 0.4;
+            z-index: 1;
+        }
+
+        /* ===================== HERO BIG TEXT ===================== */
+        .hero-bg-text {
+            position: absolute;
+            bottom: -5%;
+            left: 0;
+            font-size: 15vw;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(220,38,38,0.06);
+            line-height: 1;
+            pointer-events: none;
+            z-index: 0;
+            animation: fadeUp 1.5s var(--ease-out-expo) 0.8s both;
+        }
+        .dark .hero-bg-text { -webkit-text-stroke: 1px rgba(220,38,38,0.1); }
+
+        /* ===================== SCROLL INDICATOR ===================== */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            animation: fadeUp 1s var(--ease-out-expo) 2s both;
+            z-index: 10;
+        }
+        .scroll-indicator span {
+            display: block;
+            width: 1px; height: 60px;
+            background: linear-gradient(to bottom, #dc2626, transparent);
+            animation: floatY 1.8s ease-in-out infinite;
+        }
+        .scroll-indicator p { font-size: 9px; font-weight: 800; letter-spacing: 0.3em; text-transform: uppercase; color: #dc2626; }
+
+        /* ===================== LINE DRAW SVG ===================== */
+        .line-draw { stroke-dasharray: 600; stroke-dashoffset: 600; }
+        .line-draw.drawn { animation: borderDraw 1.5s var(--ease-out-expo) forwards; }
+
+        /* ===================== PROGRESS RING ===================== */
+        .progress-ring { transform: rotate(-90deg); }
+        .progress-ring-circle {
+            stroke-dasharray: 251;
+            stroke-dashoffset: 251;
+            transition: stroke-dashoffset 1.5s var(--ease-out-expo);
+        }
+
+        /* ===================== MOBILE MENU ===================== */
+        #mobile-menu { display: none; }
+        #mobile-menu.open { display: flex; }
+
+        /* ===================== MAGNETIC ELEMENTS ===================== */
+        .magnetic { transition: transform 0.3s var(--ease-out-expo); }
+
+        /* ===================== LOADING SCREEN ===================== */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: #0f172a;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        #loader.done { opacity: 0; visibility: hidden; }
+        .loader-gear { animation: spin-slow 1.5s linear infinite; }
+        .loader-bar {
+            width: 200px; height: 3px;
+            background: #1e293b;
+            margin-top: 2rem;
+            overflow: hidden;
+        }
+        .loader-fill {
+            height: 100%;
+            background: #dc2626;
+            animation: typing 1.5s var(--ease-out-expo) forwards;
+        }
+
+        /* ===================== SECTION TRANSITIONS ===================== */
+        .section-enter { animation: waveIn 0.8s var(--ease-out-expo) both; }
+
+        /* ===================== GLITCH ===================== */
+        @keyframes glitch1 {
+            0%,100% { clip-path: inset(0 0 90% 0); transform: translate(-2px, 0); }
+            20%      { clip-path: inset(30% 0 50% 0); transform: translate(2px, 0); }
+            40%      { clip-path: inset(60% 0 20% 0); transform: translate(-2px, 0); }
+            60%      { clip-path: inset(80% 0 5% 0); transform: translate(2px, 0); }
+            80%      { clip-path: inset(10% 0 70% 0); transform: translate(-2px, 0); }
+        }
+        @keyframes glitch2 {
+            0%,100% { clip-path: inset(80% 0 0 0); transform: translate(2px, 0); }
+            20%      { clip-path: inset(20% 0 60% 0); transform: translate(-2px, 0); }
+            40%      { clip-path: inset(50% 0 30% 0); transform: translate(2px, 0); }
+        }
+        .glitch { position: relative; }
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            opacity: 0;
+        }
+        .glitch::before { color: #ff6b6b; }
+        .glitch::after  { color: #3b82f6; }
+        .glitch:hover::before { opacity: 0.6; animation: glitch1 0.4s steps(1) infinite; }
+        .glitch:hover::after  { opacity: 0.6; animation: glitch2 0.4s steps(1) infinite; }
+
+        /* ===================== TAG CHIP ===================== */
+        .tag-chip {
+            display: inline-block;
+            padding: 4px 12px;
+            border: 1px solid rgba(220,38,38,0.3);
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #dc2626;
+            transition: background 0.25s, color 0.25s;
+        }
+        .tag-chip:hover { background: #dc2626; color: white; }
+
+        /* dark overrides */
+        .dark #about  { background: #0f172a; }
+        .dark #contact { background: #0f172a; }
+        .dark #achievements { background: #020617; }
+    </style>
+</head>
+<body class="bg-white dark:bg-slate-900 transition-colors duration-300">
+
+<!-- ===== LOADER ===== -->
+<div id="loader">
+    <svg class="loader-gear" width="60" height="60" viewBox="0 0 24 24" fill="none">
+        <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" fill="#dc2626"/>
+        <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58z" fill="#94a3b8"/>
+    </svg>
+    <p style="color:#dc2626;font-size:11px;font-weight:800;letter-spacing:0.4em;text-transform:uppercase;margin-top:1.5rem;">Loading Portfolio</p>
+    <div class="loader-bar"><div class="loader-fill"></div></div>
+</div>
+
+<!-- ===== CUSTOM CURSOR ===== -->
+<div class="cursor-dot" id="cursor-dot"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+
+<!-- ===== PARTICLE CANVAS ===== -->
+<canvas id="particle-canvas"></canvas>
+
+<!-- ===== THEME TOGGLE ===== -->
+<button id="theme-toggle" title="Toggle Dark/Light Mode" class="magnetic">
+    <i class="fa-solid fa-moon" id="theme-icon"></i>
+</button>
+
+<!-- ===== NAVIGATION ===== -->
+<nav id="main-nav" style="animation: navSlideDown 0.8s var(--ease-out-expo) 1.6s both;">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+        <div class="flex items-center space-x-2 home-anim home-fade-right d2 magnetic">
+            <div class="w-8 h-8 bg-red-600 flex items-center justify-center rounded pulse-glow">
+                <i class="fa-solid fa-compass-drafting text-white text-sm"></i>
+            </div>
+            <span class="font-extrabold text-xl tracking-tighter uppercase dark:text-white glitch" data-text="MechEng.">Mech<span class="text-red-600 font-black">Eng.</span></span>
+        </div>
+        <div class="hidden md:flex items-center space-x-10 text-[11px] font-bold uppercase tracking-[0.25em] text-gray-500 dark:text-slate-400">
+            <a href="#home"         class="nav-link magnetic hover:text-red-600 transition" data-section="home">Home</a>
+            <a href="#about"        class="nav-link magnetic hover:text-red-600 transition" data-section="about">About</a>
+            <a href="#achievements" class="nav-link magnetic hover:text-red-600 transition" data-section="achievements">Achievements</a>
+            <a href="#contact"      class="nav-link magnetic hover:text-red-600 transition" data-section="contact">Contact</a>
+        </div>
+        <button id="hamburger" class="md:hidden text-gray-700 dark:text-slate-300 text-xl magnetic">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </div>
+    <div id="mobile-menu" class="flex-col items-start px-6 pb-4 bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 gap-4 text-[11px] font-bold uppercase tracking-[0.25em] text-gray-500 dark:text-slate-400">
+        <a href="#home"         class="hover:text-red-600 transition" onclick="closeMobileMenu()">Home</a>
+        <a href="#about"        class="hover:text-red-600 transition" onclick="closeMobileMenu()">About</a>
+        <a href="#achievements" class="hover:text-red-600 transition" onclick="closeMobileMenu()">Achievements</a>
+        <a href="#contact"      class="hover:text-red-600 transition" onclick="closeMobileMenu()">Contact</a>
+    </div>
+</nav>
+
+<!-- ===== HOME SECTION ===== -->
+<main id="home" class="grid-pattern">
+    <div class="noise"></div>
+
+    <!-- Animated background blobs -->
+    <div class="absolute top-20 right-10 w-64 h-64 bg-red-600/5 morph-blob -z-10 dark:bg-red-600/10"></div>
+    <div class="absolute bottom-20 left-20 w-40 h-40 red-dot-pattern opacity-20 -z-10 float-anim"></div>
+    <div class="absolute top-1/2 right-1/3 w-8 h-8 border-2 border-red-600/30 rounded-full spin-slow -z-10"></div>
+    <div class="absolute top-1/3 left-1/4 w-5 h-5 bg-red-600/20 rounded-full float-anim" style="animation-delay:1s"></div>
+
+    <!-- Animated SVG decoration -->
+    <svg class="absolute top-0 left-0 w-full h-full pointer-events-none -z-10" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
+        <circle cx="1300" cy="150" r="300" stroke="rgba(220,38,38,0.04)" stroke-width="2" class="line-draw" id="hero-circle"/>
+        <circle cx="1300" cy="150" r="200" stroke="rgba(220,38,38,0.06)" stroke-width="1"/>
+    </svg>
+
+    <div class="section-inner">
+        <div class="max-w-7xl w-full mx-auto grid lg:grid-cols-12 gap-10 items-center relative z-10">
+            <!-- Text side -->
+            <div class="lg:col-span-7 space-y-8">
+                <div class="home-anim home-fade-up d1">
+                    <h2 class="text-red-600 font-bold uppercase tracking-[0.4em] text-xs mb-4 flex items-center gap-3">
+                        <span class="w-8 h-[2px] bg-red-600" style="animation: slideInBar 1s var(--ease-out-expo) 0.2s both; transform-origin:left; animation-fill-mode:both;"></span>
+                        2026 Graduate Portfolio
+                    </h2>
+                    <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-slate-900 dark:text-white leading-[0.95] tracking-tighter">
+                        Innovating <br>
+                        <span class="shimmer-text italic">Precision</span> Mech.
+                    </h1>
+                </div>
+
+                <p class="home-anim home-fade-up d3 text-lg text-gray-500 dark:text-slate-400 max-w-xl leading-relaxed font-medium">
+                    Final year Mechanical Engineering student specializing in
+                    <strong class="text-slate-700 dark:text-slate-200">computational design</strong> and
+                    <strong class="text-slate-700 dark:text-slate-200">industrial automation</strong>.
+                    Transforming complex problems into streamlined mechanical solutions.
+                </p>
+
+                <div class="home-anim home-fade-up d4 flex flex-wrap items-center gap-4">
+                    <span class="tag-chip magnetic">SolidWorks</span>
+                    <span class="tag-chip magnetic">ANSYS</span>
+                    <span class="tag-chip magnetic">Robotics</span>
+                    <span class="tag-chip magnetic">Python</span>
+                    <span class="tag-chip magnetic">Mechatronics</span>
+                </div>
+
+                <div class="home-anim home-fade-up d5 flex flex-wrap items-center gap-6 pt-2">
+                    <a href="#about" class="btn-primary magnetic px-8 py-4 bg-red-600 text-white font-bold text-sm uppercase tracking-widest hover:bg-black dark:hover:bg-white dark:hover:text-black transition-all duration-500 shadow-[8px_8px_0px_0px_rgba(220,38,38,0.2)] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
+                        About Me
+                    </a>
+                    <a href="#contact" class="magnetic px-8 py-4 border-2 border-gray-900 dark:border-white text-gray-900 dark:text-white font-bold text-sm uppercase tracking-widest hover:bg-gray-900 hover:text-white dark:hover:bg-white dark:hover:text-black transition-all">
+                        Hire Me
+                    </a>
+                </div>
+
+                <div class="home-anim home-fade-up d6 grid grid-cols-3 gap-6 pt-8 border-t border-gray-100 dark:border-slate-700">
+                    <div class="magnetic">
+                        <span class="block text-xl font-black text-slate-900 dark:text-white uppercase">3D CAD</span>
+                        <span class="text-[10px] text-gray-400 font-bold tracking-widest">SOLIDWORKS / ANSYS</span>
+                    </div>
+                    <div class="magnetic">
+                        <span class="block text-xl font-black text-slate-900 dark:text-white uppercase">A+</span>
+                        <span class="text-[10px] text-gray-400 font-bold tracking-widest">ACADEMIC STANDING</span>
+                    </div>
+                    <div class="magnetic">
+                        <span class="block text-xl font-black text-slate-900 dark:text-white uppercase">ROBO</span>
+                        <span class="text-[10px] text-gray-400 font-bold tracking-widest">MECHATRONICS</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image side -->
+            <div class="lg:col-span-5 relative flex justify-center lg:justify-end">
+                <div class="home-anim home-clip d3 relative w-full max-w-[420px] aspect-[4/5] bg-gray-200 dark:bg-slate-700 shadow-2xl overflow-hidden group">
+                    <img
+                        src="https://cdn.corenexis.com/files/c/4847741720.png"
+                        alt="Mechanical Engineering Student"
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    >
+                    <div class="absolute inset-0 border-[20px] border-white/10 pointer-events-none"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-red-700/80 to-transparent">
+                        <p class="text-white font-black text-sm uppercase tracking-widest">Mechanical Engineer</p>
+                        <p class="text-white/60 text-xs">2026 Graduate · Tamil Nadu, India</p>
+                    </div>
+                </div>
+
+                <!-- Floating badge -->
+                <div class="home-anim home-scale d5 absolute -bottom-4 -left-4 bg-white dark:bg-slate-800 p-5 shadow-xl border-l-4 border-red-600 hidden md:block magnetic pulse-glow">
+                    <i class="fa-solid fa-microchip text-red-600 text-2xl mb-1"></i>
+                    <p class="text-[10px] font-black uppercase text-gray-400 tracking-widest">Industry 4.0 Ready</p>
+                </div>
+
+                <!-- Spinning ring decorations -->
+                <div class="absolute -top-8 -right-8 w-24 h-24 border-2 border-red-600/20 rounded-full spin-slow hidden md:block"></div>
+                <div class="absolute -top-4 -right-4 w-12 h-12 border-2 border-red-600/40 rounded-full spin-rev hidden md:block"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="scroll-indicator hidden md:flex">
+        <p>Scroll</p>
+        <span></span>
+    </div>
+
+    <!-- Big background text -->
+    <div class="hero-bg-text">Engineer</div>
+</main>
+
+<!-- ===== ABOUT SECTION ===== -->
+<section id="about" class="bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
+    <div class="noise"></div>
+    <div class="absolute inset-0 grid-pattern opacity-30"></div>
+
+    <!-- Decorative elements -->
+    <div class="absolute top-10 right-10 w-32 h-32 red-dot-pattern opacity-10 float-anim" style="animation-delay:0.5s"></div>
+    <div class="absolute bottom-20 left-0 w-24 h-24 border-r-2 border-t-2 border-red-600/20"></div>
+
+    <div class="section-inner">
+        <div class="max-w-7xl w-full mx-auto grid lg:grid-cols-2 gap-14 items-center">
+
+            <!-- Image -->
+            <div class="about-img-wrap w-full max-w-[400px] mx-auto lg:mx-0 animate-on-scroll from-left">
+                <img
+                    src="https://cdn.corenexis.com/files/c/2193894720.png"
+                    alt="About - Engineering Work"
+                    class="w-full h-[420px] lg:h-[500px] object-cover shadow-2xl"
+                    onerror="this.src='https://placehold.co/600x500/1e293b/dc2626?text=About+Me'"
+                >
+                <!-- Spinning gear overlay -->
+                <div class="absolute -top-5 -right-5 w-20 h-20 bg-red-600 flex items-center justify-center z-20 magnetic pulse-glow" style="border-radius:4px;">
+                    <i class="fa-solid fa-gear text-white text-2xl spin-slow"></i>
+                </div>
+                <!-- Progress rings -->
+                <div class="absolute -bottom-6 -right-6 bg-white dark:bg-slate-800 p-3 shadow-xl z-20 hidden lg:block animate-on-scroll from-scale delay-4">
+                    <svg width="70" height="70" class="progress-ring">
+                        <circle cx="35" cy="35" r="28" fill="none" stroke="#f1f5f9" stroke-width="5"/>
+                        <circle cx="35" cy="35" r="28" fill="none" stroke="#dc2626" stroke-width="5" stroke-linecap="round"
+                                class="progress-ring-circle" data-pct="92" id="ring-cad"/>
+                    </svg>
+                    <p class="text-[9px] font-black text-center text-gray-400 tracking-widest mt-1 uppercase">CAD</p>
+                </div>
+            </div>
+
+            <!-- Text -->
+            <div class="space-y-6">
+                <div class="animate-on-scroll">
+                    <h2 class="text-red-600 font-bold uppercase tracking-[0.4em] text-xs mb-3 flex items-center gap-3">
+                        <span class="w-8 h-[2px] bg-red-600"></span> About Me
+                    </h2>
+                    <h3 class="text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-tight glitch" data-text="Passionate About Engineering Excellence">
+                        Passionate About<br><span class="text-red-600">Engineering</span> Excellence
+                    </h3>
+                </div>
+
+                <p class="animate-on-scroll delay-1 text-gray-600 dark:text-slate-400 leading-relaxed font-medium">
+                    I'm a final-year Mechanical Engineering student at a top-tier institute, passionate about solving real-world problems through innovative design and precision engineering. My core interests lie in <strong class="text-slate-800 dark:text-white">FEA analysis</strong>, <strong class="text-slate-800 dark:text-white">robotics</strong>, and <strong class="text-slate-800 dark:text-white">smart manufacturing systems</strong>.
+                </p>
+                <p class="animate-on-scroll delay-2 text-gray-600 dark:text-slate-400 leading-relaxed font-medium">
+                    With hands-on experience in SolidWorks, ANSYS, and Python automation, I bridge the gap between theoretical knowledge and practical application in every project I undertake.
+                </p>
+
+                <!-- Skill bars -->
+                <div class="space-y-4 pt-2">
+                    <div class="animate-on-scroll delay-2">
+                        <div class="flex justify-between text-xs font-bold uppercase text-gray-500 dark:text-slate-400 mb-1">
+                            <span>SolidWorks / CAD</span><span>92%</span>
+                        </div>
+                        <div class="h-2 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                            <div class="skill-bar-fill" data-width="0.92"></div>
+                        </div>
+                    </div>
+                    <div class="animate-on-scroll delay-3">
+                        <div class="flex justify-between text-xs font-bold uppercase text-gray-500 dark:text-slate-400 mb-1">
+                            <span>ANSYS / FEA</span><span>85%</span>
+                        </div>
+                        <div class="h-2 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                            <div class="skill-bar-fill" data-width="0.85"></div>
+                        </div>
+                    </div>
+                    <div class="animate-on-scroll delay-4">
+                        <div class="flex justify-between text-xs font-bold uppercase text-gray-500 dark:text-slate-400 mb-1">
+                            <span>Python / Automation</span><span>78%</span>
+                        </div>
+                        <div class="h-2 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                            <div class="skill-bar-fill" data-width="0.78"></div>
+                        </div>
+                    </div>
+                    <div class="animate-on-scroll delay-5">
+                        <div class="flex justify-between text-xs font-bold uppercase text-gray-500 dark:text-slate-400 mb-1">
+                            <span>Robotics / Mechatronics</span><span>80%</span>
+                        </div>
+                        <div class="h-2 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                            <div class="skill-bar-fill" data-width="0.80"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="animate-on-scroll delay-6 flex gap-4 pt-4">
+                    <a href="#achievements" class="btn-primary magnetic px-7 py-3 bg-red-600 text-white font-bold text-xs uppercase tracking-widest hover:bg-black dark:hover:bg-white dark:hover:text-black transition-all duration-300">
+                        My Achievements
+                    </a>
+                    <a href="#" class="magnetic px-7 py-3 border-2 border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 font-bold text-xs uppercase tracking-widest hover:border-red-600 hover:text-red-600 transition-all">
+                        Download CV
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== ACHIEVEMENTS SECTION ===== -->
+<section id="achievements" class="bg-white dark:bg-slate-950 transition-colors duration-300">
+    <div class="noise"></div>
+    <div class="absolute inset-0 red-dot-pattern opacity-[0.02]"></div>
+
+    <!-- Decorative corners -->
+    <div class="absolute top-0 left-0 w-40 h-40 border-r-2 border-b-2 border-red-600/10"></div>
+    <div class="absolute bottom-0 right-0 w-40 h-40 border-l-2 border-t-2 border-red-600/10"></div>
+
+    <div class="section-inner">
+        <div class="max-w-7xl w-full mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-10 animate-on-scroll">
+                <h2 class="text-red-600 font-bold uppercase tracking-[0.4em] text-xs mb-3 flex items-center justify-center gap-3">
+                    <span class="w-8 h-[2px] bg-red-600"></span> Milestones <span class="w-8 h-[2px] bg-red-600"></span>
+                </h2>
+                <h3 class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight">
+                    Achievements & <span class="shimmer-text">Recognition</span>
+                </h3>
+            </div>
+
+            <!-- Stats Row -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+                <div class="bg-red-600 text-white p-6 text-center ach-card animate-on-scroll delay-1 from-scale magnetic">
+                    <div class="text-4xl font-black stat-num" data-target="12" data-suffix="+">0</div>
+                    <div class="text-[10px] font-bold uppercase tracking-widest mt-1 opacity-80">Projects Done</div>
+                </div>
+                <div class="bg-slate-900 dark:bg-slate-700 text-white p-6 text-center ach-card animate-on-scroll delay-2 from-scale magnetic">
+                    <div class="text-4xl font-black stat-num" data-target="3" data-suffix="">0</div>
+                    <div class="text-[10px] font-bold uppercase tracking-widest mt-1 opacity-80">National Awards</div>
+                </div>
+                <div class="bg-red-600 text-white p-6 text-center ach-card animate-on-scroll delay-3 from-scale magnetic">
+                    <div class="text-4xl font-black stat-num" data-target="2" data-suffix="">0</div>
+                    <div class="text-[10px] font-bold uppercase tracking-widest mt-1 opacity-80">Publications</div>
+                </div>
+                <div class="bg-slate-900 dark:bg-slate-700 text-white p-6 text-center ach-card animate-on-scroll delay-4 from-scale magnetic">
+                    <div class="text-4xl font-black stat-num" data-target="92" data-suffix="" data-decimal="9.2">0</div>
+                    <div class="text-[10px] font-bold uppercase tracking-widest mt-1 opacity-80">CGPA</div>
+                </div>
+            </div>
+
+            <!-- Achievement Cards -->
+            <div class="grid md:grid-cols-3 gap-5">
+                <div class="ach-card bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 p-6 border-t-4 border-t-red-600 animate-on-scroll delay-1 magnetic">
+                    <div class="w-12 h-12 bg-red-100 dark:bg-red-900/30 flex items-center justify-center mb-4 transition-transform duration-300 group-hover:rotate-12">
+                        <i class="fa-solid fa-trophy text-red-600 text-xl"></i>
+                    </div>
+                    <h4 class="font-black text-slate-900 dark:text-white text-lg mb-2">Smart India Hackathon</h4>
+                    <p class="text-gray-500 dark:text-slate-400 text-sm leading-relaxed">
+                        Winner of SIH 2025 — Designed an autonomous maintenance drone for industrial pipelines using embedded sensors & ML-based anomaly detection.
+                    </p>
+                    <span class="mt-4 inline-block tag-chip">2025 · National Level</span>
+                </div>
+
+                <div class="ach-card bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 p-6 border-t-4 border-t-slate-900 dark:border-t-slate-500 animate-on-scroll delay-2 magnetic">
+                    <div class="w-12 h-12 bg-slate-100 dark:bg-slate-700 flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-file-lines text-slate-700 dark:text-slate-300 text-xl"></i>
+                    </div>
+                    <h4 class="font-black text-slate-900 dark:text-white text-lg mb-2">Research Publication</h4>
+                    <p class="text-gray-500 dark:text-slate-400 text-sm leading-relaxed">
+                        Co-authored paper on "Topology Optimization of Lightweight Structural Components" published in IJME — cited 14 times within 6 months.
+                    </p>
+                    <span class="mt-4 inline-block tag-chip">2024 · IJME Journal</span>
+                </div>
+
+                <div class="ach-card bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 p-6 border-t-4 border-t-red-600 animate-on-scroll delay-3 magnetic">
+                    <div class="w-12 h-12 bg-red-100 dark:bg-red-900/30 flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-robot text-red-600 text-xl"></i>
+                    </div>
+                    <h4 class="font-black text-slate-900 dark:text-white text-lg mb-2">Robocon 2024 — Runner Up</h4>
+                    <p class="text-gray-500 dark:text-slate-400 text-sm leading-relaxed">
+                        Led the mechanical sub-team in designing a 4-DOF robotic arm system for ABU Robocon. Reached the national finals with a precision score of 94%.
+                    </p>
+                    <span class="mt-4 inline-block tag-chip">2024 · ABU Robocon</span>
+                </div>
+
+                <div class="ach-card bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 p-6 border-t-4 border-t-slate-900 dark:border-t-slate-500 animate-on-scroll delay-4 magnetic">
+                    <div class="w-12 h-12 bg-slate-100 dark:bg-slate-700 flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-star text-slate-700 dark:text-slate-300 text-xl"></i>
+                    </div>
+                    <h4 class="font-black text-slate-900 dark:text-white text-lg mb-2">Merit Scholarship</h4>
+                    <p class="text-gray-500 dark:text-slate-400 text-sm leading-relaxed">
+                        Recipient of the Institute Merit Scholarship for 3 consecutive years for maintaining top-5 rank in the Mechanical Engineering department.
+                    </p>
+                    <span class="mt-4 inline-block tag-chip">2022–2025 · Institute</span>
+                </div>
+
+                <div class="ach-card bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 p-6 border-t-4 border-t-red-600 animate-on-scroll delay-5 magnetic">
+                    <div class="w-12 h-12 bg-red-100 dark:bg-red-900/30 flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-industry text-red-600 text-xl"></i>
+                    </div>
+                    <h4 class="font-black text-slate-900 dark:text-white text-lg mb-2">TATA Motors Internship</h4>
+                    <p class="text-gray-500 dark:text-slate-400 text-sm leading-relaxed">
+                        Selected as one of 12 interns across India for TATA Motors' Advanced Manufacturing R&D — worked on EV chassis weight optimization.
+                    </p>
+                    <span class="mt-4 inline-block tag-chip">Summer 2025 · TATA Motors</span>
+                </div>
+
+                <div class="ach-card bg-red-600 text-white p-6 border-t-4 border-t-white/30 flex flex-col justify-between animate-on-scroll delay-6 magnetic">
+                    <div>
+                        <div class="w-12 h-12 bg-white/20 flex items-center justify-center mb-4">
+                            <i class="fa-solid fa-award text-white text-xl"></i>
+                        </div>
+                        <h4 class="font-black text-white text-lg mb-2">Best Final Year Project</h4>
+                        <p class="text-white/80 text-sm leading-relaxed">
+                            Awarded Best Project 2026 for "Design of a Solar-Powered Agricultural Vehicle" — Featured in department magazine.
+                        </p>
+                    </div>
+                    <span class="mt-4 inline-block text-[10px] font-black uppercase tracking-widest text-white/70">2026 · Department Award</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== CONTACT SECTION ===== -->
+<section id="contact" class="bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
+    <div class="noise"></div>
+    <div class="absolute inset-0 grid-pattern opacity-20"></div>
+
+    <div class="section-inner">
+        <div class="max-w-7xl w-full mx-auto grid lg:grid-cols-2 gap-14 items-start">
+
+            <!-- Left Info -->
+            <div class="space-y-8">
+                <div class="animate-on-scroll">
+                    <h2 class="text-red-600 font-bold uppercase tracking-[0.4em] text-xs mb-3 flex items-center gap-3">
+                        <span class="w-8 h-[2px] bg-red-600"></span> Get In Touch
+                    </h2>
+                    <h3 class="text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+                        Let's Build Something <span class="shimmer-text">Great</span> Together
+                    </h3>
+                </div>
+                <p class="animate-on-scroll delay-1 text-gray-600 dark:text-slate-400 leading-relaxed font-medium max-w-md">
+                    Whether it's a job opportunity, research collaboration, or just a conversation about engineering — I'm always open. Drop me a message below.
+                </p>
+
+                <div class="space-y-4">
+                    <div class="animate-on-scroll delay-2 flex items-center gap-4 group cursor-pointer magnetic">
+                        <div class="w-12 h-12 bg-red-600 flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110 pulse-glow">
+                            <i class="fa-solid fa-envelope text-white"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black uppercase text-gray-400 tracking-widest">Email</p>
+                            <p class="font-bold text-slate-900 dark:text-white text-sm">hello@mecheng.dev</p>
+                        </div>
+                    </div>
+                    <div class="animate-on-scroll delay-3 flex items-center gap-4 group cursor-pointer magnetic">
+                        <div class="w-12 h-12 bg-slate-900 dark:bg-slate-700 flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110">
+                            <i class="fa-solid fa-phone text-white"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black uppercase text-gray-400 tracking-widest">Phone</p>
+                            <p class="font-bold text-slate-900 dark:text-white text-sm">+91 98765 43210</p>
+                        </div>
+                    </div>
+                    <div class="animate-on-scroll delay-4 flex items-center gap-4 group cursor-pointer magnetic">
+                        <div class="w-12 h-12 bg-red-600 flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110">
+                            <i class="fa-solid fa-location-dot text-white"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black uppercase text-gray-400 tracking-widest">Location</p>
+                            <p class="font-bold text-slate-900 dark:text-white text-sm">Tiruchirappalli, Tamil Nadu, India</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="animate-on-scroll delay-5 flex gap-3 pt-2">
+                    <a href="#" class="w-10 h-10 bg-red-600 text-white flex items-center justify-center hover:bg-black dark:hover:bg-white dark:hover:text-black transition-all magnetic hover:rotate-12 hover:scale-110">
+                        <i class="fa-brands fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-slate-900 dark:bg-slate-700 text-white flex items-center justify-center hover:bg-red-600 transition-all magnetic hover:rotate-12 hover:scale-110">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-red-600 text-white flex items-center justify-center hover:bg-black dark:hover:bg-white dark:hover:text-black transition-all magnetic hover:rotate-12 hover:scale-110">
+                        <i class="fa-brands fa-twitter"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="animate-on-scroll from-right bg-white dark:bg-slate-800 p-8 shadow-xl border-t-4 border-red-600 relative overflow-hidden">
+                <!-- Corner decoration -->
+                <div class="absolute bottom-0 right-0 w-24 h-24 bg-red-600/5 pointer-events-none"></div>
+
+                <h4 class="font-black text-slate-900 dark:text-white text-xl mb-6">Send a Message</h4>
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="animate-on-scroll delay-1">
+                            <label class="block text-[10px] font-black uppercase text-gray-400 tracking-widest mb-2">Full Name</label>
+                            <input type="text" placeholder="Your Name" class="contact-input dark:bg-slate-900 dark:border-slate-700 dark:text-white">
+                        </div>
+                        <div class="animate-on-scroll delay-2">
+                            <label class="block text-[10px] font-black uppercase text-gray-400 tracking-widest mb-2">Email</label>
+                            <input type="email" placeholder="you@email.com" class="contact-input dark:bg-slate-900 dark:border-slate-700 dark:text-white">
+                        </div>
+                    </div>
+                    <div class="animate-on-scroll delay-3">
+                        <label class="block text-[10px] font-black uppercase text-gray-400 tracking-widest mb-2">Subject</label>
+                        <input type="text" placeholder="Job Opportunity / Collaboration..." class="contact-input dark:bg-slate-900 dark:border-slate-700 dark:text-white">
+                    </div>
+                    <div class="animate-on-scroll delay-4">
+                        <label class="block text-[10px] font-black uppercase text-gray-400 tracking-widest mb-2">Message</label>
+                        <textarea rows="4" placeholder="Tell me about your project..." class="contact-input dark:bg-slate-900 dark:border-slate-700 dark:text-white resize-none"></textarea>
+                    </div>
+                    <div class="animate-on-scroll delay-5">
+                        <button onclick="handleFormSubmit()" class="btn-primary magnetic w-full py-4 bg-red-600 text-white font-black uppercase tracking-widest text-sm hover:bg-black dark:hover:bg-white dark:hover:text-black transition-all duration-300 shadow-[6px_6px_0px_0px_rgba(220,38,38,0.2)] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
+                            Send Message <i class="fa-solid fa-paper-plane ml-2"></i>
+                        </button>
+                    </div>
+                    <div id="form-success" class="hidden text-center py-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 text-green-700 dark:text-green-400 text-sm font-bold animate-on-scroll">
+                        ✅ Message sent! I'll get back to you shortly.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="bg-slate-900 text-white text-center py-6 text-xs font-bold tracking-widest uppercase relative overflow-hidden">
+    <div class="absolute inset-0 red-dot-pattern opacity-5"></div>
+    <span class="text-red-600 relative z-10">MechEng.</span>
+    <span class="relative z-10"> Portfolio &copy; 2026 &mdash; Built with Precision</span>
+</footer>
+
+<script>
+/* ===================================================
+   LOADER
+=================================================== */
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        document.getElementById('loader').classList.add('done');
+        // Trigger hero circle draw
+        document.getElementById('hero-circle').classList.add('drawn');
+    }, 1600);
+});
+
+/* ===================================================
+   CUSTOM CURSOR
+=================================================== */
+const dot  = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+document.addEventListener('mousemove', e => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    dot.style.left = mouseX + 'px';
+    dot.style.top  = mouseY + 'px';
+});
+
+// Lag ring behind cursor
+function animateRing() {
+    ringX += (mouseX - ringX) * 0.12;
+    ringY += (mouseY - ringY) * 0.12;
+    ring.style.left = ringX + 'px';
+    ring.style.top  = ringY + 'px';
+    requestAnimationFrame(animateRing);
+}
+animateRing();
+
+document.querySelectorAll('a, button, .magnetic, .ach-card, input, textarea').forEach(el => {
+    el.addEventListener('mouseenter', () => { dot.classList.add('hovered'); ring.classList.add('hovered'); });
+    el.addEventListener('mouseleave', () => { dot.classList.remove('hovered'); ring.classList.remove('hovered'); });
+});
+
+/* ===================================================
+   PARTICLES
+=================================================== */
+const canvas = document.getElementById('particle-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resizeCanvas() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+function createParticle() {
+    return {
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 2 + 0.5,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        opacity: Math.random() * 0.5 + 0.1,
+        color: Math.random() > 0.6 ? '#dc2626' : '#94a3b8'
+    };
+}
+
+for (let i = 0; i < 60; i++) particles.push(createParticle());
+
+function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0 || p.x > canvas.width)  p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.opacity;
+        ctx.fill();
+    });
+    // Draw lines between close particles
+    ctx.globalAlpha = 1;
+    for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            if (dist < 100) {
+                ctx.beginPath();
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.strokeStyle = 'rgba(220,38,38,' + (0.08 * (1 - dist/100)) + ')';
+                ctx.lineWidth = 0.5;
+                ctx.stroke();
+            }
+        }
+    }
+    requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+/* ===================================================
+   SCROLL-TRIGGERED ANIMATIONS
+=================================================== */
+const scrollEls = document.querySelectorAll('.animate-on-scroll');
+const scrollObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            scrollObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.12 });
+scrollEls.forEach(el => scrollObserver.observe(el));
+
+/* ===================================================
+   SKILL BARS
+=================================================== */
+const skillBars = document.querySelectorAll('.skill-bar-fill');
+const barObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const bar = entry.target;
+            const w = parseFloat(bar.dataset.width);
+            // Use scaleX transform (bar goes from 0 to data-width ratio)
+            bar.style.transform = `scaleX(${w})`;
+            bar.classList.add('animated');
+            barObserver.unobserve(bar);
+        }
+    });
+}, { threshold: 0.4 });
+skillBars.forEach(b => barObserver.observe(b));
+
+/* ===================================================
+   COUNTER ANIMATION
+=================================================== */
+function animateCount(el, target, suffix, isDecimal) {
+    let start = 0;
+    const dur = 1800;
+    const step = 16;
+    const inc = target / (dur / step);
+    const timer = setInterval(() => {
+        start += inc;
+        if (start >= target) {
+            start = target;
+            clearInterval(timer);
+        }
+        el.textContent = isDecimal
+            ? (start / 10).toFixed(1) + suffix
+            : Math.floor(start) + suffix;
+    }, step);
+}
+
+const statNums = document.querySelectorAll('.stat-num');
+const statObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const el = entry.target;
+            const target = parseInt(el.dataset.target);
+            const suffix = el.dataset.suffix || '';
+            const isDecimal = !!el.dataset.decimal;
+            animateCount(el, target, suffix, isDecimal);
+            statObserver.unobserve(el);
+        }
+    });
+}, { threshold: 0.5 });
+statNums.forEach(n => statObserver.observe(n));
+
+/* ===================================================
+   PROGRESS RING
+=================================================== */
+const ringEl = document.getElementById('ring-cad');
+if (ringEl) {
+    const ringObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const pct = parseInt(entry.target.dataset.pct) / 100;
+                const circ = 2 * Math.PI * 28;
+                entry.target.style.strokeDashoffset = circ * (1 - pct);
+                ringObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+    ringObserver.observe(ringEl);
+}
+
+/* ===================================================
+   THEME TOGGLE
+=================================================== */
+const html       = document.documentElement;
+const themeBtn   = document.getElementById('theme-toggle');
+const themeIcon  = document.getElementById('theme-icon');
+
+if (localStorage.getItem('theme') === 'dark') {
+    html.classList.add('dark');
+    themeIcon.className = 'fa-solid fa-sun';
+}
+themeBtn.addEventListener('click', () => {
+    html.classList.toggle('dark');
+    const isDark = html.classList.contains('dark');
+    themeIcon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+});
+
+/* ===================================================
+   ACTIVE NAV
+=================================================== */
+const sections = document.querySelectorAll('main, section');
+const navLinks = document.querySelectorAll('.nav-link');
+const navObs   = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const id = entry.target.id;
+            navLinks.forEach(l => {
+                l.classList.remove('active');
+                if (l.dataset.section === id) l.classList.add('active');
+            });
+        }
+    });
+}, { threshold: 0.5 });
+sections.forEach(s => navObs.observe(s));
+
+/* ===================================================
+   HIDE NAV ON SCROLL DOWN
+=================================================== */
+let lastY = 0;
+window.addEventListener('scroll', () => {
+    const nav = document.getElementById('main-nav');
+    const y = window.scrollY;
+    if (y > lastY && y > 100) nav.classList.add('hidden-nav');
+    else nav.classList.remove('hidden-nav');
+    lastY = y;
+}, { passive: true });
+
+/* ===================================================
+   MOBILE MENU
+=================================================== */
+document.getElementById('hamburger').addEventListener('click', () => {
+    document.getElementById('mobile-menu').classList.toggle('open');
+});
+function closeMobileMenu() {
+    document.getElementById('mobile-menu').classList.remove('open');
+}
+
+/* ===================================================
+   MAGNETIC ELEMENTS
+=================================================== */
+document.querySelectorAll('.magnetic').forEach(el => {
+    el.addEventListener('mousemove', e => {
+        const rect = el.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top  + rect.height / 2;
+        const dx = (e.clientX - cx) * 0.25;
+        const dy = (e.clientY - cy) * 0.25;
+        el.style.transform = `translate(${dx}px, ${dy}px)`;
+    });
+    el.addEventListener('mouseleave', () => {
+        el.style.transform = '';
+    });
+});
+
+/* ===================================================
+   PARALLAX BACKGROUNDS
+=================================================== */
+window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    const bgTexts  = document.querySelectorAll('.hero-bg-text');
+    bgTexts.forEach(t => {
+        t.style.transform = `translateY(${scrolled * 0.3}px)`;
+    });
+    const dots = document.querySelectorAll('.red-dot-pattern');
+    dots.forEach((d, i) => {
+        d.style.transform = `translateY(${scrolled * (0.05 + i * 0.02)}px)`;
+    });
+}, { passive: true });
+
+/* ===================================================
+   FORM SUBMIT
+=================================================== */
+function handleFormSubmit() {
+    const btn = event.currentTarget;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Sending...';
+    btn.disabled = true;
+    setTimeout(() => {
+        btn.innerHTML = 'Send Message <i class="fa-solid fa-paper-plane ml-2"></i>';
+        btn.disabled = false;
+        const success = document.getElementById('form-success');
+        success.classList.remove('hidden');
+        success.classList.add('visible');
+        setTimeout(() => {
+            success.classList.add('hidden');
+            success.classList.remove('visible');
+        }, 4000);
+    }, 1500);
+}
+
+/* ===================================================
+   STAGGER CARD HOVER RIPPLE
+=================================================== */
+document.querySelectorAll('.ach-card').forEach(card => {
+    card.addEventListener('mouseenter', () => {
+        const icon = card.querySelector('.fa-solid, .fa-brands');
+        if (icon) {
+            icon.style.transform = 'rotate(15deg) scale(1.2)';
+            icon.style.transition = 'transform 0.3s cubic-bezier(0.16,1,0.3,1)';
+        }
+    });
+    card.addEventListener('mouseleave', () => {
+        const icon = card.querySelector('.fa-solid, .fa-brands');
+        if (icon) { icon.style.transform = ''; }
+    });
+});
+</script>
+</body>
+</html>

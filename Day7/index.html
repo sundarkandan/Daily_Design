@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreshMart | Premium Experience</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --green: #059669;
+  --green-dark: #047857;
+  --green-light: #ecfdf5;
+  --green-mid: #34d399;
+  --slate: #0f172a;
+  --gray: #6b7280;
+  --light: #f9fafb;
+  --white: #ffffff;
+  --border: #f3f4f6;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  height: 100%;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--white);
+  color: var(--slate);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── Custom cursor ── */
+#cursor {
+  width: 10px; height: 10px;
+  background: var(--green);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 99999;
+  transform: translate(-50%,-50%);
+  transition: transform 0.1s;
+}
+#cursor-ring {
+  width: 34px; height: 34px;
+  border: 1.5px solid var(--green);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 99998;
+  transform: translate(-50%,-50%);
+  transition: left 0.12s ease, top 0.12s ease, width 0.3s, height 0.3s;
+  opacity: 0.45;
+}
+
+/* ── Scroll snap ── */
+section {
+  height: 100vh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* ── Header ── */
+header {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 1000;
+  padding: 1.1rem 3rem;
+  display: flex; justify-content: space-between; align-items: center;
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  transition: padding 0.35s ease, box-shadow 0.35s ease;
+}
+header.shrunk { padding: 0.75rem 3rem; box-shadow: 0 4px 28px rgba(0,0,0,0.06); }
+
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-icon {
+  background: var(--green); padding: 9px; border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(5,150,105,0.28);
+}
+.logo-icon i { color: white; font-size: 15px; }
+.logo-text { font-size: 1.35rem; font-weight: 800; letter-spacing: -0.5px; }
+.logo-text span { color: var(--green); }
+
+nav { display: flex; gap: 2.5rem; }
+nav a {
+  font-size: 11.5px; font-weight: 700; letter-spacing: 1.5px;
+  color: #9ca3af; text-transform: uppercase;
+  cursor: pointer; position: relative; padding-bottom: 3px;
+  transition: color 0.2s; text-decoration: none;
+}
+nav a::after {
+  content: ''; position: absolute; bottom: 0; left: 0;
+  width: 0; height: 2px; background: var(--green);
+  transition: width 0.3s ease;
+}
+nav a:hover, nav a.active { color: var(--green); }
+nav a:hover::after, nav a.active::after { width: 100%; }
+
+.hicons { display: flex; gap: 1.4rem; align-items: center; }
+.hicons i { font-size: 16px; color: #6b7280; cursor: pointer; transition: color 0.2s; }
+.hicons i:hover { color: var(--green); }
+.cart-w { position: relative; cursor: pointer; }
+.cbadge {
+  position: absolute; top: -8px; right: -8px;
+  background: var(--green); color: white;
+  font-size: 9px; font-weight: 800;
+  width: 16px; height: 16px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ── Section wrapper ── */
+.sw {
+  width: 100%; max-width: 1200px;
+  margin: 0 auto; padding: 0 3rem;
+  padding-top: 80px;
+}
+
+/* ── Reveal animations ── */
+.rv {
+  opacity: 0;
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.rv.up    { transform: translateY(45px); }
+.rv.left  { transform: translateX(-55px); }
+.rv.right { transform: translateX(55px); }
+.rv.sc    { transform: scale(0.88); }
+.rv.in    { opacity: 1 !important; transform: none !important; }
+
+.d1 { transition-delay: 0.08s; }
+.d2 { transition-delay: 0.18s; }
+.d3 { transition-delay: 0.28s; }
+.d4 { transition-delay: 0.38s; }
+.d5 { transition-delay: 0.48s; }
+.d6 { transition-delay: 0.58s; }
+.d7 { transition-delay: 0.68s; }
+.d8 { transition-delay: 0.78s; }
+
+/* ── Pill ── */
+.pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--green-light); padding: 6px 15px; border-radius: 999px;
+}
+.pdot { width: 7px; height: 7px; border-radius: 50%; background: #10b981; }
+.pill p { font-size: 10px; font-weight: 800; color: #065f46; letter-spacing: 2px; text-transform: uppercase; margin: 0; }
+
+/* ── Nav dots ── */
+#ndots {
+  position: fixed; right: 1.8rem; top: 50%; transform: translateY(-50%);
+  z-index: 900; display: flex; flex-direction: column; gap: 9px;
+}
+.ndot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #d1d5db; cursor: pointer; border: none;
+  transition: all 0.3s; display: block;
+}
+.ndot.on { background: var(--green); transform: scale(1.5); }
+
+/* ── Progress bar ── */
+#pbar {
+  position: fixed; top: 0; left: 0;
+  height: 2.5px; background: var(--green);
+  z-index: 9999; width: 0;
+  transition: width 0.08s linear;
+}
+
+/* ── Toast ── */
+#toast {
+  position: fixed; bottom: 2rem; left: 50%;
+  transform: translateX(-50%) translateY(70px);
+  background: #0f172a; color: white;
+  padding: 11px 22px; border-radius: 14px;
+  font-size: 13px; font-weight: 700;
+  z-index: 9998; opacity: 0;
+  display: flex; align-items: center; gap: 9px;
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
+  box-shadow: 0 8px 36px rgba(0,0,0,0.2);
+}
+#toast.on { transform: translateX(-50%) translateY(0); opacity: 1; }
+.tdot { width: 7px; height: 7px; border-radius: 50%; background: var(--green-mid); flex-shrink: 0; }
+
+/* ══════════════════════════
+   HOME
+══════════════════════════ */
+#home { background: var(--white); }
+.home-flex { display: flex; align-items: center; gap: 4rem; width: 100%; }
+
+.hl { flex: 1; display: flex; flex-direction: column; gap: 1.8rem; }
+.htitle {
+  font-size: 4.6rem; font-weight: 800;
+  line-height: 1.05; letter-spacing: -2px; color: var(--slate);
+}
+.htitle .acc {
+  color: var(--green); position: relative; display: inline-block;
+}
+.htitle .acc::after {
+  content: ''; position: absolute; bottom: 5px; left: 0; right: 0;
+  height: 7px; background: var(--green-light); border-radius: 4px; z-index: -1;
+}
+.hsub { color: var(--gray); font-size: 0.98rem; line-height: 1.85; max-width: 420px; font-weight: 500; }
+
+.brow { display: flex; gap: 1rem; }
+.bp {
+  padding: 15px 32px; background: var(--green); color: white;
+  font-weight: 700; font-size: 14px; border-radius: 14px; border: none; cursor: pointer;
+  box-shadow: 0 8px 22px rgba(5,150,105,0.25);
+  transition: all 0.25s; overflow: hidden; position: relative;
+  font-family: inherit;
+}
+.bp::before {
+  content: ''; position: absolute; inset: 0;
+  background: rgba(255,255,255,0.18);
+  transform: translateX(-100%) skewX(-15deg);
+  transition: transform 0.4s ease;
+}
+.bp:hover::before { transform: translateX(130%) skewX(-15deg); }
+.bp:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(5,150,105,0.3); }
+
+.bo {
+  padding: 15px 32px; background: white; color: var(--slate);
+  font-weight: 700; font-size: 14px; border-radius: 14px;
+  border: 2px solid var(--border); cursor: pointer; transition: all 0.25s;
+  font-family: inherit;
+}
+.bo:hover { border-color: var(--green); color: var(--green); transform: translateY(-2px); }
+
+.srow { display: flex; gap: 2rem; padding-top: 1.5rem; border-top: 1px solid #f3f4f6; }
+.st p:first-child { font-size: 1.9rem; font-weight: 800; color: var(--slate); }
+.st p:last-child { font-size: 10px; font-weight: 700; color: #9ca3af; letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+.sdiv { width: 1px; background: #e5e7eb; }
+
+.hr { flex: 1; position: relative; }
+.himgw { border-radius: 28px; overflow: hidden; box-shadow: 0 36px 70px -10px rgba(0,0,0,0.12); }
+.himgw img { width: 100%; height: 510px; object-fit: cover; display: block; }
+
+.fc {
+  position: absolute; background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(14px); border: 1px solid rgba(0,0,0,0.04);
+  box-shadow: 0 18px 46px rgba(0,0,0,0.08); border-radius: 18px;
+}
+.fc-d {
+  bottom: -22px; left: -26px; padding: 15px 18px;
+  display: flex; align-items: center; gap: 12px;
+  animation: fy 4.5s ease-in-out infinite;
+}
+.fc-r {
+  top: 22px; right: -18px; padding: 11px 15px;
+  display: flex; align-items: center; gap: 9px;
+  animation: fy 4.5s ease-in-out infinite 2s;
+}
+@keyframes fy { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+.fci { padding: 10px; border-radius: 11px; }
+.fct { font-weight: 700; font-size: 13px; color: var(--slate); }
+.fcs { font-size: 11px; color: var(--gray); margin-top: 2px; }
+
+/* ══════════════════════════
+   ABOUT
+══════════════════════════ */
+#about { background: #f8faff; align-items: flex-start; }
+#about .sw {
+  display: flex; flex-direction: column; gap: 2rem;
+  height: 100%; justify-content: center;
+}
+
+.abh { text-align: center; }
+.abh h2 { font-size: 2.6rem; font-weight: 800; color: var(--slate); letter-spacing: -1px; margin: 0.6rem 0 0; }
+.abh h2 span { color: var(--green); }
+
+.abgrid {
+  display: grid; grid-template-columns: 1.15fr 1fr;
+  gap: 2.5rem; align-items: start;
+}
+.abimg { border-radius: 22px; overflow: hidden; height: 280px; }
+.abimg img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; display: block; }
+.abimg:hover img { transform: scale(1.04); }
+
+.abchips {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin-top: 0.8rem;
+}
+.chip {
+  background: white; border: 1px solid var(--border);
+  border-radius: 13px; padding: 0.85rem;
+  display: flex; align-items: flex-start; gap: 9px;
+  transition: all 0.25s;
+}
+.chip:hover { border-color: var(--green); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(5,150,105,0.07); }
+.chico { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.chip h4 { font-size: 12px; font-weight: 700; color: var(--slate); }
+.chip p { font-size: 11px; color: var(--gray); margin-top: 1px; line-height: 1.4; }
+
+.abr { display: flex; flex-direction: column; gap: 1.2rem; }
+.abr h3 { font-size: 1.6rem; font-weight: 800; color: var(--slate); letter-spacing: -0.5px; }
+.abr h3 span { color: var(--green); }
+.abr p { color: var(--gray); line-height: 1.85; font-size: 0.9rem; }
+
+.astat { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+.sch {
+  background: white; padding: 0.8rem 1.1rem;
+  border-radius: 13px; border: 1px solid var(--border);
+  text-align: center; flex: 1; min-width: 80px;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+.sch:hover { transform: translateY(-3px); box-shadow: 0 10px 26px rgba(0,0,0,0.07); }
+.sch .n { font-size: 1.2rem; font-weight: 800; color: var(--green); }
+.sch .l { font-size: 10px; color: #9ca3af; font-weight: 600; margin-top: 2px; }
+
+/* ══════════════════════════
+   PRODUCTS
+══════════════════════════ */
+#products { background: var(--white); align-items: flex-start; }
+#products .sw {
+  display: flex; flex-direction: column; gap: 1.6rem;
+  height: 100%; justify-content: center;
+}
+
+.ph { display: flex; justify-content: space-between; align-items: flex-end; width: 100%; }
+.phl h2 { font-size: 2.3rem; font-weight: 800; color: var(--slate); letter-spacing: -1px; margin: 0.5rem 0 0; }
+.phl h2 span { color: var(--green); }
+
+.frow { display: flex; gap: 0.55rem; flex-wrap: wrap; }
+.fb {
+  padding: 7px 16px; border-radius: 999px;
+  font-size: 11.5px; font-weight: 700; cursor: pointer;
+  border: 1.5px solid var(--border);
+  background: white; color: var(--gray);
+  transition: all 0.2s; font-family: inherit;
+}
+.fb:hover { border-color: var(--green); color: var(--green); }
+.fb.on { background: var(--green); color: white; border-color: var(--green); }
+
+.pgrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.1rem; width: 100%;
+}
+
+.pc {
+  border-radius: 16px; border: 1px solid var(--border);
+  overflow: hidden; background: white;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer;
+}
+.pc:hover { transform: translateY(-5px); box-shadow: 0 18px 42px rgba(0,0,0,0.09); }
+.pcimg { overflow: hidden; position: relative; }
+.pcimg img { width: 100%; height: 155px; object-fit: cover; transition: transform 0.45s ease; display: block; }
+.pc:hover .pcimg img { transform: scale(1.06); }
+.pbadge {
+  position: absolute; top: 9px; left: 9px;
+  font-size: 9.5px; font-weight: 700;
+  padding: 3px 8px; border-radius: 999px;
+}
+.pcb { padding: 0.9rem; }
+.pcb h4 { font-weight: 700; font-size: 13px; margin-bottom: 2px; }
+.pcb .pcd { font-size: 11.5px; color: var(--gray); margin-bottom: 0.7rem; }
+.pcf { display: flex; justify-content: space-between; align-items: center; }
+.pcp { font-weight: 800; font-size: 1.05rem; color: var(--slate); }
+.pcp span { font-size: 10.5px; color: #9ca3af; font-weight: 400; }
+.addb {
+  background: var(--green); color: white; border: none;
+  padding: 6px 13px; border-radius: 8px;
+  font-weight: 700; font-size: 11.5px; cursor: pointer;
+  transition: all 0.2s; font-family: inherit;
+}
+.addb:hover { background: var(--green-dark); transform: scale(1.05); }
+
+/* ══════════════════════════
+   CONTACT
+══════════════════════════ */
+#contact { background: var(--light); }
+#contact .sw { display: flex; gap: 3.5rem; align-items: center; width: 100%; }
+
+.cl { flex: 1; display: flex; flex-direction: column; gap: 1.2rem; }
+.cl h2 { font-size: 2.4rem; font-weight: 800; letter-spacing: -1px; color: var(--slate); margin: 0; }
+.cl h2 span { color: var(--green); }
+.cl > p { color: var(--gray); line-height: 1.85; font-size: 0.9rem; }
+
+.icard {
+  background: white; border-radius: 14px; border: 1px solid var(--border);
+  padding: 0.95rem 1.1rem;
+  display: flex; align-items: center; gap: 0.9rem;
+  transition: all 0.25s;
+}
+.icard:hover { border-color: var(--green); transform: translateX(4px); box-shadow: 0 6px 22px rgba(5,150,105,0.08); }
+.iico { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.iico i { font-size: 15px; }
+.icard h4 { font-size: 12.5px; font-weight: 700; color: var(--slate); }
+.icard p { font-size: 11.5px; color: var(--gray); margin-top: 1px; line-height: 1.45; }
+
+.cr { flex: 1; }
+.fcard {
+  background: white; border-radius: 22px;
+  border: 1px solid var(--border); padding: 2rem;
+}
+.fcard h3 { font-size: 1.2rem; font-weight: 800; color: var(--slate); margin-bottom: 1.3rem; }
+.frow2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-bottom: 0.8rem; }
+.fi label { display: block; font-size: 11.5px; font-weight: 700; color: #374151; margin-bottom: 4px; }
+.fi input, .fi textarea {
+  width: 100%; padding: 10px 13px;
+  border: 1.5px solid #e5e7eb; border-radius: 10px;
+  font-size: 13px; font-family: inherit; outline: none;
+  transition: border-color 0.2s; color: var(--slate); background: white;
+  box-sizing: border-box;
+}
+.fi input:focus, .fi textarea:focus { border-color: var(--green); }
+.fi textarea { resize: none; }
+.fi.fw { margin-bottom: 0.8rem; }
+.sbtn {
+  width: 100%; padding: 13px;
+  background: var(--green); color: white;
+  font-weight: 700; font-size: 14px; border: none; border-radius: 11px;
+  cursor: pointer; margin-top: 0.8rem;
+  position: relative; overflow: hidden;
+  transition: all 0.25s; font-family: inherit;
+}
+.sbtn::before {
+  content: ''; position: absolute; inset: 0;
+  background: rgba(255,255,255,0.16);
+  transform: translateX(-100%) skewX(-15deg);
+  transition: transform 0.5s ease;
+}
+.sbtn:hover::before { transform: translateX(130%) skewX(-15deg); }
+.sbtn:hover { background: var(--green-dark); transform: translateY(-2px); box-shadow: 0 10px 26px rgba(5,150,105,0.22); }
+
+/* ══════════════════════════
+   FOOTER
+══════════════════════════ */
+#fsec {
+  height: 100vh; scroll-snap-align: start; scroll-snap-stop: always;
+  background: #0f172a; display: flex; align-items: center;
+  overflow: hidden;
+}
+#fsec .sw {
+  display: flex; flex-direction: column; gap: 0;
+  justify-content: center; height: 100%;
+}
+
+.fgrid {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 3rem; padding-bottom: 2.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  width: 100%;
+}
+.fbrand p { color: #94a3b8; font-size: 13px; line-height: 1.9; max-width: 260px; margin: 0.9rem 0 1.3rem; }
+.fsocs { display: flex; gap: 9px; }
+.fsoc {
+  width: 34px; height: 34px;
+  background: rgba(255,255,255,0.06); border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: #94a3b8; text-decoration: none; transition: all 0.2s;
+}
+.fsoc:hover { background: var(--green); color: white; }
+.fcol h4 { color: white; font-size: 13px; font-weight: 700; margin-bottom: 1rem; }
+.fcol a {
+  display: block; color: #94a3b8; font-size: 13px;
+  text-decoration: none; margin-bottom: 0.55rem;
+  cursor: pointer; transition: color 0.2s;
+}
+.fcol a:hover { color: var(--green-mid); }
+.appb {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.06); color: white; border: none;
+  padding: 8px 12px; border-radius: 8px;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  font-family: inherit; width: 100%; margin-bottom: 0.5rem;
+  transition: background 0.2s;
+}
+.appb:hover { background: rgba(255,255,255,0.11); }
+.fbot {
+  display: flex; justify-content: space-between; align-items: center;
+  padding-top: 1.4rem; flex-wrap: wrap; gap: 0.5rem; width: 100%;
+}
+.fbot p { color: #475569; font-size: 12px; }
+.fbot span { color: #f97316; }
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .hr { display: none; }
+  .htitle { font-size: 3.5rem; }
+  .abgrid { grid-template-columns: 1fr; }
+  .abimg { height: 200px; }
+  .pgrid { grid-template-columns: repeat(2, 1fr); }
+  .cr { display: none; }
+  .fgrid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+  header { padding: 1rem 1.5rem; }
+  nav { display: none; }
+  .sw { padding: 0 1.5rem; padding-top: 80px; }
+  .htitle { font-size: 2.6rem; }
+  .pgrid { grid-template-columns: 1fr; }
+  .fgrid { grid-template-columns: 1fr; }
+  body { cursor: auto; }
+  #cursor, #cursor-ring { display: none; }
+  #ndots { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<div id="pbar"></div>
+<div id="toast"><div class="tdot"></div>Added to cart!</div>
+
+<!-- Nav Dots -->
+<div id="ndots">
+  <button class="ndot on" onclick="gt('home')"></button>
+  <button class="ndot" onclick="gt('about')"></button>
+  <button class="ndot" onclick="gt('products')"></button>
+  <button class="ndot" onclick="gt('contact')"></button>
+  <button class="ndot" onclick="gt('fsec')"></button>
+</div>
+
+<!-- ══ HEADER ══ -->
+<header id="hdr">
+  <div class="logo">
+    <div class="logo-icon"><i class="fas fa-leaf"></i></div>
+    <span class="logo-text">Fresh<span>Mart.</span></span>
+  </div>
+  <nav>
+    <a class="active" id="nh" onclick="gt('home')">Home</a>
+    <a id="na" onclick="gt('about')">About</a>
+    <a id="np" onclick="gt('products')">Products</a>
+    <a id="nc" onclick="gt('contact')">Contact</a>
+  </nav>
+  <div class="hicons">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <div class="cart-w" onclick="addCart()">
+      <i class="fa-solid fa-cart-shopping" style="color:#1f2937;"></i>
+      <span class="cbadge" id="cb">3</span>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════
+     HOME
+══════════════════════════ -->
+<section id="home">
+  <div class="sw">
+    <div class="home-flex">
+      <div class="hl">
+        <div class="pill rv up d1">
+          <span class="pdot"></span><p>Premium Quality Guaranteed</p>
+        </div>
+        <h1 class="htitle rv up d2">
+          Freshness<br><span class="acc">Delivered</span><br>To Your Door.
+        </h1>
+        <p class="hsub rv up d3">Discover the finest organic groceries and farm-fresh produce, handpicked and delivered with care to your sanctuary.</p>
+        <div class="brow rv up d4">
+          <button class="bp" onclick="gt('products')">Start Shopping</button>
+          <button class="bo" onclick="gt('products')">View Offers</button>
+        </div>
+        <div class="srow rv up d5">
+          <div class="st"><p>12k+</p><p>Customers</p></div>
+          <div class="sdiv"></div>
+          <div class="st"><p>100%</p><p>Organic</p></div>
+          <div class="sdiv"></div>
+          <div class="st"><p>500+</p><p>Products</p></div>
+        </div>
+      </div>
+      <div class="hr rv right d3">
+        <div class="himgw">
+          <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=80" alt="Fresh Vegetables">
+        </div>
+        <div class="fc fc-d">
+          <div class="fci" style="background:#d1fae5;"><i class="fas fa-truck-fast" style="color:var(--green);font-size:17px;"></i></div>
+          <div><div class="fct">Hyper-Fast</div><div class="fcs">Under 15 minutes</div></div>
+        </div>
+        <div class="fc fc-r">
+          <div style="width:30px;height:30px;background:#fff7ed;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <i class="fas fa-star" style="color:#f97316;font-size:12px;"></i>
+          </div>
+          <div class="fct">Top Rated</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════
+     ABOUT
+══════════════════════════ -->
+<section id="about">
+  <div class="sw">
+    <div class="abh rv up d1" style="width:100%;">
+      <div class="pill" style="margin:0 auto 0.5rem;"><span class="pdot"></span><p>Our Story</p></div>
+      <h2>Why Choose <span>FreshMart?</span></h2>
+    </div>
+    <div class="abgrid" style="width:100%;">
+      <div>
+        <div class="abimg rv left d2"><img src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=900&q=80" alt="Farm"></div>
+        <div class="abchips">
+          <div class="chip rv up d3">
+            <div class="chico" style="background:#ecfdf5;"><i class="fas fa-seedling" style="color:var(--green);font-size:15px;"></i></div>
+            <div><h4>100% Organic</h4><p>No pesticides, certified</p></div>
+          </div>
+          <div class="chip rv up d4">
+            <div class="chico" style="background:#eff6ff;"><i class="fas fa-handshake" style="color:#3b82f6;font-size:15px;"></i></div>
+            <div><h4>Local Farmers</h4><p>150+ partnerships</p></div>
+          </div>
+          <div class="chip rv up d5">
+            <div class="chico" style="background:#fff7ed;"><i class="fas fa-truck-fast" style="color:#f97316;font-size:15px;"></i></div>
+            <div><h4>Fast Delivery</h4><p>Under 15 min express</p></div>
+          </div>
+          <div class="chip rv up d6">
+            <div class="chico" style="background:#fdf4ff;"><i class="fas fa-shield-halved" style="color:#a855f7;font-size:15px;"></i></div>
+            <div><h4>Quality Assured</h4><p>Full refund guarantee</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="abr rv right d2">
+        <h3>From Farm to <span>Your Table</span></h3>
+        <p>Founded in Coimbatore in 2019, FreshMart started with a simple idea — make fresh, organic food accessible to every household. What began as a small local delivery service has grown into a platform serving over 12,000 happy families across Tamil Nadu.</p>
+        <p>Our 200+ team works tirelessly every day, from dawn at partner farms to midnight deliveries, ensuring freshness never sleeps.</p>
+        <div class="astat">
+          <div class="sch rv up d3"><div class="n">150+</div><div class="l">Farm Partners</div></div>
+          <div class="sch rv up d4"><div class="n">4.9 ★</div><div class="l">Avg Rating</div></div>
+          <div class="sch rv up d5"><div class="n">5 yrs</div><div class="l">Experience</div></div>
+          <div class="sch rv up d6"><div class="n">12k+</div><div class="l">Families</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════
+     PRODUCTS
+══════════════════════════ -->
+<section id="products">
+  <div class="sw">
+    <div class="ph">
+      <div class="phl rv up d1">
+        <div class="pill"><span class="pdot"></span><p>Fresh Picks</p></div>
+        <h2>Our Best <span>Products</span></h2>
+      </div>
+      <div class="frow rv up d2">
+        <button class="fb on" id="fa" onclick="fil('all')">All</button>
+        <button class="fb" id="fv" onclick="fil('veg')">Vegetables</button>
+        <button class="fb" id="ff" onclick="fil('fruit')">Fruits</button>
+        <button class="fb" id="fd" onclick="fil('dairy')">Dairy</button>
+        <button class="fb" id="fp" onclick="fil('pantry')">Pantry</button>
+      </div>
+    </div>
+    <div class="pgrid" id="pg">
+      <div class="pc rv up d2" data-c="veg">
+        <div class="pcimg"><img src="https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=500&q=80" alt="Tomatoes"><span class="pbadge" style="background:#ecfdf5;color:#065f46;">Organic</span></div>
+        <div class="pcb"><h4>Fresh Tomatoes</h4><p class="pcd">Farm fresh, rich in lycopene</p><div class="pcf"><span class="pcp">₹49 <span>/ kg</span></span><button class="addb" onclick="addCart()">+ Add</button></div></div>
+      </div>
+      <div class="pc rv up d3" data-c="fruit">
+        <div class="pcimg"><img src="https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&w=500&q=80" alt="Mango"><span class="pbadge" style="background:#fff7ed;color:#9a3412;">Seasonal</span></div>
+        <div class="pcb"><h4>Alphonso Mango</h4><p class="pcd">King of fruits, naturally sweet</p><div class="pcf"><span class="pcp">₹180 <span>/ kg</span></span><button class="addb" onclick="addCart()">+ Add</button></div></div>
+      </div>
+      <div class="pc rv up d4" data-c="dairy">
+        <div class="pcimg"><img src="https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=500&q=80" alt="Milk"><span class="pbadge" style="background:#eff6ff;color:#1e40af;">Fresh Daily</span></div>
+        <div class="pcb"><h4>Farm Cow Milk</h4><p class="pcd">Pasture-raised, pure A2 milk</p><div class="pcf"><span class="pcp">₹65 <span>/ litre</span></span><button class="addb" onclick="addCart()">+ Add</button></div></div>
+      </div>
+      <div class="pc rv up d5" data-c="pantry">
+        <div class="pcimg"><img src="https://images.unsplash.com/photo-1518977956812-cd3dbadaaf31?auto=format&fit=crop&w=500&q=80" alt="Honey"><span class="pbadge" style="background:#fff7ed;color:#9a3412;">Bestseller</span></div>
+        <div class="pcb"><h4>Raw Forest Honey</h4><p class="pcd">Unprocessed, pure wildflower</p><div class="pcf"><span class="pcp">₹350 <span>/ 500g</span></span><button class="addb" onclick="addCart()">+ Add</button></div></div>
+      </div>
+      <div class="pc rv up d3" data-c="veg">
+        <div class="pcimg"><img src="https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=500&q=80" alt="Spinach"><span class="pbadge" style="background:#ecfdf5;color:#065f46;">Organic</span></div>
+        <div class="pcb"><h4>Baby Spinach</h4><p class="pcd">Iron-rich, tender leaves</p><div class="pcf"><span class="pcp">₹35 <span>/ bunch</span></span><button class="addb" onclick="addCart()">+ Add</button></div></div>
+      </div>
+      <div class="pc rv up d4" data-c="fruit">
+        <div class="pcimg"><img src="https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=500&q=80" alt="Berries"><span class="pbadge" style="background:#fdf4ff;color:#7e22ce;">Exotic</span></div>
+        <div class="pcb"><h4>Mixed Berries</h4><p class="pcd">Blueberry & strawberry blend</p><div class="pcf"><span class="pcp">₹220 <span>/ 250g</span></span><button class="addb" onclick="addCart()">+ Add</button></div></div>
+      </div>
+      <div class="pc rv up d5" data-c="dairy">
+        <div class="pcimg"><img src="https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=500&q=80" alt="Eggs"><span class="pbadge" style="background:#eff6ff;color:#1e40af;">Free Range</span></div>
+        <div class="pcb"><h4>Country Eggs</h4><p class="pcd">Free-range, protein-packed</p><div class="pcf"><span class="pcp">₹90 <span>/ dozen</span></span><button class="addb" onclick="addCart()">+ Add</button></div></div>
+      </div>
+      <div class="pc rv up d6" data-c="veg">
+        <div class="pcimg"><img src="https://images.unsplash.com/photo-1506084868230-bb9d95c24759?auto=format&fit=crop&w=500&q=80" alt="Carrots"><span class="pbadge" style="background:#ecfdf5;color:#065f46;">Organic</span></div>
+        <div class="pcb"><h4>Orange Carrots</h4><p class="pcd">Crunchy, beta-carotene rich</p><div class="pcf"><span class="pcp">₹40 <span>/ kg</span></span><button class="addb" onclick="addCart()">+ Add</button></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════
+     CONTACT
+══════════════════════════ -->
+<section id="contact">
+  <div class="sw" style="width:100%;">
+    <div class="cl">
+      <div class="pill rv up d1"><span class="pdot"></span><p>Get In Touch</p></div>
+      <h2 class="rv up d2">We'd Love to<br><span>Hear From You</span></h2>
+      <p class="rv up d3" style="max-width:380px;">Have a question or partnership idea? Our team is ready to help every step of the way.</p>
+      <div class="icard rv up d4">
+        <div class="iico" style="background:#ecfdf5;"><i class="fas fa-location-dot" style="color:var(--green);"></i></div>
+        <div><h4>Address</h4><p>42, Sathy Road, Saravanampatti, Coimbatore – 641035</p></div>
+      </div>
+      <div class="icard rv up d5">
+        <div class="iico" style="background:#eff6ff;"><i class="fas fa-phone" style="color:#3b82f6;"></i></div>
+        <div><h4>Phone</h4><p>+91 98765 43210 &nbsp;|&nbsp; Mon–Sat, 8am–9pm</p></div>
+      </div>
+      <div class="icard rv up d6">
+        <div class="iico" style="background:#fff7ed;"><i class="fas fa-envelope" style="color:#f97316;"></i></div>
+        <div><h4>Email</h4><p>hello@freshmart.in &nbsp;|&nbsp; support@freshmart.in</p></div>
+      </div>
+      <div class="icard rv up d7">
+        <div class="iico" style="background:#fdf4ff;"><i class="fas fa-clock" style="color:#a855f7;"></i></div>
+        <div><h4>Hours</h4><p>Mon–Sat: 7am–10pm &nbsp;|&nbsp; Sun: 8am–8pm</p></div>
+      </div>
+    </div>
+    <div class="cr rv right d3">
+      <div class="fcard">
+        <h3>Send Us a Message</h3>
+        <div class="frow2">
+          <div class="fi"><label>First Name</label><input type="text" placeholder="Arun"></div>
+          <div class="fi"><label>Last Name</label><input type="text" placeholder="Kumar"></div>
+        </div>
+        <div class="fi fw"><label>Email</label><input type="email" placeholder="arun@example.com"></div>
+        <div class="fi fw"><label>Phone</label><input type="tel" placeholder="+91 98765 43210"></div>
+        <div class="fi fw"><label>Message</label><textarea rows="3" placeholder="How can we help you?"></textarea></div>
+        <button class="sbtn" id="sbtn" onclick="sendForm()">Send Message &nbsp;<i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════
+     FOOTER
+══════════════════════════ -->
+<section id="fsec" style="height:100vh;scroll-snap-align:start;scroll-snap-stop:always;background:#0f172a;display:block;overflow:hidden;">
+  <div class="sw" style="height:100%;display:flex;flex-direction:column;justify-content:center;">
+    <div class="fgrid rv up d1">
+      <div class="fbrand">
+        <div class="logo">
+          <div class="logo-icon"><i class="fas fa-leaf"></i></div>
+          <span class="logo-text" style="color:white;">Fresh<span>Mart.</span></span>
+        </div>
+        <p>Bringing farm-fresh goodness to your doorstep every day. Trusted by 12,000+ families across Coimbatore.</p>
+        <div class="fsocs">
+          <a class="fsoc" href="#"><i class="fab fa-instagram"></i></a>
+          <a class="fsoc" href="#"><i class="fab fa-facebook-f"></i></a>
+          <a class="fsoc" href="#"><i class="fab fa-twitter"></i></a>
+          <a class="fsoc" href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="fcol rv up d2">
+        <h4>Quick Links</h4>
+        <a onclick="gt('home')">Home</a>
+        <a onclick="gt('about')">About Us</a>
+        <a onclick="gt('products')">Products</a>
+        <a onclick="gt('contact')">Contact</a>
+      </div>
+      <div class="fcol rv up d3">
+        <h4>Categories</h4>
+        <a>Vegetables</a><a>Fruits</a><a>Dairy &amp; Eggs</a><a>Pantry Staples</a>
+      </div>
+      <div class="fcol rv up d4">
+        <h4>Download App</h4>
+        <p style="color:#94a3b8;font-size:12px;margin-bottom:0.8rem;line-height:1.6;">Exclusive app deals &amp; faster ordering</p>
+        <button class="appb"><i class="fab fa-apple"></i> App Store</button>
+        <button class="appb"><i class="fab fa-google-play"></i> Google Play</button>
+      </div>
+    </div>
+    <div class="fbot rv up d5">
+      <p>© 2026 FreshMart. All rights reserved.</p>
+      <p>Made with <span>♥</span> in Coimbatore</p>
+    </div>
+  </div>
+</section>
+
+<script>
+/* ── Cursor ── */
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
+function animCursor(){
+  rx += (mx-rx)*0.15; ry += (my-ry)*0.15;
+  cur.style.left=mx+'px'; cur.style.top=my+'px';
+  ring.style.left=rx+'px'; ring.style.top=ry+'px';
+  requestAnimationFrame(animCursor);
+}
+animCursor();
+
+/* ── Progress ── */
+const pb = document.getElementById('pbar');
+window.addEventListener('scroll', () => {
+  const s = document.documentElement;
+  pb.style.width = (s.scrollTop/(s.scrollHeight-s.clientHeight)*100)+'%';
+});
+
+/* ── Goto ── */
+function gt(id){ document.getElementById(id).scrollIntoView({behavior:'smooth'}); }
+
+/* ── Reveal ── */
+const robs = new IntersectionObserver(ens => {
+  ens.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); });
+}, {threshold:0.12});
+document.querySelectorAll('.rv').forEach(el => robs.observe(el));
+
+/* ── Active nav + dots ── */
+const sids = ['home','about','products','contact','fsec'];
+const nmap = {home:'nh',about:'na',products:'np',contact:'nc',fsec:'nc'};
+const dots = document.querySelectorAll('.ndot');
+const sobs = new IntersectionObserver(ens => {
+  ens.forEach(e => {
+    if(e.isIntersecting){
+      const id = e.target.id;
+      document.querySelectorAll('nav a').forEach(a=>a.classList.remove('active'));
+      const nel = document.getElementById(nmap[id]);
+      if(nel) nel.classList.add('active');
+      dots.forEach((d,i)=>d.classList.toggle('on', sids[i]===id));
+    }
+  });
+},{threshold:0.5});
+sids.forEach(id=>{ const el=document.getElementById(id); if(el) sobs.observe(el); });
+
+/* ── Header shrink ── */
+window.addEventListener('scroll', ()=>{
+  document.getElementById('hdr').classList.toggle('shrunk', window.scrollY>40);
+});
+
+/* ── Filter ── */
+const fmap = {all:'fa',veg:'fv',fruit:'ff',dairy:'fd',pantry:'fp'};
+function fil(cat){
+  document.querySelectorAll('.pc').forEach(c=>{
+    const show = cat==='all' || c.dataset.c===cat;
+    c.style.display = show?'block':'none';
+    if(show){ c.classList.remove('in'); setTimeout(()=>c.classList.add('in'),60); }
+  });
+  document.querySelectorAll('.fb').forEach(b=>b.classList.remove('on'));
+  document.getElementById(fmap[cat]).classList.add('on');
+}
+
+/* ── Cart ── */
+let cn=3;
+let tt;
+function addCart(){
+  cn++;
+  document.getElementById('cb').textContent=cn;
+  const t=document.getElementById('toast');
+  t.classList.add('on');
+  clearTimeout(tt);
+  tt=setTimeout(()=>t.classList.remove('on'),2200);
+}
+
+/* ── Form ── */
+function sendForm(){
+  const b=document.getElementById('sbtn');
+  b.innerHTML='✓ Message Sent!';
+  b.style.background='#065f46';
+  b.disabled=true;
+  setTimeout(()=>{
+    b.innerHTML='Send Message &nbsp;<i class="fas fa-paper-plane"></i>';
+    b.style.background='var(--green)';
+    b.disabled=false;
+  },3000);
+}
+</script>
+</body>
+</html>
