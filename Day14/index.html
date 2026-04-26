@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CineVault — Premium Cinema Experience</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        brand: {
+          orange: '#F97316',
+          amber: '#FB923C',
+          deep: '#EA580C',
+          glow: '#FED7AA',
+        }
+      },
+      fontFamily: {
+        display: ['Bebas Neue', 'sans-serif'],
+        body: ['DM Sans', 'sans-serif'],
+        serif: ['Playfair Display', 'serif'],
+      }
+    }
+  }
+}
+</script>
+<style>
+  :root {
+    --orange: #F97316;
+    --orange-light: #FED7AA;
+    --orange-deep: #EA580C;
+    --orange-glow: rgba(249,115,22,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+
+  /* ── THEME ── */
+  html[data-theme="light"] {
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #FFF7ED;
+    --bg-card: #FFFFFF;
+    --text-primary: #1C0A00;
+    --text-secondary: #78350F;
+    --text-muted: #92400E;
+    --border: rgba(234,88,12,0.15);
+    --nav-bg: rgba(255,255,255,0.92);
+    --film-strip: #FFF7ED;
+  }
+  html[data-theme="dark"] {
+    --bg-primary: #0D0500;
+    --bg-secondary: #160800;
+    --bg-card: #1A0A02;
+    --text-primary: #FFF7ED;
+    --text-secondary: #FED7AA;
+    --text-muted: #FB923C;
+    --border: rgba(249,115,22,0.18);
+    --nav-bg: rgba(13,5,0,0.92);
+    --film-strip: #1A0A02;
+  }
+
+  body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+    transition: background 0.4s ease, color 0.4s ease;
+  }
+
+  /* ── STYLED SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+    border-left: 1px solid var(--border);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #F97316 0%, #EA580C 50%, #FB923C 100%);
+    border-radius: 99px;
+    border: 2px solid var(--bg-secondary);
+    box-shadow: 0 0 6px rgba(249,115,22,0.4);
+    transition: background 0.3s ease;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #FB923C 0%, #F97316 100%);
+    box-shadow: 0 0 12px rgba(249,115,22,0.7);
+  }
+  ::-webkit-scrollbar-corner { background: var(--bg-secondary); }
+  * { scrollbar-width: thin; scrollbar-color: #F97316 var(--bg-secondary); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; } to { opacity: 1; }
+  }
+  @keyframes slideRight {
+    from { opacity: 0; transform: translateX(-50px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes slideLeft {
+    from { opacity: 0; transform: translateX(50px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.85); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  @keyframes filmRoll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(249,115,22,0); }
+    50%       { box-shadow: 0 0 30px 8px rgba(249,115,22,0.25); }
+  }
+  @keyframes heroFloat {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-12px); }
+  }
+  @keyframes spotlightSweep {
+    0%   { transform: rotate(-15deg) translateY(0); }
+    50%  { transform: rotate(10deg) translateY(20px); }
+    100% { transform: rotate(-15deg) translateY(0); }
+  }
+  @keyframes tickerScroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes starBlink {
+    0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
+  }
+  @keyframes borderGlow {
+    0%, 100% { border-color: var(--orange); }
+    50%       { border-color: var(--orange-deep); box-shadow: 0 0 20px rgba(249,115,22,0.4); }
+  }
+  @keyframes countUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fade-up    { animation: fadeUp 0.7s ease forwards; }
+  .animate-slide-r    { animation: slideRight 0.7s ease forwards; }
+  .animate-slide-l    { animation: slideLeft 0.7s ease forwards; }
+  .animate-scale-in   { animation: scaleIn 0.6s ease forwards; }
+  .animate-fade-in    { animation: fadeIn 0.8s ease forwards; }
+
+  .reveal { opacity: 0; }
+  .reveal.visible { animation: fadeUp 0.75s cubic-bezier(.16,1,.3,1) forwards; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+    background: var(--nav-bg);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    transition: all 0.4s ease;
+  }
+  .nav-inner {
+    max-width: 1280px; margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 70px;
+  }
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem; letter-spacing: 0.05em;
+    color: var(--orange);
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .logo-icon { width: 34px; height: 34px; }
+  .nav-links {
+    display: flex; align-items: center; gap: 2rem;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem; font-weight: 500; letter-spacing: 0.03em;
+    transition: color 0.25s ease;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+    height: 2px; background: var(--orange);
+    transform: scaleX(0); transform-origin: center;
+    transition: transform 0.3s ease;
+  }
+  .nav-links a:hover { color: var(--orange); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+
+  .btn-primary {
+    background: var(--orange); color: #fff;
+    padding: 0.6rem 1.5rem; border-radius: 4px;
+    font-weight: 600; font-size: 0.85rem; letter-spacing: 0.05em;
+    text-decoration: none; border: none; cursor: pointer;
+    transition: background 0.25s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    display: inline-flex; align-items: center; gap: 0.4rem;
+  }
+  .btn-primary:hover {
+    background: var(--orange-deep);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(249,115,22,0.35);
+  }
+  .btn-outline {
+    background: transparent;
+    border: 1.5px solid var(--orange);
+    color: var(--orange);
+    padding: 0.6rem 1.5rem; border-radius: 4px;
+    font-weight: 600; font-size: 0.85rem; letter-spacing: 0.05em;
+    text-decoration: none; cursor: pointer;
+    transition: all 0.25s ease;
+    display: inline-flex; align-items: center; gap: 0.4rem;
+  }
+  .btn-outline:hover {
+    background: var(--orange); color: #fff;
+    box-shadow: 0 8px 24px rgba(249,115,22,0.3);
+  }
+
+  /* ── THEME TOGGLE ── */
+  .theme-toggle {
+    position: relative; width: 52px; height: 28px; cursor: pointer;
+    background: none; border: none; padding: 0;
+  }
+  .toggle-track {
+    width: 52px; height: 28px; border-radius: 14px;
+    background: var(--bg-secondary);
+    border: 1.5px solid var(--border);
+    transition: all 0.3s ease;
+    position: relative; overflow: hidden;
+  }
+  html[data-theme="dark"] .toggle-track { border-color: var(--orange); }
+  .toggle-thumb {
+    position: absolute; top: 3px; left: 3px;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--orange);
+    transition: transform 0.35s cubic-bezier(.34,1.56,.64,1);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 8px rgba(249,115,22,0.4);
+  }
+  html[data-theme="light"] .toggle-thumb { transform: translateX(0); }
+  html[data-theme="dark"]  .toggle-thumb { transform: translateX(24px); }
+  .toggle-icon-sun, .toggle-icon-moon { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transition: opacity 0.3s ease; }
+  html[data-theme="light"] .toggle-icon-sun  { opacity: 1; }
+  html[data-theme="light"] .toggle-icon-moon { opacity: 0; }
+  html[data-theme="dark"]  .toggle-icon-sun  { opacity: 0; }
+  html[data-theme="dark"]  .toggle-icon-moon { opacity: 1; }
+
+  /* ── HAMBURGER ── */
+  .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+  .hamburger span {
+    display: block; width: 24px; height: 2px; border-radius: 2px;
+    background: var(--text-primary);
+    transition: all 0.35s cubic-bezier(.34,1.56,.64,1);
+    transform-origin: center;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); background: var(--orange); }
+  .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); background: var(--orange); }
+
+  .mobile-menu {
+    display: none; flex-direction: column;
+    background: var(--nav-bg); backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem;
+    gap: 1.25rem;
+  }
+  .mobile-menu.open { display: flex; animation: fadeUp 0.3s ease; }
+  .mobile-menu a {
+    color: var(--text-secondary); text-decoration: none;
+    font-size: 1.1rem; font-weight: 500;
+    transition: color 0.2s ease; padding: 0.25rem 0;
+  }
+  .mobile-menu a:hover { color: var(--orange); }
+
+  /* ── HERO ── */
+  #home {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    position: relative; overflow: hidden;
+    padding-top: 70px;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background: radial-gradient(ellipse 80% 60% at 60% 50%, rgba(249,115,22,0.08) 0%, transparent 65%),
+                var(--bg-primary);
+    transition: background 0.4s ease;
+  }
+  html[data-theme="dark"] .hero-bg {
+    background: radial-gradient(ellipse 80% 60% at 60% 50%, rgba(249,115,22,0.12) 0%, transparent 65%),
+                var(--bg-primary);
+  }
+  .spotlight {
+    position: absolute; top: -200px; right: -100px; z-index: 0;
+    width: 500px; height: 700px;
+    background: conic-gradient(from -30deg at 50% 0%, transparent 0deg, rgba(249,115,22,0.05) 30deg, transparent 60deg);
+    animation: spotlightSweep 8s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .hero-inner {
+    max-width: 1280px; margin: 0 auto; padding: 5rem 1.5rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+    position: relative; z-index: 1; width: 100%;
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3.5rem, 7vw, 6.5rem);
+    line-height: 0.95; letter-spacing: 0.02em;
+    color: var(--text-primary);
+  }
+  .hero-title span { color: var(--orange); display: block; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--orange-glow); border: 1px solid var(--orange);
+    border-radius: 100px; padding: 0.3rem 1rem;
+    font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em;
+    color: var(--orange); margin-bottom: 1.5rem;
+    animation: pulseGlow 3s ease-in-out infinite;
+    text-transform: uppercase;
+  }
+  .hero-badge-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--orange); animation: starBlink 1.5s ease-in-out infinite;
+  }
+  .hero-poster-wrap {
+    position: relative; display: flex; justify-content: center;
+    animation: heroFloat 6s ease-in-out infinite;
+  }
+  .hero-poster {
+    width: 320px; height: 460px; border-radius: 16px;
+    background: linear-gradient(160deg, #1a0a02 0%, #2d1206 50%, #1a0a02 100%);
+    border: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    overflow: hidden; position: relative;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 40px rgba(249,115,22,0.12);
+    animation: borderGlow 4s ease-in-out infinite;
+  }
+  html[data-theme="light"] .hero-poster {
+    background: linear-gradient(160deg, #FFF7ED 0%, #FED7AA 50%, #FFF7ED 100%);
+    box-shadow: 0 40px 80px rgba(234,88,12,0.12), 0 0 40px rgba(249,115,22,0.1);
+  }
+  .poster-top {
+    height: 70%; background: linear-gradient(180deg, rgba(249,115,22,0.05) 0%, rgba(249,115,22,0.15) 100%);
+    display: flex; align-items: center; justify-content: center; position: relative;
+    overflow: hidden;
+  }
+  .poster-film-icon { font-size: 0; }
+  .poster-reel {
+    width: 100px; height: 100px; border: 3px solid rgba(249,115,22,0.4);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .poster-reel::before {
+    content: ''; position: absolute; width: 30px; height: 30px;
+    border-radius: 50%; border: 2px solid var(--orange);
+  }
+  .reel-spoke {
+    position: absolute; width: 2px; height: 38px;
+    background: rgba(249,115,22,0.5); border-radius: 2px;
+    transform-origin: center 50%;
+  }
+  .poster-bottom {
+    height: 30%; padding: 1rem 1.2rem;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+  }
+  .poster-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem; color: var(--orange); letter-spacing: 0.05em;
+  }
+  .poster-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+  .hero-glow-orb {
+    position: absolute; border-radius: 50%;
+    background: radial-gradient(circle, rgba(249,115,22,0.2) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-stats {
+    display: flex; gap: 2.5rem; margin-top: 2.5rem;
+  }
+  .stat-item { text-align: left; }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem; color: var(--orange); line-height: 1;
+  }
+  .stat-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem; letter-spacing: 0.05em; }
+
+  /* ── SECTION SHARED ── */
+  section { padding: 6rem 1.5rem; transition: background 0.4s ease; }
+  .section-inner { max-width: 1280px; margin: 0 auto; }
+  .section-label {
+    font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--orange); font-weight: 600; margin-bottom: 0.75rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .section-label::before {
+    content: ''; display: block; width: 32px; height: 2px; background: var(--orange);
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1; color: var(--text-primary); margin-bottom: 1rem;
+  }
+  .section-title em { color: var(--orange); font-style: normal; }
+  .section-desc { color: var(--text-muted); max-width: 560px; line-height: 1.75; font-size: 0.95rem; }
+
+  /* ── TICKER ── */
+  .ticker-bar {
+    background: var(--orange); padding: 0.6rem 0;
+    overflow: hidden; white-space: nowrap;
+  }
+  .ticker-inner {
+    display: inline-flex; gap: 0;
+    animation: tickerScroll 20s linear infinite;
+  }
+  .ticker-item {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem; letter-spacing: 0.15em; color: #fff;
+    padding: 0 2rem; display: flex; align-items: center; gap: 1rem;
+  }
+  .ticker-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.5); }
+
+  /* ── ABOUT ── */
+  #about { background: var(--bg-secondary); }
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 5rem; align-items: center;
+  }
+  .about-visual {
+    position: relative; height: 440px;
+  }
+  .about-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px; padding: 2rem;
+    position: absolute;
+    transition: box-shadow 0.3s ease;
+  }
+  .about-card:hover { box-shadow: 0 20px 50px rgba(249,115,22,0.1); }
+  .about-card-main {
+    inset: 0; right: 60px;
+    display: flex; flex-direction: column; gap: 1.5rem;
+  }
+  .about-card-float {
+    bottom: 20px; right: 0; left: auto;
+    width: 180px; z-index: 2;
+    animation: heroFloat 4s 1s ease-in-out infinite;
+  }
+  .feature-row {
+    display: flex; align-items: flex-start; gap: 1rem;
+  }
+  .feature-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    background: var(--orange-glow); border: 1px solid rgba(249,115,22,0.2);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .feature-icon svg { width: 22px; height: 22px; color: var(--orange); }
+  .feature-title { font-weight: 600; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 0.25rem; }
+  .feature-desc  { font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; }
+  .float-card-num {
+    font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem;
+    color: var(--orange); line-height: 1;
+  }
+  .float-card-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+  /* ── MOVIE CARDS ── */
+  .movies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem; margin-top: 3rem;
+  }
+  .movie-card {
+    border-radius: 12px; overflow: hidden;
+    background: var(--bg-card); border: 1px solid var(--border);
+    cursor: pointer; position: relative;
+    transition: transform 0.35s cubic-bezier(.34,1.56,.64,1), box-shadow 0.35s ease;
+    group: true;
+  }
+  .movie-card:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.3), 0 0 20px rgba(249,115,22,0.12);
+  }
+  .movie-poster {
+    height: 300px; position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .movie-poster-bg {
+    position: absolute; inset: 0;
+    transition: transform 0.4s ease;
+  }
+  .movie-card:hover .movie-poster-bg { transform: scale(1.06); }
+  .movie-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%);
+    opacity: 0; transition: opacity 0.35s ease; z-index: 2;
+    display: flex; align-items: flex-end; padding: 1rem;
+  }
+  .movie-card:hover .movie-overlay { opacity: 1; }
+  .movie-play-btn {
+    position: absolute; top: 50%; left: 50%; z-index: 3;
+    transform: translate(-50%, -50%) scale(0.6);
+    opacity: 0; transition: all 0.35s cubic-bezier(.34,1.56,.64,1);
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--orange); display: flex; align-items: center; justify-content: center;
+  }
+  .movie-card:hover .movie-play-btn { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  .movie-info { padding: 1.2rem; }
+  .movie-genre {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--orange); margin-bottom: 0.4rem;
+  }
+  .movie-title { font-weight: 700; font-size: 0.95rem; color: var(--text-primary); margin-bottom: 0.5rem; }
+  .movie-meta {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 0.78rem; color: var(--text-muted);
+  }
+  .movie-rating {
+    display: flex; align-items: center; gap: 0.3rem; color: var(--orange);
+  }
+  .badge-new {
+    position: absolute; top: 0.75rem; left: 0.75rem; z-index: 4;
+    background: var(--orange); color: #fff;
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em;
+    padding: 0.25rem 0.6rem; border-radius: 4px; text-transform: uppercase;
+  }
+  .badge-coming {
+    background: rgba(13,5,0,0.85); color: var(--orange);
+    border: 1px solid var(--orange);
+  }
+
+  /* ── UPCOMING SECTION ── */
+  #upcoming { background: var(--bg-primary); }
+  #running   { background: var(--bg-secondary); }
+
+  /* ── REVIEWS ── */
+  #reviews { background: var(--bg-primary); }
+  .reviews-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem; margin-top: 3rem;
+  }
+  .review-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 2rem;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+    position: relative; overflow: hidden;
+  }
+  .review-card::before {
+    content: '"'; position: absolute; top: -0.5rem; left: 1rem;
+    font-family: 'Playfair Display', serif; font-size: 8rem;
+    color: rgba(249,115,22,0.06); line-height: 1; pointer-events: none;
+  }
+  .review-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.15), 0 0 16px rgba(249,115,22,0.08);
+  }
+  .review-stars {
+    display: flex; gap: 0.2rem; margin-bottom: 1rem;
+  }
+  .star { color: var(--orange); font-size: 0.9rem; }
+  .review-text {
+    font-size: 0.9rem; line-height: 1.75;
+    color: var(--text-secondary); margin-bottom: 1.5rem;
+    font-style: italic; font-family: 'Playfair Display', serif;
+  }
+  .reviewer { display: flex; align-items: center; gap: 0.75rem; }
+  .reviewer-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.85rem; color: #fff;
+    background: var(--orange); flex-shrink: 0;
+  }
+  .reviewer-name { font-weight: 600; font-size: 0.88rem; color: var(--text-primary); }
+  .reviewer-sub  { font-size: 0.75rem; color: var(--text-muted); }
+
+  /* ── CONTACT ── */
+  #contact { background: var(--bg-secondary); }
+  .contact-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; align-items: start;
+  }
+  .contact-form {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 2.5rem;
+  }
+  .form-group { margin-bottom: 1.25rem; }
+  .form-label {
+    display: block; font-size: 0.82rem; font-weight: 600;
+    color: var(--text-secondary); margin-bottom: 0.5rem; letter-spacing: 0.04em;
+  }
+  .form-input {
+    width: 100%; padding: 0.8rem 1rem;
+    background: var(--bg-secondary); border: 1.5px solid var(--border);
+    border-radius: 8px; color: var(--text-primary);
+    font-size: 0.9rem; font-family: 'DM Sans', sans-serif;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    outline: none;
+  }
+  .form-input:focus {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 3px rgba(249,115,22,0.12);
+  }
+  .form-input::placeholder { color: var(--text-muted); opacity: 0.6; }
+  .form-textarea { resize: vertical; min-height: 120px; }
+  .contact-info { display: flex; flex-direction: column; gap: 2rem; }
+  .contact-item { display: flex; align-items: flex-start; gap: 1rem; }
+  .contact-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: var(--orange-glow); border: 1px solid rgba(249,115,22,0.2);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .contact-icon svg { width: 22px; height: 22px; color: var(--orange); }
+  .contact-item-title { font-weight: 600; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 0.25rem; }
+  .contact-item-text  { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+
+  /* ── MAP PLACEHOLDER ── */
+  .map-box {
+    border-radius: 12px; overflow: hidden;
+    border: 1px solid var(--border); height: 200px;
+    background: var(--bg-card);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; margin-top: 2rem;
+  }
+  .map-pin-anim {
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  }
+  .map-pin { color: var(--orange); }
+  .map-pulse {
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--orange); opacity: 0.4;
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+
+  /* ── FILM STRIP DIVIDER ── */
+  .film-strip {
+    height: 40px; background: var(--film-strip);
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    display: flex; overflow: hidden; position: relative;
+  }
+  .film-holes {
+    display: flex; align-items: center;
+    gap: 1.5rem; padding: 0 1rem;
+    animation: filmRoll 12s linear infinite;
+    white-space: nowrap; min-width: 200%;
+  }
+  .film-hole {
+    width: 14px; height: 20px; border-radius: 3px;
+    background: var(--bg-primary); border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border);
+    padding: 3rem 1.5rem;
+  }
+  .footer-inner {
+    max-width: 1280px; margin: 0 auto;
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+  }
+  .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--orange); }
+  .footer-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.7; margin-top: 0.75rem; max-width: 280px; }
+  .footer-heading { font-weight: 700; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-primary); margin-bottom: 1rem; }
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.65rem; }
+  .footer-links a { font-size: 0.85rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+  .footer-links a:hover { color: var(--orange); }
+  .footer-bottom {
+    max-width: 1280px; margin: 2rem auto 0;
+    padding-top: 1.5rem; border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 0.8rem; color: var(--text-muted);
+  }
+  .social-links { display: flex; gap: 0.75rem; }
+  .social-btn {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.25s ease; color: var(--text-muted);
+    text-decoration: none;
+  }
+  .social-btn:hover { background: var(--orange); border-color: var(--orange); color: #fff; }
+  .social-btn svg { width: 16px; height: 16px; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    .hero-inner    { grid-template-columns: 1fr; gap: 3rem; text-align: center; }
+    .hero-stats    { justify-content: center; }
+    .hero-poster-wrap { display: none; }
+    .about-grid    { grid-template-columns: 1fr; }
+    .about-visual  { display: none; }
+    .contact-grid  { grid-template-columns: 1fr; }
+    .footer-inner  { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .nav-links   { display: none; }
+    .btn-book-nav { display: none; }
+    .hamburger   { display: flex; }
+    section      { padding: 4rem 1rem; }
+    .movies-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+    .reviews-grid { grid-template-columns: 1fr; }
+    .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
+    .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+    .hero-title  { font-size: clamp(3rem, 10vw, 4rem); }
+    .section-title { font-size: clamp(2rem, 8vw, 3rem); }
+  }
+  @media (max-width: 480px) {
+    .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
+    .nav-inner  { padding: 0 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAVIGATION ── -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <div class="logo">
+      <!-- Film reel SVG logo -->
+      <svg class="logo-icon" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="17" cy="17" r="15" stroke="#F97316" stroke-width="2"/>
+        <circle cx="17" cy="17" r="5" fill="#F97316"/>
+        <circle cx="17" cy="5"  r="2.5" fill="#F97316"/>
+        <circle cx="17" cy="29" r="2.5" fill="#F97316"/>
+        <circle cx="5"  cy="17" r="2.5" fill="#F97316"/>
+        <circle cx="29" cy="17" r="2.5" fill="#F97316"/>
+        <circle cx="8.5"  cy="8.5"  r="2.5" fill="#F97316"/>
+        <circle cx="25.5" cy="25.5" r="2.5" fill="#F97316"/>
+        <circle cx="25.5" cy="8.5"  r="2.5" fill="#F97316"/>
+        <circle cx="8.5"  cy="25.5" r="2.5" fill="#F97316"/>
+      </svg>
+      CineVault
+    </div>
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#upcoming">Upcoming</a></li>
+      <li><a href="#running">Now Playing</a></li>
+      <li><a href="#reviews">Reviews</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle light/dark mode">
+        <div class="toggle-track">
+          <div class="toggle-thumb">
+            <div class="toggle-icon-sun">
+              <!-- Sun icon -->
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+                <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/>
+                <line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/>
+                <line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+              </svg>
+            </div>
+            <div class="toggle-icon-moon">
+              <!-- Moon icon -->
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </button>
+      <a href="#contact" class="btn-primary btn-book-nav" style="font-size:0.8rem;padding:0.5rem 1.1rem;">
+        Book Tickets
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#home"     onclick="closeMobile()">Home</a>
+    <a href="#about"    onclick="closeMobile()">About</a>
+    <a href="#upcoming" onclick="closeMobile()">Upcoming</a>
+    <a href="#running"  onclick="closeMobile()">Now Playing</a>
+    <a href="#reviews"  onclick="closeMobile()">Reviews</a>
+    <a href="#contact"  onclick="closeMobile()">Contact</a>
+    <a href="#contact" class="btn-primary" onclick="closeMobile()" style="width:fit-content;">Book Tickets</a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="home">
+  <div class="hero-bg"></div>
+  <div class="spotlight"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge" style="animation-delay:0.1s">
+        <div class="hero-badge-dot"></div>
+        Now Showing — Summer 2025
+      </div>
+      <h1 class="hero-title animate-fade-up" style="animation-delay:0.15s">
+        Where Every<br/>
+        <span>Frame Tells</span>
+        A Story
+      </h1>
+      <p class="animate-fade-up" style="color:var(--text-muted);max-width:480px;line-height:1.8;margin-top:1.5rem;animation-delay:0.25s;font-size:1rem;">
+        Immerse yourself in breathtaking cinematic experiences with Dolby Atmos sound, 4K laser projection, and luxury seating. CineVault redefines what it means to watch a film.
+      </p>
+      <div class="animate-fade-up" style="display:flex;gap:1rem;margin-top:2rem;flex-wrap:wrap;animation-delay:0.35s;">
+        <a href="#running" class="btn-primary">
+          Now Playing
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5,3 19,12 5,21"/></svg>
+        </a>
+        <a href="#upcoming" class="btn-outline">
+          Upcoming Films
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </a>
+      </div>
+      <div class="hero-stats animate-fade-up" style="animation-delay:0.45s;">
+        <div class="stat-item">
+          <div class="stat-num">12+</div>
+          <div class="stat-label">Screen Halls</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">4K</div>
+          <div class="stat-label">Laser Projection</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">50K+</div>
+          <div class="stat-label">Happy Viewers</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-poster-wrap animate-scale-in" style="animation-delay:0.3s;">
+      <div class="hero-glow-orb" style="width:400px;height:400px;top:-100px;right:-100px;opacity:0.4;"></div>
+      <div class="hero-poster">
+        <div class="poster-top">
+          <div class="poster-reel">
+            <div class="reel-spoke" style="transform:rotate(0deg) translateY(-19px)"></div>
+            <div class="reel-spoke" style="transform:rotate(60deg) translateY(-19px)"></div>
+            <div class="reel-spoke" style="transform:rotate(120deg) translateY(-19px)"></div>
+            <div class="reel-spoke" style="transform:rotate(180deg) translateY(-19px)"></div>
+            <div class="reel-spoke" style="transform:rotate(240deg) translateY(-19px)"></div>
+            <div class="reel-spoke" style="transform:rotate(300deg) translateY(-19px)"></div>
+          </div>
+        </div>
+        <div class="poster-bottom">
+          <div class="poster-label">CineVault Originals</div>
+          <div class="poster-sub">Premium Cinematic Experience · Est. 2010</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TICKER ── -->
+<div class="ticker-bar">
+  <div class="ticker-inner" id="ticker">
+    <!-- duplicated for seamless loop -->
+  </div>
+</div>
+
+<!-- ── ABOUT ── -->
+<section id="about">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div class="reveal">
+        <div class="section-label">About CineVault</div>
+        <h2 class="section-title">Cinema <em>Reimagined</em> For The Modern Age</h2>
+        <p class="section-desc">
+          For over 15 years, CineVault has been the premier destination for film lovers. We combine cutting-edge technology with luxurious comfort to deliver an unmatched cinematic experience that you won't find anywhere else.
+        </p>
+        <div style="display:flex;flex-direction:column;gap:1.5rem;margin-top:2.5rem;">
+          <div class="feature-row">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><circle cx="11" cy="11" r="3"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <div>
+              <div class="feature-title">4K Laser Projection</div>
+              <div class="feature-desc">Experience every frame with crystal-clear 4K resolution and HDR laser projection for unparalleled brightness and color accuracy.</div>
+            </div>
+          </div>
+          <div class="feature-row">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+            </div>
+            <div>
+              <div class="feature-title">Dolby Atmos Sound</div>
+              <div class="feature-desc">360-degree immersive audio with Dolby Atmos surround sound that places you right in the middle of the action.</div>
+            </div>
+          </div>
+          <div class="feature-row">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </div>
+            <div>
+              <div class="feature-title">Luxury Recliners</div>
+              <div class="feature-desc">Sink into fully motorized leather recliners with heated seats, personal tray tables, and in-seat dining service.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="about-visual reveal">
+        <div class="about-card about-card-main">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--orange);letter-spacing:0.05em;margin-bottom:1rem;">Our Technology</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div style="background:var(--bg-secondary);border-radius:8px;padding:1rem;border:1px solid var(--border);">
+              <div style="font-size:1.6rem;font-family:'Bebas Neue',sans-serif;color:var(--orange);">4K</div>
+              <div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.25rem;">Laser Projection</div>
+            </div>
+            <div style="background:var(--bg-secondary);border-radius:8px;padding:1rem;border:1px solid var(--border);">
+              <div style="font-size:1.6rem;font-family:'Bebas Neue',sans-serif;color:var(--orange);">360°</div>
+              <div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.25rem;">Dolby Atmos</div>
+            </div>
+            <div style="background:var(--bg-secondary);border-radius:8px;padding:1rem;border:1px solid var(--border);">
+              <div style="font-size:1.6rem;font-family:'Bebas Neue',sans-serif;color:var(--orange);">12</div>
+              <div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.25rem;">Premium Halls</div>
+            </div>
+            <div style="background:var(--bg-secondary);border-radius:8px;padding:1rem;border:1px solid var(--border);">
+              <div style="font-size:1.6rem;font-family:'Bebas Neue',sans-serif;color:var(--orange);">IMAX</div>
+              <div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.25rem;">Giant Screen</div>
+            </div>
+          </div>
+          <div style="margin-top:1.5rem;padding:1rem;border-radius:8px;background:var(--orange-glow);border:1px solid rgba(249,115,22,0.2);">
+            <div style="font-size:0.8rem;color:var(--orange);font-weight:600;margin-bottom:0.4rem;">OPEN DAILY</div>
+            <div style="font-size:0.85rem;color:var(--text-secondary);">Mon–Thu: 10AM – 11PM</div>
+            <div style="font-size:0.85rem;color:var(--text-secondary);">Fri–Sun: 10AM – 1AM</div>
+          </div>
+        </div>
+        <div class="about-card about-card-float">
+          <div class="float-card-num">98%</div>
+          <div class="float-card-label">Customer Satisfaction</div>
+          <div style="display:flex;gap:0.2rem;margin-top:0.5rem;">
+            <span style="color:var(--orange);font-size:0.8rem;">★★★★★</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FILM STRIP ── -->
+<div class="film-strip"><div class="film-holes" id="filmHoles"></div></div>
+
+<!-- ── UPCOMING MOVIES ── -->
+<section id="upcoming">
+  <div class="section-inner">
+    <div class="reveal" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:0.5rem;">
+      <div>
+        <div class="section-label">Coming Soon</div>
+        <h2 class="section-title">Upcoming <em>Releases</em></h2>
+      </div>
+      <a href="#" class="btn-outline" style="margin-bottom:1rem;">View All
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+    <div class="movies-grid" id="upcomingGrid"></div>
+  </div>
+</section>
+
+<!-- ── NOW PLAYING ── -->
+<section id="running">
+  <div class="section-inner">
+    <div class="reveal" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:0.5rem;">
+      <div>
+        <div class="section-label">In Theatres Now</div>
+        <h2 class="section-title">Now <em>Playing</em></h2>
+      </div>
+      <a href="#" class="btn-outline" style="margin-bottom:1rem;">See All Shows
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+    <div class="movies-grid" id="runningGrid"></div>
+  </div>
+</section>
+
+<!-- ── FILM STRIP ── -->
+<div class="film-strip"><div class="film-holes" id="filmHoles2"></div></div>
+
+<!-- ── REVIEWS ── -->
+<section id="reviews">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center;max-width:600px;margin:0 auto 0.5rem;">
+      <div class="section-label" style="justify-content:center;">What People Say</div>
+      <h2 class="section-title" style="text-align:center;">Voices of <em>Our Audience</em></h2>
+      <p class="section-desc" style="margin:0 auto;text-align:center;">Thousands of film lovers choose CineVault every week. Here's what they have to say about their experience.</p>
+    </div>
+    <div class="reviews-grid" id="reviewsGrid"></div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="reveal" style="margin-bottom:3rem;">
+      <div class="section-label">Get In Touch</div>
+      <h2 class="section-title">Contact <em>Us</em></h2>
+      <p class="section-desc">Have questions about screenings, memberships, or private bookings? We'd love to hear from you.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-form reveal">
+        <h3 style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--text-primary);margin-bottom:1.5rem;letter-spacing:0.03em;">Send a Message</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input type="text" class="form-input" placeholder="Alex"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input type="text" class="form-input" placeholder="Chen"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-input" placeholder="alex@example.com"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Subject</label>
+          <select class="form-input" style="cursor:pointer;">
+            <option>General Enquiry</option>
+            <option>Private Screening</option>
+            <option>Membership</option>
+            <option>Feedback</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Message</label>
+          <textarea class="form-input form-textarea" placeholder="Tell us how we can help..."></textarea>
+        </div>
+        <button class="btn-primary" style="width:100%;justify-content:center;padding:0.9rem;" onclick="handleSubmit(this)">
+          Send Message
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/></svg>
+        </button>
+      </div>
+      <div class="contact-info reveal">
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <div class="contact-item-title">Our Location</div>
+            <div class="contact-item-text">12 Silverscreen Boulevard,<br/>Arts District, Downtown<br/>New York, NY 10001</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.42 2 2 0 0 1 3.6 1.24h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.37a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.5 16a2 2 0 0 1 .42.92z"/></svg>
+          </div>
+          <div>
+            <div class="contact-item-title">Phone Number</div>
+            <div class="contact-item-text">+1 (800) 555-CINE<br/>+1 (212) 555-0198</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div>
+            <div class="contact-item-title">Email Us</div>
+            <div class="contact-item-text">info@cinevault.com<br/>bookings@cinevault.com</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <div class="contact-item-title">Box Office Hours</div>
+            <div class="contact-item-text">Mon–Thu: 10:00 AM – 11:00 PM<br/>Fri–Sun: 10:00 AM – 1:00 AM</div>
+          </div>
+        </div>
+        <div class="map-box">
+          <div class="map-pin-anim">
+            <svg class="map-pin" width="36" height="36" viewBox="0 0 24 24" fill="var(--orange)" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            <div class="map-pulse"></div>
+            <div style="font-size:0.8rem;color:var(--text-muted);margin-top:0.5rem;">12 Silverscreen Blvd, NY</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">CineVault</div>
+      <p class="footer-desc">The premier cinematic destination for film lovers. Where every frame tells a story and every visit becomes a memory.</p>
+      <div class="social-links" style="margin-top:1.25rem;">
+        <a class="social-btn" href="#" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        </a>
+        <a class="social-btn" href="#" aria-label="Twitter / X">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a class="social-btn" href="#" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+        </a>
+        <a class="social-btn" href="#" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-heading">Navigate</div>
+      <ul class="footer-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#upcoming">Upcoming</a></li>
+        <li><a href="#running">Now Playing</a></li>
+        <li><a href="#reviews">Reviews</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-heading">Explore</div>
+      <ul class="footer-links">
+        <li><a href="#">Membership</a></li>
+        <li><a href="#">Gift Cards</a></li>
+        <li><a href="#">Private Hire</a></li>
+        <li><a href="#">Dining</a></li>
+        <li><a href="#">Concessions</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-heading">Legal</div>
+      <ul class="footer-links">
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Cookie Policy</a></li>
+        <li><a href="#">Accessibility</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 CineVault Theatres. All rights reserved.</span>
+    <span style="color:var(--orange);">Made with passion for cinema</span>
+  </div>
+</footer>
+
+<script>
+/* ── DATA ── */
+const upcomingMovies = [
+  { title: "Avengers Doomsday", genre: "Sci-Fi Thriller", rating: "PG-13", duration: "2h 18m", release: "Jul 25", accent: "#a855f7",
+    img: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/2e317a1c-f1ce-4a5f-90db-d88cc01db2d0/djyh7h2-d0dd3eb7-ade6-4245-ad14-f843b4cf7df2.png/v1/fill/w_1280,h_2027,q_80,strp/avengers_doomsday_poster_hd_2027_4k_by_mrandrew7w7_djyh7h2-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MjAyNyIsInBhdGgiOiJcL2ZcLzJlMzE3YTFjLWYxY2UtNGE1Zi05MGRiLWQ4OGNjMDFkYjJkMFwvZGp5aDdoMi1kMGRkM2ViNy1hZGU2LTQyNDUtYWQxNC1mODQzYjRjZjdkZjIucG5nIiwid2lkdGgiOiI8PTEyODAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.F0tPUEt8UhfhosZKOzP0IZAPNtpsQKR-ZKR0RKiukQQ" },
+  { title: "Toxic", genre: "action", rating: "PG", duration: "3h 02m", release: "Aug 8", accent: "#22c55e",
+    img: "https://images.filmibeat.com/ph-big/2026/01/toxic1767870066_0.jpeg" },
+  { title: "Ramayana", genre: "Action Adventure", rating: "PG-13", duration: "2h 34m", release: "Aug 22", accent: "#f97316",
+    img: "https://m.media-amazon.com/images/M/MV5BOTM2OGY3YzItNTE3My00N2VjLTgwOGEtMjkzN2IwZDdjM2Y1XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" },
+  { title: "Toy story 5", genre: "History", rating: "R", duration: "1h 55m", release: "Sep 5", accent: "#3b82f6",
+    img: "https://tse4.mm.bing.net/th/id/OIP.rvQ3wsMD1qd4rM1fN0JQeQHaLH?cb=thfc1&rs=1&pid=ImgDetMain&o=7&rm=3" },
+    { title: "King", genre: "Action", rating: "R", duration: "1h 55m", release: "Sep 12", accent: "#3a82a5",
+    img: "https://m.media-amazon.com/images/M/MV5BNDI0NDI1ZGUtNDI4MS00OWQxLWE0ZDgtYTViYmIwODdmZTdiXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" }
+];
+
+const runningMovies = [
+  { title: "The Boys", genre: "Action Dark", rating: "PG-13", duration: "2h 22m", score: "9.1", accent: "#f97316",
+    img: "https://static1.cbrimages.com/wordpress/wp-content/uploads/2021/04/E0EoxMaVEAU7WRN.jpg" },
+  { title: "When life gives you tangerines", genre: "Drama Romance", rating: "PG", duration: "1h 48m", score: "8.7", accent: "#60a5fa",
+    img: "https://image.tmdb.org/t/p/original/Afrz3QAcQcsT6w4S5wrKUxmYPWM.jpg" },
+  { title: "Game of thrones", genre: "history", rating: "R", duration: "2h 05m", score: "8.4", accent: "#ef4444",
+    img: "https://tse2.mm.bing.net/th/id/OIP._bp2D9_elq4bMsFU7syOdAHaLG?cb=thfc1&rs=1&pid=ImgDetMain&o=7&rm=3" },
+  { title: "Wednesday", genre: "thriller Comedy", rating: "PG-13", duration: "1h 38m", score: "8.2", accent: "#84cc16",
+    img: "https://i.pinimg.com/736x/44/8a/1a/448a1a7e20ccf078f775dd0f7e5a4f91.jpg" },
+    { title: "Laugh Track", genre: "crime drama", rating: "PG-13", duration: "1h 38m", score: "8.2", accent: "#82ccf6",
+    img: "https://static1.srcdn.com/wordpress/wp-content/uploads/2023/02/breaking-bad-tv-poster.jpg" }
+];
+
+const reviews = [
+  { text: "Absolutely breathtaking. The Dolby Atmos experience transported me completely — I forgot I was sitting in a cinema hall. CineVault sets the gold standard.", name: "Priya M.", sub: "Gold Member", initial: "P", delay: 0 },
+  { text: "The recliner seats and in-seat dining made this the most comfortable and indulgent evening I've ever spent at the movies. Worth every penny.", name: "James R.", sub: "Verified Patron", initial: "J", delay: 0.1 },
+  { text: "I've visited cinemas across three continents and CineVault's projection quality is genuinely world-class. The 4K laser makes every other screen feel outdated.", name: "Sophia L.", sub: "Film Critic", initial: "S", delay: 0.2 },
+  { text: "Booked a private screening for my anniversary and the staff was impeccably attentive. The whole evening felt like a five-star experience from start to finish.", name: "Daniel K.", sub: "Premium Member", initial: "D", delay: 0.3 },
+  { text: "The concessions menu is a revelation — craft cocktails, artisan popcorn, gourmet bites. CineVault treats food as seriously as cinema.", name: "Amara O.", sub: "Food Blogger", initial: "A", delay: 0.4 },
+  { text: "Kids loved it, parents loved it. The family screening room with the heated seats and wide seats made even a three-hour film feel effortless.", name: "Raj & Meera", sub: "Family Visitors", initial: "R", delay: 0.5 },
+];
+
+const tickerItems = ["Dolby Atmos Sound", "4K Laser Projection", "Luxury Recliners", "IMAX Experience", "In-Seat Dining", "12 Premium Halls", "Gift Cards Available", "Private Screenings"];
+
+/* ── RENDER TICKER ── */
+function renderTicker() {
+  const el = document.getElementById('ticker');
+  const items = [...tickerItems, ...tickerItems];
+  el.innerHTML = items.map(t => `<span class="ticker-item"><span class="ticker-dot"></span>${t}</span>`).join('');
+}
+
+/* ── RENDER FILM HOLES ── */
+function renderFilmHoles() {
+  ['filmHoles','filmHoles2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    let h = '';
+    for (let i = 0; i < 80; i++) h += '<div class="film-hole"></div>';
+    el.innerHTML = h + h;
+  });
+}
+
+/* ── RENDER MOVIE CARD ── */
+function movieCard(m, isUpcoming) {
+  return `
+  <div class="movie-card reveal" style="animation-delay:${Math.random()*0.3}s">
+    ${isUpcoming ? `<div class="badge-new badge-coming">Coming ${m.release}</div>` : `<div class="badge-new">Now Showing</div>`}
+    <div class="movie-poster">
+      <div class="movie-poster-bg" style="width:100%;height:100%;background:url('${m.img}') center/cover no-repeat;"></div>
+      <div class="movie-play-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
+      </div>
+      <div class="movie-overlay" style="background:linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);">
+        <button class="btn-primary" style="font-size:0.75rem;padding:0.4rem 1rem;" onclick="event.stopPropagation()">
+          ${isUpcoming ? 'Remind Me' : 'Book Now'}
+        </button>
+      </div>
+      <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(to bottom,transparent 50%,rgba(0,0,0,0.5) 100%);pointer-events:none;"></div>
+    </div>
+    <div class="movie-info">
+      <div class="movie-genre" style="color:${m.accent};">${m.genre}</div>
+      <div class="movie-title">${m.title}</div>
+      <div class="movie-meta">
+        <span>${m.rating} · ${m.duration}</span>
+        ${!isUpcoming ? `<span class="movie-rating" style="color:${m.accent};"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>${m.score}</span>` : ''}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderMovies() {
+  document.getElementById('upcomingGrid').innerHTML = upcomingMovies.map(m => movieCard(m, true)).join('');
+  document.getElementById('runningGrid').innerHTML  = runningMovies.map(m => movieCard(m, false)).join('');
+}
+
+/* ── RENDER REVIEWS ── */
+function renderReviews() {
+  document.getElementById('reviewsGrid').innerHTML = reviews.map(r => `
+  <div class="review-card reveal" style="animation-delay:${r.delay}s">
+    <div class="review-stars">${'★'.repeat(5).split('').map(s => `<span class="star">${s}</span>`).join('')}</div>
+    <p class="review-text">${r.text}</p>
+    <div class="reviewer">
+      <div class="reviewer-avatar">${r.initial}</div>
+      <div>
+        <div class="reviewer-name">${r.name}</div>
+        <div class="reviewer-sub">${r.sub}</div>
+      </div>
+    </div>
+  </div>`).join('');
+}
+
+/* ── SCROLL REVEAL ── */
+function revealOnScroll() {
+  document.querySelectorAll('.reveal').forEach(el => {
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight - 80) el.classList.add('visible');
+  });
+}
+
+/* ── THEME TOGGLE ── */
+document.getElementById('themeToggle').addEventListener('click', function() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+});
+
+/* ── HAMBURGER ── */
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+hamburger.addEventListener('click', function() {
+  hamburger.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
+});
+function closeMobile() {
+  hamburger.classList.remove('open');
+  mobileMenu.classList.remove('open');
+}
+
+/* ── FORM SUBMIT ── */
+function handleSubmit(btn) {
+  btn.textContent = '✓ Message Sent!';
+  btn.style.background = '#16a34a';
+  setTimeout(() => {
+    btn.innerHTML = 'Send Message <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/></svg>';
+    btn.style.background = '';
+  }, 3000);
+}
+
+/* ── NAV SCROLL EFFECT ── */
+window.addEventListener('scroll', function() {
+  const nav = document.getElementById('navbar');
+  if (window.scrollY > 50) {
+    nav.style.boxShadow = '0 4px 30px rgba(0,0,0,0.15)';
+  } else {
+    nav.style.boxShadow = 'none';
+  }
+  revealOnScroll();
+});
+
+/* ── INIT ── */
+renderTicker();
+renderFilmHoles();
+renderMovies();
+renderReviews();
+revealOnScroll();
+setTimeout(revealOnScroll, 300);
+</script>
+</body>
+</html>

@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pinnacle College of Excellence</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Playfair Display', 'serif'],
+            body: ['DM Sans', 'sans-serif'],
+          },
+          colors: {
+            primary: { light: '#1d4ed8', dark: '#06b6d4' },
+          },
+          animation: {
+            'fade-up': 'fadeUp 0.7s ease both',
+            'fade-in': 'fadeIn 0.6s ease both',
+            'slide-left': 'slideLeft 0.7s ease both',
+            'slide-right': 'slideRight 0.7s ease both',
+            'float': 'float 3s ease-in-out infinite',
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4,0,0.6,1) infinite',
+            'spin-slow': 'spin 8s linear infinite',
+            'bounce-slow': 'bounce 2s infinite',
+            'scale-in': 'scaleIn 0.5s ease both',
+          },
+          keyframes: {
+            fadeUp: { '0%': { opacity:'0', transform:'translateY(40px)' }, '100%': { opacity:'1', transform:'translateY(0)' } },
+            fadeIn: { '0%': { opacity:'0' }, '100%': { opacity:'1' } },
+            slideLeft: { '0%': { opacity:'0', transform:'translateX(-50px)' }, '100%': { opacity:'1', transform:'translateX(0)' } },
+            slideRight: { '0%': { opacity:'0', transform:'translateX(50px)' }, '100%': { opacity:'1', transform:'translateX(0)' } },
+            float: { '0%,100%': { transform:'translateY(0)' }, '50%': { transform:'translateY(-12px)' } },
+            scaleIn: { '0%': { opacity:'0', transform:'scale(0.85)' }, '100%': { opacity:'1', transform:'scale(1)' } },
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --accent: #1d4ed8;
+      --accent-glow: rgba(29,78,216,0.25);
+    }
+    html.dark {
+      --accent: #06b6d4;
+      --accent-glow: rgba(6,182,212,0.25);
+    }
+    * { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; }
+    h1,h2,h3 { font-family: 'Playfair Display', serif; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 9px; }
+
+    /* Nav glass */
+    .nav-glass {
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    /* Gradient text */
+    .grad-text {
+      background: linear-gradient(135deg, var(--accent), #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Hero bg */
+    .hero-bg {
+      background: radial-gradient(ellipse 80% 70% at 60% 40%, var(--accent-glow), transparent 70%),
+                  radial-gradient(ellipse 50% 60% at 10% 80%, rgba(168,85,247,0.12), transparent 60%);
+    }
+
+    /* Carousel */
+    .carousel-track { display: flex; transition: transform 0.7s cubic-bezier(0.77,0,0.175,1); }
+    .carousel-slide { min-width: 100%; position: relative; overflow: hidden; }
+    .carousel-slide img { width:100%; height:520px; object-fit:cover; display:block; }
+    @media(max-width:768px){ .carousel-slide img { height:260px; } }
+
+    /* Card hover */
+    .card-hover {
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease;
+    }
+    .card-hover:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 24px 60px -8px var(--accent-glow); }
+
+    /* Reveal animation */
+    .reveal { opacity: 0; transform: translateY(36px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-left { opacity: 0; transform: translateX(-40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal-left.visible { opacity: 1; transform: none; }
+    .reveal-right { opacity: 0; transform: translateX(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal-right.visible { opacity: 1; transform: none; }
+
+    /* Theme toggle */
+    .theme-toggle {
+      position: relative;
+      width: 56px; height: 28px;
+      background: var(--accent);
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: background 0.4s;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+    .theme-toggle .knob {
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 22px; height: 22px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; color: #333;
+    }
+    html.dark .theme-toggle .knob { transform: translateX(28px); color: #1e293b; }
+
+    /* Stat counter */
+    .stat-num { font-family: 'Playfair Display', serif; }
+
+    /* Fee table */
+    .fee-row { transition: background 0.2s, transform 0.2s; }
+    .fee-row:hover { transform: scale(1.01); }
+
+    /* Dots */
+    .dot { width:10px; height:10px; border-radius:50%; cursor:pointer; transition: all 0.3s; }
+    .dot.active { width:28px; border-radius:9999px; background: var(--accent) !important; }
+
+    /* Floating badge */
+    @keyframes badgePop { 0%{transform:scale(0) rotate(-15deg)} 70%{transform:scale(1.1) rotate(3deg)} 100%{transform:scale(1) rotate(0)} }
+    .badge-pop { animation: badgePop 0.6s 0.5s both; }
+
+    /* Mobile menu */
+    #mobile-menu { transition: max-height 0.4s ease, opacity 0.4s ease; max-height:0; overflow:hidden; opacity:0; }
+    #mobile-menu.open { max-height: 400px; opacity:1; }
+
+    /* Accent border */
+    .accent-border-l { border-left: 4px solid var(--accent); }
+
+    /* Progress bar */
+    .prog-bar { height:6px; border-radius:9999px; background: linear-gradient(90deg, var(--accent), #a855f7); transition: width 1.2s cubic-bezier(0.34,1,0.64,1); }
+
+    /* Contact input focus */
+    .inp-focus { transition: border-color 0.3s, box-shadow 0.3s; }
+    .inp-focus:focus { outline:none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+
+    /* Particle */
+    .particle { position:absolute; border-radius:50%; pointer-events:none; animation: float var(--dur,4s) ease-in-out infinite; }
+
+    /* Tilt card on hover via JS */
+    .tilt-card { transform-style: preserve-3d; transition: transform 0.15s ease; }
+
+    /* glowing circle */
+    .glow-circle {
+      position:absolute; border-radius:50%;
+      background: radial-gradient(circle, var(--accent-glow), transparent 70%);
+      pointer-events:none;
+      animation: pulse 4s ease-in-out infinite;
+    }
+
+    /* Nav link underline */
+    .nav-link { position:relative; }
+    .nav-link::after { content:''; position:absolute; bottom:-2px; left:0; width:0; height:2px; background:var(--accent); border-radius:2px; transition:width 0.3s; }
+    .nav-link:hover::after { width:100%; }
+
+    /* btn */
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      padding: 0.75rem 2rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+    .btn-primary:hover { transform:translateY(-2px); box-shadow: 0 8px 30px var(--accent-glow); opacity:0.92; }
+    .btn-outline {
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      padding: 0.75rem 2rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    .btn-outline:hover { background: var(--accent); color: white; transform:translateY(-2px); }
+
+    html.dark body { background-color: #0f172a; color: #e2e8f0; }
+    html.light body { background-color: #f8faff; color: #1e293b; }
+  </style>
+</head>
+<body class="light:bg-slate-50 dark:bg-slate-900 transition-colors duration-500">
+
+<!-- ======= NAVBAR ======= -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 nav-glass border-b border-transparent transition-all duration-500">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 md:h-20">
+      <!-- Logo -->
+      <a href="#home" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg transition-transform group-hover:rotate-6 group-hover:scale-110" style="background:var(--accent)">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <div>
+          <div class="font-display font-bold text-lg leading-none dark:text-white">Pinnacle</div>
+          <div class="text-xs tracking-widest uppercase opacity-60 dark:text-slate-300">College of Excellence</div>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#home" class="nav-link text-sm font-medium dark:text-slate-200 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors">Home</a>
+        <a href="#about" class="nav-link text-sm font-medium dark:text-slate-200 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors">About</a>
+        <a href="#achievements" class="nav-link text-sm font-medium dark:text-slate-200 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors">Achievements</a>
+        <a href="#fees" class="nav-link text-sm font-medium dark:text-slate-200 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors">Fees</a>
+        <a href="#contact" class="nav-link text-sm font-medium dark:text-slate-200 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors">Contact</a>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <!-- Theme Toggle -->
+        <div class="theme-toggle" id="themeToggle" title="Toggle Dark/Light">
+          <div class="knob">
+            <span id="themeIcon">☀️</span>
+          </div>
+        </div>
+        <!-- Apply Button -->
+        <a href="#contact" class="hidden md:block btn-primary text-sm">Apply Now</a>
+        <!-- Mobile hamburger -->
+        <button id="menuBtn" class="md:hidden p-2 rounded-lg dark:text-white" aria-label="Menu">
+          <i class="fa-solid fa-bars text-lg"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden">
+      <div class="py-3 space-y-1 border-t border-slate-200 dark:border-slate-700">
+        <a href="#home" class="block px-4 py-2 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors text-sm font-medium dark:text-slate-200">Home</a>
+        <a href="#about" class="block px-4 py-2 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors text-sm font-medium dark:text-slate-200">About</a>
+        <a href="#achievements" class="block px-4 py-2 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors text-sm font-medium dark:text-slate-200">Achievements</a>
+        <a href="#fees" class="block px-4 py-2 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors text-sm font-medium dark:text-slate-200">Fees Structure</a>
+        <a href="#contact" class="block px-4 py-2 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors text-sm font-medium dark:text-slate-200">Contact</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ======= HOME / HERO ======= -->
+<section id="home" class="relative min-h-screen flex flex-col justify-center overflow-hidden pt-20">
+  <div class="hero-bg absolute inset-0 pointer-events-none"></div>
+
+  <!-- Decorative particles -->
+  <div class="particle w-3 h-3 opacity-30" style="background:var(--accent);top:15%;left:8%;--dur:5s"></div>
+  <div class="particle w-5 h-5 opacity-20" style="background:#a855f7;top:60%;left:4%;--dur:4s;animation-delay:1s"></div>
+  <div class="particle w-4 h-4 opacity-25" style="background:var(--accent);top:30%;right:8%;--dur:6s;animation-delay:0.5s"></div>
+  <div class="particle w-2 h-2 opacity-40" style="background:#f59e0b;top:75%;right:15%;--dur:3.5s;animation-delay:1.5s"></div>
+  <div class="glow-circle w-96 h-96 opacity-30" style="top:-80px;right:-80px;"></div>
+  <div class="glow-circle w-64 h-64 opacity-20" style="bottom:10%;left:-60px;"></div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <!-- Text -->
+      <div class="space-y-6 z-10">
+        <div class="reveal" style="transition-delay:0.1s">
+          <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase" style="background:var(--accent-glow);color:var(--accent)">
+            <span class="w-2 h-2 rounded-full animate-pulse" style="background:var(--accent)"></span>
+            Est. 1985 · NAAC A++ Accredited
+          </span>
+        </div>
+        <h1 class="reveal text-4xl sm:text-5xl lg:text-6xl font-display font-black leading-tight dark:text-white" style="transition-delay:0.2s">
+          Shape Your <span class="grad-text">Future</span><br>at Pinnacle
+        </h1>
+        <p class="reveal text-base sm:text-lg leading-relaxed text-slate-600 dark:text-slate-300 max-w-lg" style="transition-delay:0.3s">
+          A premier institution committed to academic excellence, holistic development, and nurturing tomorrow's leaders with world-class faculty and infrastructure.
+        </p>
+        <div class="reveal flex flex-wrap gap-4" style="transition-delay:0.4s">
+          <a href="#about" class="btn-primary inline-flex items-center gap-2">
+            Explore Programs <i class="fa-solid fa-arrow-right text-sm"></i>
+          </a>
+          <a href="#contact" class="btn-outline inline-flex items-center gap-2">
+            <i class="fa-solid fa-phone text-sm"></i> Get in Touch
+          </a>
+        </div>
+        <!-- Stats row -->
+        <div class="reveal flex flex-wrap gap-6 pt-4" style="transition-delay:0.5s">
+          <div class="text-center">
+            <div class="text-3xl font-display font-black grad-text">12K+</div>
+            <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Students</div>
+          </div>
+          <div class="w-px bg-slate-200 dark:bg-slate-700 self-stretch"></div>
+          <div class="text-center">
+            <div class="text-3xl font-display font-black grad-text">98%</div>
+            <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Placement Rate</div>
+          </div>
+          <div class="w-px bg-slate-200 dark:bg-slate-700 self-stretch"></div>
+          <div class="text-center">
+            <div class="text-3xl font-display font-black grad-text">40+</div>
+            <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Programs</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Carousel -->
+      <div class="reveal-right z-10" style="transition-delay:0.2s">
+        <div class="relative rounded-2xl overflow-hidden shadow-2xl" id="heroCarousel">
+          <div class="carousel-track" id="carouselTrack">
+            <!-- Slide 1 -->
+            <div class="carousel-slide">
+              <img src="https://images.unsplash.com/photo-1463592177119-bab2a00f3ccb?q=80&w=869&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Cultural Fest"/>
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-6">
+                <div>
+                  <div class="text-white/70 text-xs uppercase tracking-widest mb-1">Cultural Festival</div>
+                  <div class="text-white font-display text-xl font-bold">Utsav 2024 – Grand Cultural Fest</div>
+                </div>
+              </div>
+            </div>
+            <!-- Slide 2 -->
+            <div class="carousel-slide">
+              <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=900&q=80" alt="Convocation"/>
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-6">
+                <div>
+                  <div class="text-white/70 text-xs uppercase tracking-widest mb-1">Annual Event</div>
+                  <div class="text-white font-display text-xl font-bold">Convocation Ceremony 2024</div>
+                </div>
+              </div>
+            </div>
+            <!-- Slide 3 -->
+            <div class="carousel-slide">
+              <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=900&q=80" alt="Sports Day"/>
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-6">
+                <div>
+                  <div class="text-white/70 text-xs uppercase tracking-widest mb-1">Sports Day</div>
+                  <div class="text-white font-display text-xl font-bold">Inter-College Sports Championship</div>
+                </div>
+              </div>
+            </div>
+            <!-- Slide 4 -->
+            <div class="carousel-slide">
+              <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=900&q=80" alt="Hackathon"/>
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-6">
+                <div>
+                  <div class="text-white/70 text-xs uppercase tracking-widest mb-1">Tech Event</div>
+                  <div class="text-white font-display text-xl font-bold">Techpinnacle Hackathon 2024</div>
+                </div>
+              </div>
+            </div>
+            <!-- Slide 5 -->
+            <div class="carousel-slide">
+              <img src="https://plus.unsplash.com/premium_photo-1723924826573-f5ba48ba42ed?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Student Life"/>
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-6">
+                <div>
+                  <div class="text-white/70 text-xs uppercase tracking-widest mb-1">Student Life</div>
+                  <div class="text-white font-display text-xl font-bold">Diverse Campus Community</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Controls -->
+          <button id="prevBtn" class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/20 backdrop-blur text-white hover:bg-white/40 transition flex items-center justify-center shadow-lg z-20">
+            <i class="fa-solid fa-chevron-left text-sm"></i>
+          </button>
+          <button id="nextBtn" class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/20 backdrop-blur text-white hover:bg-white/40 transition flex items-center justify-center shadow-lg z-20">
+            <i class="fa-solid fa-chevron-right text-sm"></i>
+          </button>
+          <!-- Dots -->
+          <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20" id="carouselDots"></div>
+          <!-- Badge -->
+          <div class="badge-pop absolute top-4 right-4 bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 rounded-full shadow-lg z-20 flex items-center gap-1">
+            <i class="fa-solid fa-star text-xs"></i> Ranked #1 State
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce-slow opacity-60">
+    <span class="text-xs tracking-widest uppercase dark:text-slate-400 text-slate-500">Scroll</span>
+    <i class="fa-solid fa-chevron-down dark:text-slate-400 text-slate-500"></i>
+  </div>
+</section>
+
+<!-- ======= ABOUT SECTION ======= -->
+<section id="about" class="py-24 relative overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Section header -->
+    <div class="text-center mb-16 reveal">
+      <span class="text-xs tracking-widest uppercase font-semibold mb-3 block" style="color:var(--accent)">Who We Are</span>
+      <h2 class="text-3xl sm:text-4xl font-display font-black dark:text-white mb-4">About <span class="grad-text">Pinnacle</span></h2>
+      <div class="w-16 h-1 mx-auto rounded-full" style="background:var(--accent)"></div>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-16 items-center">
+      <!-- Left: Image grid -->
+      <div class="reveal-left grid grid-cols-2 gap-4">
+        <div class="card-hover rounded-2xl overflow-hidden row-span-2 shadow-xl">
+          <img src="https://images.unsplash.com/photo-1562774053-701939374585?w=600&q=80" alt="Campus" class="w-full h-full object-cover"/>
+        </div>
+        <div class="card-hover rounded-2xl overflow-hidden shadow-xl">
+          <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=400&q=80" alt="Library" class="w-full h-48 object-cover"/>
+        </div>
+        <div class="card-hover rounded-2xl overflow-hidden shadow-xl">
+          <img src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=400&q=80" alt="Lab" class="w-full h-48 object-cover"/>
+        </div>
+      </div>
+
+      <!-- Right: Content -->
+      <div class="reveal-right space-y-6">
+        <div class="accent-border-l pl-5">
+          <h3 class="text-2xl font-display font-bold dark:text-white">A Legacy of Academic Excellence Since 1985</h3>
+        </div>
+        <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+          Pinnacle College of Excellence was established with a singular vision — to provide transformative education that equips students with knowledge, character, and the confidence to lead. Over four decades, we have evolved into a vibrant institution that blends tradition with innovation.
+        </p>
+        <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+          Our 120-acre campus is home to state-of-the-art laboratories, a world-class library, Olympic-standard sports facilities, and a thriving student community from over 30 states and 12 countries.
+        </p>
+        <!-- Feature list -->
+        <div class="space-y-3">
+          <div class="flex items-center gap-3 group">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs flex-shrink-0 group-hover:scale-110 transition-transform" style="background:var(--accent)"><i class="fa-solid fa-check"></i></div>
+            <span class="dark:text-slate-200">NAAC A++ Accredited Institution</span>
+          </div>
+          <div class="flex items-center gap-3 group">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs flex-shrink-0 group-hover:scale-110 transition-transform" style="background:var(--accent)"><i class="fa-solid fa-check"></i></div>
+            <span class="dark:text-slate-200">500+ distinguished faculty members</span>
+          </div>
+          <div class="flex items-center gap-3 group">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs flex-shrink-0 group-hover:scale-110 transition-transform" style="background:var(--accent)"><i class="fa-solid fa-check"></i></div>
+            <span class="dark:text-slate-200">Partnerships with 200+ global companies</span>
+          </div>
+          <div class="flex items-center gap-3 group">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs flex-shrink-0 group-hover:scale-110 transition-transform" style="background:var(--accent)"><i class="fa-solid fa-check"></i></div>
+            <span class="dark:text-slate-200">Active research programs with ₹50Cr+ grants</span>
+          </div>
+        </div>
+        <a href="#achievements" class="btn-primary inline-flex items-center gap-2 mt-4">
+          Our Achievements <i class="fa-solid fa-arrow-right text-sm"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Core values -->
+    <div class="mt-20 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="reveal card-hover p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-sm text-center" style="transition-delay:0s">
+        <div class="w-14 h-14 rounded-xl mx-auto mb-4 flex items-center justify-center text-2xl" style="background:var(--accent-glow);color:var(--accent)">🎓</div>
+        <h4 class="font-display font-bold dark:text-white mb-2">Academic Excellence</h4>
+        <p class="text-sm text-slate-500 dark:text-slate-400">Rigorous curriculum designed for real-world impact</p>
+      </div>
+      <div class="reveal card-hover p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-sm text-center" style="transition-delay:0.1s">
+        <div class="w-14 h-14 rounded-xl mx-auto mb-4 flex items-center justify-center text-2xl" style="background:var(--accent-glow);color:var(--accent)">🌍</div>
+        <h4 class="font-display font-bold dark:text-white mb-2">Global Exposure</h4>
+        <p class="text-sm text-slate-500 dark:text-slate-400">International collaborations and exchange programs</p>
+      </div>
+      <div class="reveal card-hover p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-sm text-center" style="transition-delay:0.2s">
+        <div class="w-14 h-14 rounded-xl mx-auto mb-4 flex items-center justify-center text-2xl" style="background:var(--accent-glow);color:var(--accent)">🔬</div>
+        <h4 class="font-display font-bold dark:text-white mb-2">Innovation Hub</h4>
+        <p class="text-sm text-slate-500 dark:text-slate-400">Cutting-edge labs and incubation centers</p>
+      </div>
+      <div class="reveal card-hover p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-sm text-center" style="transition-delay:0.3s">
+        <div class="w-14 h-14 rounded-xl mx-auto mb-4 flex items-center justify-center text-2xl" style="background:var(--accent-glow);color:var(--accent)">🏆</div>
+        <h4 class="font-display font-bold dark:text-white mb-2">Holistic Growth</h4>
+        <p class="text-sm text-slate-500 dark:text-slate-400">Sports, arts, culture — complete student development</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= ACHIEVEMENTS SECTION ======= -->
+<section id="achievements" class="py-24 relative overflow-hidden" style="background:linear-gradient(135deg, rgba(29,78,216,0.05) 0%, transparent 50%, rgba(168,85,247,0.05) 100%)">
+  <div class="dark:bg-slate-800/30 absolute inset-0 pointer-events-none"></div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <!-- Header -->
+    <div class="text-center mb-16 reveal">
+      <span class="text-xs tracking-widest uppercase font-semibold mb-3 block" style="color:var(--accent)">Our Legacy</span>
+      <h2 class="text-3xl sm:text-4xl font-display font-black dark:text-white mb-4">Milestones & <span class="grad-text">Achievements</span></h2>
+      <div class="w-16 h-1 mx-auto rounded-full" style="background:var(--accent)"></div>
+    </div>
+
+    <!-- Stats counters -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+      <div class="reveal card-hover p-6 rounded-2xl bg-white dark:bg-slate-800 shadow-lg text-center border border-slate-100 dark:border-slate-700" style="transition-delay:0s">
+        <div class="stat-num text-4xl font-black grad-text mb-1" data-target="12000">0</div>
+        <div class="text-slate-500 dark:text-slate-400 text-sm">Students Enrolled</div>
+      </div>
+      <div class="reveal card-hover p-6 rounded-2xl bg-white dark:bg-slate-800 shadow-lg text-center border border-slate-100 dark:border-slate-700" style="transition-delay:0.1s">
+        <div class="stat-num text-4xl font-black grad-text mb-1" data-target="500">0</div>
+        <div class="text-slate-500 dark:text-slate-400 text-sm">Expert Faculty</div>
+      </div>
+      <div class="reveal card-hover p-6 rounded-2xl bg-white dark:bg-slate-800 shadow-lg text-center border border-slate-100 dark:border-slate-700" style="transition-delay:0.2s">
+        <div class="stat-num text-4xl font-black grad-text mb-1" data-target="200">0</div>
+        <div class="text-slate-500 dark:text-slate-400 text-sm">Industry Partners</div>
+      </div>
+      <div class="reveal card-hover p-6 rounded-2xl bg-white dark:bg-slate-800 shadow-lg text-center border border-slate-100 dark:border-slate-700" style="transition-delay:0.3s">
+        <div class="stat-num text-4xl font-black grad-text mb-1" data-target="98">0</div>
+        <div class="text-slate-500 dark:text-slate-400 text-sm">% Placement Rate</div>
+      </div>
+    </div>
+
+    <!-- Achievement cards with progress -->
+    <div class="grid md:grid-cols-2 gap-8 mb-16">
+      <div class="reveal-left p-8 rounded-2xl bg-white dark:bg-slate-800 shadow-lg border border-slate-100 dark:border-slate-700">
+        <h3 class="font-display font-bold text-xl dark:text-white mb-6">Academic Excellence</h3>
+        <div class="space-y-5">
+          <div>
+            <div class="flex justify-between text-sm mb-2"><span class="dark:text-slate-300">Research Publications</span><span style="color:var(--accent)" class="font-semibold">92%</span></div>
+            <div class="h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full"><div class="prog-bar" data-width="92" style="width:0%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-2"><span class="dark:text-slate-300">International Collaborations</span><span style="color:var(--accent)" class="font-semibold">78%</span></div>
+            <div class="h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full"><div class="prog-bar" data-width="78" style="width:0%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-2"><span class="dark:text-slate-300">Student Satisfaction</span><span style="color:var(--accent)" class="font-semibold">96%</span></div>
+            <div class="h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full"><div class="prog-bar" data-width="96" style="width:0%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-2"><span class="dark:text-slate-300">Innovation Index</span><span style="color:var(--accent)" class="font-semibold">85%</span></div>
+            <div class="h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full"><div class="prog-bar" data-width="85" style="width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Award cards -->
+      <div class="reveal-right space-y-4">
+        <div class="card-hover flex items-center gap-4 p-5 rounded-2xl bg-white dark:bg-slate-800 shadow-lg border border-slate-100 dark:border-slate-700">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style="background:var(--accent-glow);color:var(--accent)">🏆</div>
+          <div>
+            <div class="font-semibold dark:text-white">Best University Award 2024</div>
+            <div class="text-sm text-slate-500 dark:text-slate-400">Ministry of Education, Government of India</div>
+          </div>
+          <span class="ml-auto text-xs font-bold px-2 py-1 rounded-full" style="background:var(--accent-glow);color:var(--accent)">2024</span>
+        </div>
+        <div class="card-hover flex items-center gap-4 p-5 rounded-2xl bg-white dark:bg-slate-800 shadow-lg border border-slate-100 dark:border-slate-700">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style="background:rgba(245,158,11,0.1);color:#f59e0b">⭐</div>
+          <div>
+            <div class="font-semibold dark:text-white">NIRF Rank #12 (Engineering)</div>
+            <div class="text-sm text-slate-500 dark:text-slate-400">National Institutional Ranking Framework</div>
+          </div>
+          <span class="ml-auto text-xs font-bold px-2 py-1 rounded-full bg-yellow-100 text-yellow-700">2024</span>
+        </div>
+        <div class="card-hover flex items-center gap-4 p-5 rounded-2xl bg-white dark:bg-slate-800 shadow-lg border border-slate-100 dark:border-slate-700">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style="background:rgba(16,185,129,0.1);color:#10b981">🌿</div>
+          <div>
+            <div class="font-semibold dark:text-white">Green Campus Certification</div>
+            <div class="text-sm text-slate-500 dark:text-slate-400">Platinum rated eco-friendly campus</div>
+          </div>
+          <span class="ml-auto text-xs font-bold px-2 py-1 rounded-full bg-green-100 text-green-700">2023</span>
+        </div>
+        <div class="card-hover flex items-center gap-4 p-5 rounded-2xl bg-white dark:bg-slate-800 shadow-lg border border-slate-100 dark:border-slate-700">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style="background:rgba(168,85,247,0.1);color:#a855f7">🔬</div>
+          <div>
+            <div class="font-semibold dark:text-white">Top Research Institution</div>
+            <div class="text-sm text-slate-500 dark:text-slate-400">CSIR-UGC Excellence in Science Award</div>
+          </div>
+          <span class="ml-auto text-xs font-bold px-2 py-1 rounded-full bg-purple-100 text-purple-700">2023</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Event gallery -->
+    <div class="reveal">
+      <h3 class="text-2xl font-display font-bold dark:text-white text-center mb-8">Campus <span class="grad-text">Events Gallery</span></h3>
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div class="card-hover rounded-2xl overflow-hidden shadow-md group">
+          <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?w=400&q=80" alt="Event 1" class="w-full h-40 object-cover group-hover:scale-110 transition-transform duration-500"/>
+          <div class="p-3 bg-white dark:bg-slate-800"><div class="text-xs font-semibold dark:text-slate-200">Annual Day 2024</div></div>
+        </div>
+        <div class="card-hover rounded-2xl overflow-hidden shadow-md group">
+          <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400&q=80" alt="Event 2" class="w-full h-40 object-cover group-hover:scale-110 transition-transform duration-500"/>
+          <div class="p-3 bg-white dark:bg-slate-800"><div class="text-xs font-semibold dark:text-slate-200">Farewell Night</div></div>
+        </div>
+        <div class="card-hover rounded-2xl overflow-hidden shadow-md group">
+          <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=400&q=80" alt="Event 3" class="w-full h-40 object-cover group-hover:scale-110 transition-transform duration-500"/>
+          <div class="p-3 bg-white dark:bg-slate-800"><div class="text-xs font-semibold dark:text-slate-200">Social Outreach</div></div>
+        </div>
+        <div class="card-hover rounded-2xl overflow-hidden shadow-md group">
+          <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=400&q=80" alt="Event 4" class="w-full h-40 object-cover group-hover:scale-110 transition-transform duration-500"/>
+          <div class="p-3 bg-white dark:bg-slate-800"><div class="text-xs font-semibold dark:text-slate-200">Guest Lecture Series</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= FEES STRUCTURE ======= -->
+<section id="fees" class="py-24">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16 reveal">
+      <span class="text-xs tracking-widest uppercase font-semibold mb-3 block" style="color:var(--accent)">Admissions</span>
+      <h2 class="text-3xl sm:text-4xl font-display font-black dark:text-white mb-4">Fees <span class="grad-text">Structure</span></h2>
+      <p class="text-slate-500 dark:text-slate-400 max-w-xl mx-auto">Transparent, competitive pricing with scholarships and financial aid available for deserving students.</p>
+      <div class="w-16 h-1 mx-auto rounded-full mt-4" style="background:var(--accent)"></div>
+    </div>
+
+    <!-- Program tabs -->
+    <div class="flex flex-wrap justify-center gap-3 mb-10 reveal">
+      <button onclick="showFees('ug')" id="tab-ug" class="fee-tab px-5 py-2 rounded-full text-sm font-semibold transition-all active-tab">Undergraduate</button>
+      <button onclick="showFees('pg')" id="tab-pg" class="fee-tab px-5 py-2 rounded-full text-sm font-semibold transition-all">Postgraduate</button>
+      <button onclick="showFees('phd')" id="tab-phd" class="fee-tab px-5 py-2 rounded-full text-sm font-semibold transition-all">Ph.D</button>
+    </div>
+
+    <div class="reveal">
+      <!-- UG Table -->
+      <div id="fees-ug" class="fees-panel">
+        <div class="overflow-x-auto rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-white" style="background:var(--accent)">
+                <th class="px-6 py-4 text-left font-semibold">Program</th>
+                <th class="px-6 py-4 text-left font-semibold">Duration</th>
+                <th class="px-6 py-4 text-left font-semibold">Tuition / Year</th>
+                <th class="px-6 py-4 text-left font-semibold">Hostel / Year</th>
+                <th class="px-6 py-4 text-left font-semibold">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="fee-row border-b border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-slate-700"><td class="px-6 py-4 dark:text-slate-200 font-medium">B.Tech (CSE/IT)</td><td class="px-6 py-4 text-slate-500 dark:text-slate-400">4 years</td><td class="px-6 py-4 font-semibold" style="color:var(--accent)">₹1,20,000</td><td class="px-6 py-4 text-slate-500 dark:text-slate-400">₹60,000</td><td class="px-6 py-4 font-bold dark:text-white">₹1,80,000</td></tr>
+              <tr class="fee-row border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/70 hover:bg-blue-50 dark:hover:bg-slate-700"><td class="px-6 py-4 dark:text-slate-200 font-medium">B.Tech (Mech/Civil)</td><td class="px-6 py-4 text-slate-500 dark:text-slate-400">4 years</td><td class="px-6 py-4 font-semibold" style="color:var(--accent)">₹1,00,000</td><td class="px-6 py-4 text-slate-500 dark:text-slate-400">₹60,000</td><td class="px-6 py-4 font-bold dark:text-white">₹1,60,000</td></tr>
+              <tr class="fee-row border-b border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-slate-700"><td class="px-6 py-4 dark:text-slate-200 font-medium">BBA / B.Com</td><td class="px-6 py-4 text-slate-500 dark:text-slate-400">3 years</td><td class="px-6 py-4 font-semibold" style="color:var(--accent)">₹70,000</td><td class="px-6 py-4 text-slate-500 dark:text-slate-400">₹55,000</td><td class="px-6 py-4 font-bold dark:text-white">₹1,25,000</td></tr>
+              <tr class="fee-row bg-slate-50 dark:bg-slate-800/70 hover:bg-blue-50 dark:hover:bg-slate-700"><td class="px-6 py-4 dark:text-slate-200 font-medium">B.Sc (Sciences)</td><td class="px-6 py-4 text-slate-500 dark:text-slate-400">3 years</td><td class="px-6 py-4 font-semibold" style="color:var(--accent)">₹55,000</td><td class="px-6 py-4 text-slate-500 dark:text-slate-400">₹55,000</td><td class="px-6 py-4 font-bold dark:text-white">₹1,10,000</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PG Table -->
+      <div id="fees-pg" class="fees-panel hidden">
+        <div class="overflow-x-auto rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-white" style="background:var(--accent)">
+                <th class="px-6 py-4 text-left font-semibold">Program</th>
+                <th class="px-6 py-4 text-left font-semibold">Duration</th>
+                <th class="px-6 py-4 text-left font-semibold">Tuition / Year</th>
+                <th class="px-6 py-4 text-left font-semibold">Hostel / Year</th>
+                <th class="px-6 py-4 text-left font-semibold">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="fee-row border-b border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-slate-700"><td class="px-6 py-4 dark:text-slate-200 font-medium">M.Tech (All Branches)</td><td class="px-6 py-4 text-slate-500 dark:text-slate-400">2 years</td><td class="px-6 py-4 font-semibold" style="color:var(--accent)">₹90,000</td><td class="px-6 py-4 text-slate-500 dark:text-slate-400">₹60,000</td><td class="px-6 py-4 font-bold dark:text-white">₹1,50,000</td></tr>
+              <tr class="fee-row border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/70 hover:bg-blue-50 dark:hover:bg-slate-700"><td class="px-6 py-4 dark:text-slate-200 font-medium">MBA</td><td class="px-6 py-4 text-slate-500 dark:text-slate-400">2 years</td><td class="px-6 py-4 font-semibold" style="color:var(--accent)">₹1,40,000</td><td class="px-6 py-4 text-slate-500 dark:text-slate-400">₹65,000</td><td class="px-6 py-4 font-bold dark:text-white">₹2,05,000</td></tr>
+              <tr class="fee-row bg-white dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-slate-700"><td class="px-6 py-4 dark:text-slate-200 font-medium">M.Sc (Sciences)</td><td class="px-6 py-4 text-slate-500 dark:text-slate-400">2 years</td><td class="px-6 py-4 font-semibold" style="color:var(--accent)">₹65,000</td><td class="px-6 py-4 text-slate-500 dark:text-slate-400">₹55,000</td><td class="px-6 py-4 font-bold dark:text-white">₹1,20,000</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PhD Table -->
+      <div id="fees-phd" class="fees-panel hidden">
+        <div class="overflow-x-auto rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-white" style="background:var(--accent)">
+                <th class="px-6 py-4 text-left font-semibold">Program</th>
+                <th class="px-6 py-4 text-left font-semibold">Duration</th>
+                <th class="px-6 py-4 text-left font-semibold">Tuition / Year</th>
+                <th class="px-6 py-4 text-left font-semibold">Stipend</th>
+                <th class="px-6 py-4 text-left font-semibold">Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="fee-row border-b border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-slate-700"><td class="px-6 py-4 dark:text-slate-200 font-medium">Ph.D Engineering</td><td class="px-6 py-4 text-slate-500 dark:text-slate-400">3–5 years</td><td class="px-6 py-4 font-semibold" style="color:var(--accent)">₹40,000</td><td class="px-6 py-4 text-green-600 font-semibold">₹25,000/mo</td><td class="px-6 py-4 text-slate-500 dark:text-slate-400">JRF eligible</td></tr>
+              <tr class="fee-row bg-slate-50 dark:bg-slate-800/70 hover:bg-blue-50 dark:hover:bg-slate-700"><td class="px-6 py-4 dark:text-slate-200 font-medium">Ph.D Sciences / Management</td><td class="px-6 py-4 text-slate-500 dark:text-slate-400">3–5 years</td><td class="px-6 py-4 font-semibold" style="color:var(--accent)">₹30,000</td><td class="px-6 py-4 text-green-600 font-semibold">₹20,000/mo</td><td class="px-6 py-4 text-slate-500 dark:text-slate-400">Fellowship available</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scholarship info -->
+    <div class="mt-10 grid sm:grid-cols-3 gap-5 reveal">
+      <div class="card-hover p-5 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 dark:from-slate-800 dark:to-slate-700 border border-blue-100 dark:border-slate-600 flex items-start gap-4">
+        <div class="text-2xl">🎓</div>
+        <div><div class="font-semibold dark:text-white mb-1">Merit Scholarship</div><div class="text-sm text-slate-600 dark:text-slate-400">Up to 100% tuition waiver for rank holders</div></div>
+      </div>
+      <div class="card-hover p-5 rounded-2xl bg-gradient-to-br from-purple-50 to-purple-100 dark:from-slate-800 dark:to-slate-700 border border-purple-100 dark:border-slate-600 flex items-start gap-4">
+        <div class="text-2xl">💼</div>
+        <div><div class="font-semibold dark:text-white mb-1">Need-Based Aid</div><div class="text-sm text-slate-600 dark:text-slate-400">Financial support based on family income</div></div>
+      </div>
+      <div class="card-hover p-5 rounded-2xl bg-gradient-to-br from-green-50 to-green-100 dark:from-slate-800 dark:to-slate-700 border border-green-100 dark:border-slate-600 flex items-start gap-4">
+        <div class="text-2xl">🏅</div>
+        <div><div class="font-semibold dark:text-white mb-1">Sports Scholarship</div><div class="text-sm text-slate-600 dark:text-slate-400">For state and national level athletes</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= CONTACT SECTION ======= -->
+<section id="contact" class="py-24 relative overflow-hidden" style="background:linear-gradient(135deg, rgba(29,78,216,0.04) 0%, transparent 60%)">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16 reveal">
+      <span class="text-xs tracking-widest uppercase font-semibold mb-3 block" style="color:var(--accent)">Get in Touch</span>
+      <h2 class="text-3xl sm:text-4xl font-display font-black dark:text-white mb-4">Contact <span class="grad-text">Us</span></h2>
+      <div class="w-16 h-1 mx-auto rounded-full" style="background:var(--accent)"></div>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-12 items-start">
+      <!-- Contact info -->
+      <div class="reveal-left space-y-6">
+        <div>
+          <h3 class="text-2xl font-display font-bold dark:text-white mb-2">Let's Start a Conversation</h3>
+          <p class="text-slate-600 dark:text-slate-300">Reach out to our admissions team for any queries about programs, campus life, or scholarships.</p>
+        </div>
+        <div class="space-y-4">
+          <div class="card-hover flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-slate-800 shadow border border-slate-100 dark:border-slate-700">
+            <div class="w-11 h-11 rounded-lg flex items-center justify-center text-white flex-shrink-0" style="background:var(--accent)"><i class="fa-solid fa-location-dot"></i></div>
+            <div><div class="font-semibold dark:text-white text-sm">Address</div><div class="text-slate-500 dark:text-slate-400 text-sm">Pinnacle Nagar, College Road, Tamil Nadu – 600001</div></div>
+          </div>
+          <div class="card-hover flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-slate-800 shadow border border-slate-100 dark:border-slate-700">
+            <div class="w-11 h-11 rounded-lg flex items-center justify-center text-white flex-shrink-0" style="background:var(--accent)"><i class="fa-solid fa-phone"></i></div>
+            <div><div class="font-semibold dark:text-white text-sm">Phone</div><div class="text-slate-500 dark:text-slate-400 text-sm">+91 98765 43210 / +91 44 2800 1234</div></div>
+          </div>
+          <div class="card-hover flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-slate-800 shadow border border-slate-100 dark:border-slate-700">
+            <div class="w-11 h-11 rounded-lg flex items-center justify-center text-white flex-shrink-0" style="background:var(--accent)"><i class="fa-solid fa-envelope"></i></div>
+            <div><div class="font-semibold dark:text-white text-sm">Email</div><div class="text-slate-500 dark:text-slate-400 text-sm">admissions@pinnaclecollege.edu.in</div></div>
+          </div>
+          <div class="card-hover flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-slate-800 shadow border border-slate-100 dark:border-slate-700">
+            <div class="w-11 h-11 rounded-lg flex items-center justify-center text-white flex-shrink-0" style="background:var(--accent)"><i class="fa-solid fa-clock"></i></div>
+            <div><div class="font-semibold dark:text-white text-sm">Office Hours</div><div class="text-slate-500 dark:text-slate-400 text-sm">Mon–Sat: 9:00 AM – 5:30 PM</div></div>
+          </div>
+        </div>
+        <!-- Social -->
+        <div>
+          <div class="text-sm font-semibold dark:text-white mb-3">Follow Us</div>
+          <div class="flex gap-3">
+            <a href="#" class="w-10 h-10 rounded-lg flex items-center justify-center text-white transition-transform hover:scale-110 hover:-rotate-6 shadow-lg" style="background:var(--accent)"><i class="fab fa-instagram text-sm"></i></a>
+            <a href="#" class="w-10 h-10 rounded-lg flex items-center justify-center text-white transition-transform hover:scale-110 hover:-rotate-6 shadow-lg" style="background:var(--accent)"><i class="fab fa-youtube text-sm"></i></a>
+            <a href="#" class="w-10 h-10 rounded-lg flex items-center justify-center text-white transition-transform hover:scale-110 hover:-rotate-6 shadow-lg" style="background:var(--accent)"><i class="fab fa-linkedin-in text-sm"></i></a>
+            <a href="#" class="w-10 h-10 rounded-lg flex items-center justify-center text-white transition-transform hover:scale-110 hover:-rotate-6 shadow-lg" style="background:var(--accent)"><i class="fab fa-twitter text-sm"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div class="reveal-right">
+        <div class="p-8 rounded-2xl bg-white dark:bg-slate-800 shadow-xl border border-slate-100 dark:border-slate-700">
+          <h3 class="font-display font-bold text-xl dark:text-white mb-6">Send us a Message</h3>
+          <div class="space-y-4" id="contactForm">
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5 block">First Name</label>
+                <input type="text" placeholder="John" class="inp-focus w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 dark:text-white text-sm"/>
+              </div>
+              <div>
+                <label class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5 block">Last Name</label>
+                <input type="text" placeholder="Doe" class="inp-focus w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 dark:text-white text-sm"/>
+              </div>
+            </div>
+            <div>
+              <label class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5 block">Email Address</label>
+              <input type="email" placeholder="john@example.com" class="inp-focus w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 dark:text-white text-sm"/>
+            </div>
+            <div>
+              <label class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5 block">Phone Number</label>
+              <input type="tel" placeholder="+91 00000 00000" class="inp-focus w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 dark:text-white text-sm"/>
+            </div>
+            <div>
+              <label class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5 block">Program of Interest</label>
+              <select class="inp-focus w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 dark:text-white text-sm">
+                <option value="">Select a program...</option>
+                <option>B.Tech (Computer Science)</option>
+                <option>B.Tech (Electronics)</option>
+                <option>MBA</option>
+                <option>M.Tech</option>
+                <option>Ph.D Program</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5 block">Message</label>
+              <textarea rows="4" placeholder="Tell us about your query..." class="inp-focus w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
+            </div>
+            <button onclick="submitForm()" class="btn-primary w-full flex items-center justify-center gap-2">
+              <i class="fa-solid fa-paper-plane text-sm"></i> Send Message
+            </button>
+          </div>
+          <div id="formSuccess" class="hidden text-center py-8">
+            <div class="text-5xl mb-3">🎉</div>
+            <div class="text-xl font-display font-bold dark:text-white">Message Sent!</div>
+            <div class="text-slate-500 dark:text-slate-400 text-sm mt-1">Our team will get back to you within 24 hours.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= FOOTER ======= -->
+<footer class="py-12 border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+      <div class="lg:col-span-1">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg" style="background:var(--accent)"><i class="fa-solid fa-graduation-cap"></i></div>
+          <div>
+            <div class="font-display font-bold dark:text-white">Pinnacle</div>
+            <div class="text-xs opacity-60 dark:text-slate-400">College of Excellence</div>
+          </div>
+        </div>
+        <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Shaping futures since 1985 through academic excellence and holistic development.</p>
+      </div>
+      <div>
+        <div class="font-semibold dark:text-white mb-4 text-sm uppercase tracking-wider">Quick Links</div>
+        <div class="space-y-2 text-sm text-slate-500 dark:text-slate-400">
+          <a href="#home" class="block hover:text-blue-600 dark:hover:text-cyan-400 transition-colors">Home</a>
+          <a href="#about" class="block hover:text-blue-600 dark:hover:text-cyan-400 transition-colors">About Us</a>
+          <a href="#achievements" class="block hover:text-blue-600 dark:hover:text-cyan-400 transition-colors">Achievements</a>
+          <a href="#fees" class="block hover:text-blue-600 dark:hover:text-cyan-400 transition-colors">Fee Structure</a>
+        </div>
+      </div>
+      <div>
+        <div class="font-semibold dark:text-white mb-4 text-sm uppercase tracking-wider">Programs</div>
+        <div class="space-y-2 text-sm text-slate-500 dark:text-slate-400">
+          <a href="#fees" class="block hover:text-blue-600 dark:hover:text-cyan-400 transition-colors">B.Tech Programs</a>
+          <a href="#fees" class="block hover:text-blue-600 dark:hover:text-cyan-400 transition-colors">MBA</a>
+          <a href="#fees" class="block hover:text-blue-600 dark:hover:text-cyan-400 transition-colors">M.Tech</a>
+          <a href="#fees" class="block hover:text-blue-600 dark:hover:text-cyan-400 transition-colors">Ph.D Research</a>
+        </div>
+      </div>
+      <div>
+        <div class="font-semibold dark:text-white mb-4 text-sm uppercase tracking-wider">Contact</div>
+        <div class="space-y-2 text-sm text-slate-500 dark:text-slate-400">
+          <div>📍 Pinnacle Nagar, Tamil Nadu</div>
+          <div>📞 +91 98765 43210</div>
+          <div>✉️ admissions@pinnacle.edu.in</div>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-slate-200 dark:border-slate-700 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="text-sm text-slate-400">© 2024 Pinnacle College of Excellence. All rights reserved.</div>
+      <div class="text-sm text-slate-400">Made with ❤️ for academic excellence</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ========= THEME TOGGLE =========
+  const html = document.documentElement;
+  const toggle = document.getElementById('themeToggle');
+  const icon = document.getElementById('themeIcon');
+  let dark = false;
+
+  toggle.addEventListener('click', () => {
+    dark = !dark;
+    if (dark) {
+      html.classList.add('dark');
+      html.classList.remove('light');
+      icon.textContent = '🌙';
+    } else {
+      html.classList.remove('dark');
+      html.classList.add('light');
+      icon.textContent = '☀️';
+    }
+  });
+
+  // ========= NAVBAR scroll =========
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 40) {
+      navbar.classList.add('bg-white/90', 'dark:bg-slate-900/90', 'shadow-lg', 'border-slate-200', 'dark:border-slate-700');
+    } else {
+      navbar.classList.remove('bg-white/90', 'dark:bg-slate-900/90', 'shadow-lg', 'border-slate-200', 'dark:border-slate-700');
+    }
+  });
+
+  // ========= MOBILE MENU =========
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('open');
+  });
+  // close on link click
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileMenu.classList.remove('open')));
+
+  // ========= CAROUSEL =========
+  let current = 0;
+  const total = 5;
+  const track = document.getElementById('carouselTrack');
+  const dotsContainer = document.getElementById('carouselDots');
+
+  // create dots
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot ' + (i === 0 ? 'active' : 'bg-white/50');
+    d.addEventListener('click', () => goTo(i));
+    dotsContainer.appendChild(d);
+  }
+
+  function goTo(n) {
+    current = (n + total) % total;
+    track.style.transform = `translateX(-${current * 100}%)`;
+    dotsContainer.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.toggle('active', i === current);
+      d.style.background = i === current ? '' : 'rgba(255,255,255,0.5)';
+    });
+  }
+
+  document.getElementById('prevBtn').addEventListener('click', () => goTo(current - 1));
+  document.getElementById('nextBtn').addEventListener('click', () => goTo(current + 1));
+  setInterval(() => goTo(current + 1), 4000);
+
+  // ========= INTERSECTION OBSERVER (REVEAL ANIMATIONS) =========
+  const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => observer.observe(el));
+
+  // ========= COUNTER ANIMATION =========
+  function animateCounter(el, target) {
+    let start = 0;
+    const duration = 1800;
+    const step = Math.ceil(target / (duration / 16));
+    const timer = setInterval(() => {
+      start += step;
+      if (start >= target) { el.textContent = target.toLocaleString(); clearInterval(timer); return; }
+      el.textContent = start.toLocaleString();
+    }, 16);
+  }
+
+  const statObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const target = parseInt(e.target.dataset.target);
+        animateCounter(e.target, target);
+        statObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('[data-target]').forEach(el => statObserver.observe(el));
+
+  // ========= PROGRESS BARS =========
+  const progObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.width = e.target.dataset.width + '%';
+        progObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('.prog-bar').forEach(el => progObserver.observe(el));
+
+  // ========= FEE TABS =========
+  function showFees(type) {
+    document.querySelectorAll('.fees-panel').forEach(p => p.classList.add('hidden'));
+    document.getElementById('fees-' + type).classList.remove('hidden');
+    document.querySelectorAll('.fee-tab').forEach(t => {
+      t.style.background = '';
+      t.style.color = '';
+      t.classList.remove('shadow-lg');
+    });
+    const activeTab = document.getElementById('tab-' + type);
+    activeTab.style.background = 'var(--accent)';
+    activeTab.style.color = 'white';
+    activeTab.classList.add('shadow-lg');
+  }
+
+  // init tab styling
+  document.querySelectorAll('.fee-tab').forEach(t => {
+    t.style.background = 'transparent';
+    t.style.border = '2px solid var(--accent)';
+    t.style.color = 'var(--accent)';
+  });
+  showFees('ug');
+
+  // ========= CONTACT FORM =========
+  function submitForm() {
+    document.getElementById('contactForm').classList.add('hidden');
+    document.getElementById('formSuccess').classList.remove('hidden');
+  }
+
+  // ========= TILT EFFECT on cards =========
+  document.querySelectorAll('.card-hover').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      const tiltX = (y / rect.height) * 8;
+      const tiltY = -(x / rect.width) * 8;
+      card.style.transform = `perspective(600px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-8px) scale(1.02)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
+  });
+
+  // ========= Active nav link on scroll =========
+  const sections = ['home','about','achievements','fees','contact'];
+  window.addEventListener('scroll', () => {
+    const scrollPos = window.scrollY + 120;
+    sections.forEach(id => {
+      const sec = document.getElementById(id);
+      if (!sec) return;
+      if (sec.offsetTop <= scrollPos && sec.offsetTop + sec.offsetHeight > scrollPos) {
+        document.querySelectorAll('.nav-link').forEach(l => l.style.color = '');
+        const link = document.querySelector(`.nav-link[href="#${id}"]`);
+        if (link) link.style.color = 'var(--accent)';
+      }
+    });
+  });
+</script>
+</body>
+</html>
